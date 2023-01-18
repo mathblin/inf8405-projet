@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">My Application INF8405</string>
+    <string name="live_stream_ar_solutions">Live Stream AR solutions</string>
+    <string name="adresse_ip_ou_le_nom_de_domaine_de_la_cam_ra_ip">Adresse ip ou le nom de domaine de la caméra IP</string>
+    <string name="textview">TextView</string>
+    <string name="min_value">Min. Value</string>
+    <string name="max_value">Max. Value</string>
+    <string name="fix_min">Fix Min.</string>
+    <string name="fix_max">Fix Max.</string>
+    <string name="_0_000">0.000</string>
+    <string name="start">Start</string>
+    <string name="reset">Reset</string>
+    <string name="calibrate">Calibrate</string>
+    <string name="position">Position</string>
+</resources>

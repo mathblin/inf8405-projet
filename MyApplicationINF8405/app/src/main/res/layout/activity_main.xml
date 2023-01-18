@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.ikram.myapplication_inf8405.MainActivity"
+    tools:ignore="MergeRootFrame" >
+
+        <Button
+            android:id="@+id/buttonCalibrate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:onClick="Connexion"
+            android:text="@string/calibrate" />
+
+        <EditText
+            android:id="@+id/adresseIPText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/buttonCalibrate"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="34dp"
+            android:ems="10"
+            android:background="@drawable/border" android:inputType="" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/adresseIPText"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="15dp"
+            android:text="@string/adresse_ip_ou_le_nom_de_domaine_de_la_cam_ra_ip" />
+
+
+</RelativeLayout>
