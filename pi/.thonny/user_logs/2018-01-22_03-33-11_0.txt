@@ -1,0 +1,378 @@
+[
+    {
+        "editor_id": 1970943056,
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970942384,
+        "time": "2018-01-22T03:33:11.759862",
+        "sequence": "EditorTextCreated",
+        "editor_class": "Editor"
+    },
+    {
+        "filename": "/home/pi/Desktop/Bilal_Test/server.py",
+        "editor_id": 1970943056,
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970942384,
+        "time": "2018-01-22T03:33:11.762198",
+        "sequence": "Open",
+        "editor_class": "Editor"
+    },
+    {
+        "index2": "2.0",
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970942384,
+        "time": "2018-01-22T03:33:11.913951",
+        "index1": "1.0",
+        "sequence": "TextDelete"
+    },
+    {
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970942384,
+        "index": "1.0",
+        "time": "2018-01-22T03:33:11.914848",
+        "sequence": "TextInsert",
+        "text": "",
+        "tags": "()"
+    },
+    {
+        "widget_id": 1984283824,
+        "sequence": "<FocusIn>",
+        "time": "2018-01-22T03:33:12.267654",
+        "widget_class": "Workbench"
+    },
+    {
+        "text_widget_class": "ShellText",
+        "text_widget_id": 1970883376,
+        "index": "1.0",
+        "text_widget_context": "shell",
+        "time": "2018-01-22T03:33:12.295336",
+        "sequence": "TextInsert",
+        "text": "Python 3.5.3 (/usr/bin/python3)",
+        "tags": "('welcome',)"
+    },
+    {
+        "text_widget_class": "ShellText",
+        "text_widget_id": 1970883376,
+        "index": "1.31",
+        "text_widget_context": "shell",
+        "time": "2018-01-22T03:33:12.301544",
+        "sequence": "TextInsert",
+        "text": "\n",
+        "tags": "('io',)"
+    },
+    {
+        "text_widget_class": "ShellText",
+        "text_widget_id": 1970883376,
+        "index": "2.0",
+        "text_widget_context": "shell",
+        "time": "2018-01-22T03:33:12.304207",
+        "sequence": "TextInsert",
+        "text": ">>> ",
+        "tags": "('toplevel', 'prompt')"
+    },
+    {
+        "sequence": "<Button-1>",
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970942384,
+        "time": "2018-01-22T03:33:13.709705",
+        "widget_class": "CodeViewText",
+        "widget_id": 1970942384
+    },
+    {
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970942384,
+        "index": "1.0",
+        "time": "2018-01-22T03:33:14.310350",
+        "sequence": "TextInsert",
+        "text": "# Web streaming example\n# Source code from the official PiCamera package\n# http://picamera.readthedocs.io/en/latest/recipes2.html#web-streaming\n\nimport io\nimport picamera\nimport logging\nimport socketserver\nfrom threading import Condition\nfrom http import server\n\nPAGE=\"\"\"\\\n<html>\n<head>\n<title>Raspberry Pi - Surveillance Camera</title>\n</head>\n<body>\n<center><h1>Raspberry Pi - Surveillance Camera</h1></center>\n<center><img src=\"stream.mjpg\" width=\"640\" height=\"480\"></center>\n</body>\n</html>\n\"\"\"\n\nclass StreamingOutput(object):\n    def __init__(self):\n        self.frame = None\n        self.buffer = io.BytesIO()\n        self.condition = Condition()\n\n    def write(self, buf):\n        if buf.startswith(b'\\xff\\xd8'):\n            # New frame, copy the existing buffer's content and notify all\n            # clients it's available\n            self.buffer.truncate()\n            with self.condition:\n                self.frame = self.buffer.getvalue()\n                self.condition.notify_all()\n            self.buffer.seek(0)\n        return self.buffer.write(buf)\n\nclass StreamingHandler(server.BaseHTTPRequestHandler):\n    def do_GET(self):\n        if self.path == '/':\n            self.send_response(301)\n            self.send_header('Location', '/index.html')\n            self.end_headers()\n        elif self.path == '/index.html':\n            content = PAGE.encode('utf-8')\n            self.send_response(200)\n            self.send_header('Content-Type', 'text/html')\n            self.send_header('Content-Length', len(content))\n            self.end_headers()\n            self.wfile.write(content)\n        elif self.path == '/stream.mjpg':\n            self.send_response(200)\n            self.send_header('Age', 0)\n            self.send_header('Cache-Control', 'no-cache, private')\n            self.send_header('Pragma', 'no-cache')\n            self.send_header('Content-Type', 'multipart/x-mixed-replace; boundary=FRAME')\n            self.end_headers()\n            try:\n                while True:\n                    with output.condition:\n                        output.condition.wait()\n                        frame = output.frame\n                    self.wfile.write(b'--FRAME\\r\\n')\n                    self.send_header('Content-Type', 'image/jpeg')\n                    self.send_header('Content-Length', len(frame))\n                    self.end_headers()\n                    self.wfile.write(frame)\n                    self.wfile.write(b'\\r\\n')\n            except Exception as e:\n                logging.warning(\n                    'Removed streaming client %s: %s',\n                    self.client_address, str(e))\n        else:\n            self.send_error(404)\n            self.end_headers()\n\nclass StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):\n    allow_reuse_address = True\n    daemon_threads = True\n\nwith picamera.PiCamera(resolution='640x480', framerate=24) as camera:\n    output = StreamingOutput()\n    #Uncomment the next line to change your Pi's Camera rotation (in degrees)\n    #camera.rotation = 90\n    camera.start_recording(output, format='mjpeg')\n    try:\n        address = ('', 8000)\n        server = StreamingServer(address, StreamingHandler)\n        server.serve_forever()\n    finally:",
+        "tags": "None"
+    },
+    {
+        "sequence": "<<Paste>>",
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970942384,
+        "time": "2018-01-22T03:33:14.312176",
+        "widget_class": "CodeViewText",
+        "widget_id": 1970942384
+    },
+    {
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970942384,
+        "index": "93.12",
+        "time": "2018-01-22T03:33:15.818376",
+        "sequence": "TextInsert",
+        "text": "\n",
+        "tags": "None"
+    },
+    {
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970942384,
+        "index": "94.0",
+        "time": "2018-01-22T03:33:15.836504",
+        "sequence": "TextInsert",
+        "text": "    ",
+        "tags": "None"
+    },
+    {
+        "index2": "94.4",
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970942384,
+        "time": "2018-01-22T03:33:15.848995",
+        "index1": "94.0",
+        "sequence": "TextDelete"
+    },
+    {
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970942384,
+        "index": "94.0",
+        "time": "2018-01-22T03:33:15.861443",
+        "sequence": "TextInsert",
+        "text": "        ",
+        "tags": "None"
+    },
+    {
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970942384,
+        "index": "94.8",
+        "time": "2018-01-22T03:33:17.081374",
+        "sequence": "TextInsert",
+        "text": "c",
+        "tags": "None"
+    },
+    {
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970942384,
+        "index": "94.9",
+        "time": "2018-01-22T03:33:17.312284",
+        "sequence": "TextInsert",
+        "text": "a",
+        "tags": "None"
+    },
+    {
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970942384,
+        "index": "94.10",
+        "time": "2018-01-22T03:33:17.497625",
+        "sequence": "TextInsert",
+        "text": "m",
+        "tags": "None"
+    },
+    {
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970942384,
+        "index": "94.11",
+        "time": "2018-01-22T03:33:17.511812",
+        "sequence": "TextInsert",
+        "text": "e",
+        "tags": "None"
+    },
+    {
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970942384,
+        "index": "94.12",
+        "time": "2018-01-22T03:33:17.684352",
+        "sequence": "TextInsert",
+        "text": "r",
+        "tags": "None"
+    },
+    {
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970942384,
+        "index": "94.13",
+        "time": "2018-01-22T03:33:17.878621",
+        "sequence": "TextInsert",
+        "text": "a",
+        "tags": "None"
+    },
+    {
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970942384,
+        "index": "94.14",
+        "time": "2018-01-22T03:33:18.064745",
+        "sequence": "TextInsert",
+        "text": ".",
+        "tags": "None"
+    },
+    {
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970942384,
+        "index": "94.15",
+        "time": "2018-01-22T03:33:18.356426",
+        "sequence": "TextInsert",
+        "text": "s",
+        "tags": "None"
+    },
+    {
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970942384,
+        "index": "94.16",
+        "time": "2018-01-22T03:33:18.556633",
+        "sequence": "TextInsert",
+        "text": "t",
+        "tags": "None"
+    },
+    {
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970942384,
+        "index": "94.17",
+        "time": "2018-01-22T03:33:18.716253",
+        "sequence": "TextInsert",
+        "text": "o",
+        "tags": "None"
+    },
+    {
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970942384,
+        "index": "94.18",
+        "time": "2018-01-22T03:33:18.892696",
+        "sequence": "TextInsert",
+        "text": "p",
+        "tags": "None"
+    },
+    {
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970942384,
+        "index": "94.19",
+        "time": "2018-01-22T03:33:19.745717",
+        "sequence": "TextInsert",
+        "text": "_",
+        "tags": "None"
+    },
+    {
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970942384,
+        "index": "94.20",
+        "time": "2018-01-22T03:33:19.951782",
+        "sequence": "TextInsert",
+        "text": "r",
+        "tags": "None"
+    },
+    {
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970942384,
+        "index": "94.21",
+        "time": "2018-01-22T03:33:20.117190",
+        "sequence": "TextInsert",
+        "text": "e",
+        "tags": "None"
+    },
+    {
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970942384,
+        "index": "94.22",
+        "time": "2018-01-22T03:33:20.278286",
+        "sequence": "TextInsert",
+        "text": "c",
+        "tags": "None"
+    },
+    {
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970942384,
+        "index": "94.23",
+        "time": "2018-01-22T03:33:20.444442",
+        "sequence": "TextInsert",
+        "text": "o",
+        "tags": "None"
+    },
+    {
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970942384,
+        "index": "94.24",
+        "time": "2018-01-22T03:33:20.601061",
+        "sequence": "TextInsert",
+        "text": "r",
+        "tags": "None"
+    },
+    {
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970942384,
+        "index": "94.25",
+        "time": "2018-01-22T03:33:20.765482",
+        "sequence": "TextInsert",
+        "text": "d",
+        "tags": "None"
+    },
+    {
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970942384,
+        "index": "94.26",
+        "time": "2018-01-22T03:33:20.923321",
+        "sequence": "TextInsert",
+        "text": "i",
+        "tags": "None"
+    },
+    {
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970942384,
+        "index": "94.27",
+        "time": "2018-01-22T03:33:21.086455",
+        "sequence": "TextInsert",
+        "text": "n",
+        "tags": "None"
+    },
+    {
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970942384,
+        "index": "94.28",
+        "time": "2018-01-22T03:33:21.101210",
+        "sequence": "TextInsert",
+        "text": "g",
+        "tags": "None"
+    },
+    {
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970942384,
+        "index": "94.29",
+        "time": "2018-01-22T03:33:21.300792",
+        "sequence": "TextInsert",
+        "text": "(",
+        "tags": "None"
+    },
+    {
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970942384,
+        "index": "94.30",
+        "time": "2018-01-22T03:33:21.492692",
+        "sequence": "TextInsert",
+        "text": ")",
+        "tags": "None"
+    },
+    {
+        "filename": "/home/pi/Desktop/Bilal_Test/server.py",
+        "editor_id": 1970943056,
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970942384,
+        "time": "2018-01-22T03:33:22.319373",
+        "sequence": "Save",
+        "editor_class": "Editor"
+    },
+    {
+        "sequence": "Command",
+        "denied": "False",
+        "command_id": "save_file",
+        "time": "2018-01-22T03:33:22.327382"
+    },
+    {
+        "widget_id": 1984283824,
+        "sequence": "<FocusOut>",
+        "time": "2018-01-22T03:33:26.370337",
+        "widget_class": "Workbench"
+    },
+    {
+        "widget_id": 1984283824,
+        "sequence": "<FocusIn>",
+        "time": "2018-01-22T03:33:27.854441",
+        "widget_class": "Workbench"
+    },
+    {
+        "widget_id": 1984283824,
+        "sequence": "<FocusOut>",
+        "time": "2018-01-22T03:33:27.957534",
+        "widget_class": "Workbench"
+    },
+    {
+        "widget_id": 1984283824,
+        "sequence": "<FocusIn>",
+        "time": "2018-01-22T03:33:33.328947",
+        "widget_class": "Workbench"
+    }
+]

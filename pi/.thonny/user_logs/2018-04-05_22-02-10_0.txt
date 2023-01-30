@@ -1,0 +1,129 @@
+[
+    {
+        "sequence": "EditorTextCreated",
+        "text_widget_id": 1970537392,
+        "editor_class": "Editor",
+        "time": "2018-04-05T22:02:10.476006",
+        "editor_id": 1970466672,
+        "text_widget_class": "CodeViewText"
+    },
+    {
+        "sequence": "Open",
+        "text_widget_id": 1970537392,
+        "editor_class": "Editor",
+        "filename": "/home/pi/Desktop/platoon/platoon3.py",
+        "editor_id": 1970466672,
+        "time": "2018-04-05T22:02:10.478257",
+        "text_widget_class": "CodeViewText"
+    },
+    {
+        "sequence": "TextDelete",
+        "text_widget_id": 1970537392,
+        "time": "2018-04-05T22:02:10.479256",
+        "index2": "2.0",
+        "index1": "1.0",
+        "text_widget_class": "CodeViewText"
+    },
+    {
+        "tags": "()",
+        "sequence": "TextInsert",
+        "text_widget_class": "CodeViewText",
+        "time": "2018-04-05T22:02:10.663620",
+        "text": "# import the necessary packages\nfrom picamera.array import PiRGBArray\nfrom picamera import PiCamera\nimport time\nimport cv2 \nimport numpy as np\n\n\n# initialize the camera and grab a reference to the raw camera capture\ncamera = PiCamera()\ncamera.resolution = (640, 480)\ncamera.framerate = 32\ncamera.rotation = 180\nrawCapture = PiRGBArray(camera, size=(640, 480))\n\n# allow the camera to warmup\ntime.sleep(0.1)\n\n# capture frames from the camera\nfor frame in camera.capture_continuous(rawCapture, format=\"bgr\", use_video_port=True):\n    # grab the raw NumPy array representing the image, then initialize the timestamp\n    # and occupied/unoccupied text\n    image = frame.array\n    image =cv2.medianBlur(image,1)\n##    output=image.copy()\n    cimg = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)\n    circles = cv2.HoughCircles(cimg,cv2.CV_HOUGH_GARDIENT, 1, 20,param1=10,param2=1,minRadius=0, maxRadius=0)\n    if circles.all() != None:\n        #print(\"NoneType\")\n        circles = np.uint16(np.around(circles.astype(np.double),3))\n        \n##        for (x,y,r) in circles\n##            cv2.circle(output, (x,y),r,(0,255,0),4)\n##            cv2.rectangle(output, (x-5, y-5), (x+5,y+5),(0,)\n\n        for i in circles[0,:]:\n            # draw the outer circle\n            cv2.circle(cimg,(i[0],i[1]),i[2],(0,255,0),2)\n            # draw the center of the circle\n            cv2.circle(cimg,(i[0],i[1]),2,(0,0,255),3) \n\n    # show the frame\n    cv2.imshow(\"Frame\", cimg)\n    key = cv2.waitKey(1) & 0xFF\n\n    # clear the stream in preparation for the next frame\n    rawCapture.truncate(0)\n\n    # if the `q` key was pressed, break from the loop\n    if key == ord(\"q\"):\n        break\n",
+        "text_widget_id": 1970537392,
+        "index": "1.0"
+    },
+    {
+        "time": "2018-04-05T22:02:10.699638",
+        "sequence": "ShowView",
+        "view_id": "ShellView",
+        "view_class": "ShellView"
+    },
+    {
+        "time": "2018-04-05T22:02:12.249204",
+        "widget_class": "Workbench",
+        "sequence": "<FocusIn>",
+        "widget_id": 1990110992
+    },
+    {
+        "tags": "('welcome',)",
+        "sequence": "TextInsert",
+        "text_widget_class": "ShellText",
+        "time": "2018-04-05T22:02:12.303554",
+        "text": "Python 3.5.3 (/usr/bin/python3)",
+        "text_widget_id": 1970405456,
+        "text_widget_context": "shell",
+        "index": "1.0"
+    },
+    {
+        "tags": "('io',)",
+        "sequence": "TextInsert",
+        "text_widget_class": "ShellText",
+        "time": "2018-04-05T22:02:12.313135",
+        "text": "\n",
+        "text_widget_id": 1970405456,
+        "text_widget_context": "shell",
+        "index": "1.31"
+    },
+    {
+        "tags": "('toplevel', 'prompt')",
+        "sequence": "TextInsert",
+        "text_widget_class": "ShellText",
+        "time": "2018-04-05T22:02:12.315733",
+        "text": ">>> ",
+        "text_widget_id": 1970405456,
+        "text_widget_context": "shell",
+        "index": "2.0"
+    },
+    {
+        "time": "2018-04-05T22:02:15.862112",
+        "widget_class": "EditorNotebook",
+        "sequence": "<Button-1>",
+        "widget_id": 1970365584
+    },
+    {
+        "widget_class": "CodeViewText",
+        "text_widget_id": 1970537392,
+        "time": "2018-04-05T22:02:16.667707",
+        "widget_id": 1970537392,
+        "text_widget_class": "CodeViewText",
+        "sequence": "<Button-1>"
+    },
+    {
+        "sequence": "TextDelete",
+        "text_widget_id": 1970537392,
+        "time": "2018-04-05T22:02:22.409739",
+        "index2": "52.0",
+        "index1": "19.1",
+        "text_widget_class": "CodeViewText"
+    },
+    {
+        "sequence": "TextDelete",
+        "text_widget_id": 1970537392,
+        "time": "2018-04-05T22:02:22.439987",
+        "index2": "None",
+        "index1": "19.0",
+        "text_widget_class": "CodeViewText"
+    },
+    {
+        "sequence": "Save",
+        "text_widget_id": 1970537392,
+        "editor_class": "Editor",
+        "filename": "/home/pi/Desktop/platoon/platoon3.py",
+        "editor_id": 1970466672,
+        "time": "2018-04-05T22:03:17.737123",
+        "text_widget_class": "CodeViewText"
+    },
+    {
+        "sequence": "Command",
+        "time": "2018-04-05T22:03:17.744647",
+        "denied": "False",
+        "command_id": "save_file"
+    },
+    {
+        "sequence": "Command",
+        "time": "2018-04-05T22:07:07.506686",
+        "denied": "True",
+        "command_id": "save_file"
+    }
+]

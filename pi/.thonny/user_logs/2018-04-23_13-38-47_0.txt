@@ -1,0 +1,146 @@
+[
+    {
+        "text_widget_id": 1970824592,
+        "editor_class": "Editor",
+        "text_widget_class": "CodeViewText",
+        "sequence": "EditorTextCreated",
+        "time": "2018-04-23T13:38:47.877946",
+        "editor_id": 1970751536
+    },
+    {
+        "text_widget_id": 1970824592,
+        "editor_class": "Editor",
+        "text_widget_class": "CodeViewText",
+        "filename": "/home/pi/Desktop/platoon/INF8405/RaspberryPi/server/Import/sonar.py",
+        "sequence": "Open",
+        "time": "2018-04-23T13:38:47.884690",
+        "editor_id": 1970751536
+    },
+    {
+        "index1": "1.0",
+        "text_widget_id": 1970824592,
+        "index2": "2.0",
+        "text_widget_class": "CodeViewText",
+        "sequence": "TextDelete",
+        "time": "2018-04-23T13:38:47.885740"
+    },
+    {
+        "index": "1.0",
+        "text_widget_id": 1970824592,
+        "text": "#!/usr/bin/python3\nimport RPi.GPIO as GPIO\nimport socket\nimport serial\nimport logging\nimport threading\nimport time\nimport sys\nfrom enum import Enum\n\n\nclass State(Enum):\n\n\tSECURE = 0\n\tWARNING = 1\n\tCRITICAL = 2\n\tSTOP = 3\n\n\nclass SonarThread(threading.Thread):\n\t\n\tdef __init__(self, serialPort, conList, DistanceList, logger): \n\t\tthreading.Thread.__init__(self)\n\t\tself.conList = conList\n\t\tself.serial = serialPort\n\t\tself.DistanceList = DistanceList\n\t\tself.logger = logger\n\t\tself.stop_event = threading.Event()\n\t\tself.WARN_DISTANCE = 40.0\n\t\tself.CRIT_DISTANCE = 30.0\n\t\tself.STOP_DISTANCE = 20.0\n\t\tself.DistanceList.append(self.WARN_DISTANCE)\n\t\tself.currentState = State(0).name\n\t\tself.REMOTE_SERVER = \"www.google.com\"\n\t\tself.setup()\n\n\tdef run(self):\n\t\twhile not self.stopRequest():\n\t\t\tself.switchOffRgbLed()\t\t\t\n\t\t\tif not self.conList:\n\t\t\t\ttime.sleep(1)\n\t\t\t\tcontinue\n\t\t\tdistance = self.distance()\n\t\t\tformattedDistance = format(distance, '.1f')\n\t\t\tif not self.is_connected(self.REMOTE_SERVER):\n\t\t\t\tGPIO.output(self.GPIO_BLUE_LIGHT, True)\n\t\t\t\tself.serial.write('x'.encode())\n\t\t\t\ttime.sleep(1)\n\t\t\telif distance < self.STOP_DISTANCE:\n\t\t\t\tif self.currentState != State(3).name:\n\t\t\t\t\tself.serial.write('x'.encode())\n\t\t\t\t#self.logger.info(\"Stop Distance : \" + formattedDistance)\n\t\t\t\tGPIO.output(self.GPIO_RED_LIGHT, True)\n\t\t\t\tself.currentState = State(3).name\t\t\t\n\t\t\telif distance < self.CRIT_DISTANCE:\n\t\t\t\t#self.logger.info(\"Critical Distance : \" + formattedDistance)\n\t\t\t\tGPIO.output(self.GPIO_GREEN_LIGHT, True)\n\t\t\t\tGPIO.output(self.GPIO_BLUE_LIGHT, True)\n\t\t\t\tself.currentState = State(2).name\n\t\t\telif distance < self.WARN_DISTANCE:\n\t\t\t\t#self.logger.info(\"Warning Distance : \" + formattedDistance)\t\t\t\t\n\t\t\t\tGPIO.output(self.GPIO_GREEN_LIGHT, True)\n\t\t\t\t\n\t\t\t\tself.currentState = State(1).name\n\t\t\telse:\n\t\t\t\tself.currentState = State(0).name\n\t\t\tself.DistanceList[0] = distance\n\t\t\t\n\t\t\ttime.sleep(0.2)\t\t\t\n\t\t\t\t\n\t\tself.destroy()\n\t\t\n\tdef distance(self):\n\t\t# set Trigger to HIGH\n\t\tGPIO.output(self.GPIO_TRIGGER, True)\n\n\t\t# set Trigger after 0.01ms to LOW\n\t\ttime.sleep(0.00001)\n\t\tGPIO.output(self.GPIO_TRIGGER, False)\n\n\t\tStartTime = time.time()\n\t\tStopTime = time.time()\n\n\t\t# save StartTime\n\t\twhile GPIO.input(self.GPIO_ECHO) == 0:\n\t\t\tStartTime = time.time()\n\n\t\t# save time of arrival\n\t\twhile GPIO.input(self.GPIO_ECHO) == 1:\n\t\t\tStopTime = time.time()\n\n\t\t# time difference between start and arrival\n\t\tTimeElapsed = StopTime - StartTime\n\t\t# multiply with the sonic speed (34300 cm/s)\n\t\t# and divide by 2, because there and back\n\t\tdistance = (TimeElapsed * 34300) / 2\n\n\t\treturn distance\n\t\n\tdef switchOffRgbLed(self):\n\t\tGPIO.output(self.GPIO_BLUE_LIGHT, False)\n\t\tGPIO.output(self.GPIO_GREEN_LIGHT, False)\n\t\tGPIO.output(self.GPIO_RED_LIGHT, False)\n\t\t\n\tdef setup(self):\n\t\t#GPIO Mode (BOARD / BCM)\n\t\tGPIO.setmode(GPIO.BCM)\n\t\t \n\t\t#set GPIO Pins\n\t\tself.GPIO_TRIGGER = 23\n\t\tself.GPIO_ECHO = 24\n\t\tself.GPIO_RED_LIGHT = 16\n\t\tself.GPIO_GREEN_LIGHT = 20\n\t\tself.GPIO_BLUE_LIGHT = 21\n\t\t \n\t\t#set GPIO direction (IN / OUT)\n\t\tGPIO.setup(self.GPIO_TRIGGER, GPIO.OUT)\n\t\tGPIO.setup(self.GPIO_ECHO, GPIO.IN)\n\t\tGPIO.setup(self.GPIO_RED_LIGHT, GPIO.OUT)\n\t\tGPIO.setup(self.GPIO_GREEN_LIGHT, GPIO.OUT)\n\t\tGPIO.setup(self.GPIO_BLUE_LIGHT, GPIO.OUT)\n\t\t\n\tdef destroy(self):\n\t\t#GPIO.output(self.GPIO_TRIGGER, GPIO.HIGH)\n\t\t#GPIO.output(self.GPIO_ECHO, GPIO.HIGH)\n\t\t#GPIO.output(self.GPIO_RED_LIGHT, GPIO.HIGH)\n\t\t#GPIO.output(self.GPIO_GREEN_LIGHT, GPIO.HIGH)\n\t\t#GPIO.output(self.GPIO_BLUE_LIGHT, GPIO.HIGH)\n\t\tGPIO.cleanup()\n\t\t\n\t\n\tdef is_connected(self, hostname):\n\t\ttry:\n\t\t\t# see if we can resolve the host name -- tells us if there is\n\t\t\t# a DNS listening\n\t\t\thost = socket.gethostbyname(hostname)\n\t\t\t# connect to the host -- tells us if the host is actually\n\t\t\t# reachable\n\t\t\ts = socket.create_connection((host, 80), 2)\n\t\t\treturn True\n\t\texcept:\n\t\t\tpass\n\t\treturn False\n\t\n\tdef stop(self):\n\t\tself.stop_event.set()\n\t\t\n\tdef stopRequest(self):\n\t\treturn self.stop_event.is_set()\n\n\n",
+        "text_widget_class": "CodeViewText",
+        "tags": "()",
+        "sequence": "TextInsert",
+        "time": "2018-04-23T13:38:48.064057"
+    },
+    {
+        "view_id": 1970692816,
+        "view_class": "ShellView",
+        "sequence": "ShowView",
+        "time": "2018-04-23T13:38:48.103149"
+    },
+    {
+        "sequence": "<FocusIn>",
+        "widget_id": 1983144208,
+        "time": "2018-04-23T13:38:49.556647",
+        "widget_class": "Workbench"
+    },
+    {
+        "index": "1.0",
+        "text_widget_id": 1970693808,
+        "text": "Python 3.5.3 (/usr/bin/python3)",
+        "text_widget_class": "ShellText",
+        "tags": "('welcome',)",
+        "sequence": "TextInsert",
+        "text_widget_context": "shell",
+        "time": "2018-04-23T13:38:49.594964"
+    },
+    {
+        "index": "1.31",
+        "text_widget_id": 1970693808,
+        "text": "\n",
+        "text_widget_class": "ShellText",
+        "tags": "('io',)",
+        "sequence": "TextInsert",
+        "text_widget_context": "shell",
+        "time": "2018-04-23T13:38:49.601121"
+    },
+    {
+        "index": "2.0",
+        "text_widget_id": 1970693808,
+        "text": ">>> ",
+        "text_widget_class": "ShellText",
+        "tags": "('toplevel', 'prompt')",
+        "sequence": "TextInsert",
+        "text_widget_context": "shell",
+        "time": "2018-04-23T13:38:49.603504"
+    },
+    {
+        "text_widget_id": 1970824592,
+        "widget_id": 1970824592,
+        "text_widget_class": "CodeViewText",
+        "widget_class": "CodeViewText",
+        "sequence": "<Button-1>",
+        "time": "2018-04-23T13:39:00.243231"
+    },
+    {
+        "command_id": "OpenFindDialog",
+        "denied": "False",
+        "sequence": "Command",
+        "time": "2018-04-23T13:39:01.224515"
+    },
+    {
+        "sequence": "<FocusOut>",
+        "widget_id": 1983144208,
+        "time": "2018-04-23T13:39:01.380619",
+        "widget_class": "Workbench"
+    },
+    {
+        "sequence": "<FocusIn>",
+        "widget_id": 1983144208,
+        "time": "2018-04-23T13:39:03.857293",
+        "widget_class": "Workbench"
+    },
+    {
+        "text_widget_id": 1970824592,
+        "widget_id": 1970824592,
+        "text_widget_class": "CodeViewText",
+        "widget_class": "CodeViewText",
+        "sequence": "<Button-1>",
+        "time": "2018-04-23T13:39:07.147498"
+    },
+    {
+        "command_id": "OpenFindDialog",
+        "denied": "False",
+        "sequence": "Command",
+        "time": "2018-04-23T13:39:08.259370"
+    },
+    {
+        "sequence": "<FocusOut>",
+        "widget_id": 1983144208,
+        "time": "2018-04-23T13:39:08.450966",
+        "widget_class": "Workbench"
+    },
+    {
+        "sequence": "<FocusIn>",
+        "widget_id": 1983144208,
+        "time": "2018-04-23T13:39:10.439718",
+        "widget_class": "Workbench"
+    },
+    {
+        "text_widget_id": 1970824592,
+        "widget_id": 1970824592,
+        "text_widget_class": "CodeViewText",
+        "widget_class": "CodeViewText",
+        "sequence": "<Button-1>",
+        "time": "2018-04-23T13:39:26.308468"
+    },
+    {
+        "text_widget_id": 1970824592,
+        "widget_id": 1970824592,
+        "text_widget_class": "CodeViewText",
+        "widget_class": "CodeViewText",
+        "sequence": "<Button-1>",
+        "time": "2018-04-23T13:39:26.582277"
+    }
+]

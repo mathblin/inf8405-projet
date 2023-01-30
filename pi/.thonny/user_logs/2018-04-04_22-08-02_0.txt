@@ -1,0 +1,78 @@
+[
+    {
+        "editor_class": "Editor",
+        "time": "2018-04-04T22:08:02.246361",
+        "editor_id": 1970564496,
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970637392,
+        "sequence": "EditorTextCreated"
+    },
+    {
+        "editor_class": "Editor",
+        "time": "2018-04-04T22:08:02.253756",
+        "editor_id": 1970564496,
+        "text_widget_class": "CodeViewText",
+        "filename": "/home/pi/Desktop/Bilal_Test_2/test2.py",
+        "text_widget_id": 1970637392,
+        "sequence": "Open"
+    },
+    {
+        "time": "2018-04-04T22:08:02.255121",
+        "index1": "1.0",
+        "text_widget_class": "CodeViewText",
+        "index2": "2.0",
+        "text_widget_id": 1970637392,
+        "sequence": "TextDelete"
+    },
+    {
+        "index": "1.0",
+        "time": "2018-04-04T22:08:02.436028",
+        "text": "import cv2\nimport time\nimport socket\nimport base64\nimport numpy as np\nfrom threading import Thread\nfrom picamera.array import PiRGBArray\nfrom picamera import PiCamera\n\nSERVER_IP = \"0.0.0.0\"\nSERVER_PORT = 5000\nMAX_NUM_CONNECTIONS = 20\nDEVICE_NUMBER = 0\n\nclass ConnectionPool(Thread):\n\n    def __init__(self, ip_, port_, conn_, device_):\n        Thread.__init__(self)\n        self.ip = ip_\n        self.port = port_\n        self.conn = conn_\n        self.device = device_\n        print(\"[+] New server socket thread started for \" + self.ip + \":\" +str(self.port))\n\n    def run(self):\n        try:\n            while True:\n                ret, frame = self.device.read()\n                a = b'\\r\\n'\n                data = frame.tostring()\n                da = base64.b64encode(data)\n                self.conn.sendall(da + a)\n\n        except Exception as e:\n            print(\"Connection lost with \" + self.ip + \":\" + str(self.port) +\"\\r\\n[Error] \" + str(e.message))\n        self.conn.close()\n\nif __name__ == '__main__':\n    #cap = cv2.VideoCapture(DEVICE_NUMBER)\n    camera = PiCamera()\n    camera.resolution = (320, 288)\n    camera.framerate = 25\n    rawCapture = PiRGBArray(camera, size=(320, 288))\n    for frame in camera.capture_continuous(rawCapture, format=\"bgr\", use_video_port=True):\n        # grab the raw NumPy array representing the image, then initialize the timestamp\n        # and occupied/unoccupied text\n        image = frame.array\n        camera.rotation = 180\n        # show the frame\n        cv2.imshow(\"Frame\", image)\n        key = cv2.waitKey(1) & 0xFF\n        \n        # clear the stream in preparation for the next frame\n        rawCapture.truncate(0)\n        \n        # if the `q` key was pressed, break from the loop\n        if key == ord(\"q\"):\n            break\n        print(\"Waiting connections...\")\n        connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)\n        connection.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)\n        connection.bind((SERVER_IP, SERVER_PORT))\n        connection.listen(MAX_NUM_CONNECTIONS)\n        while True:\n            (conn, (ip, port)) = connection.accept()\n            thread = ConnectionPool(ip, port, conn, frame)\n            thread.start()\n        connection.close()\n",
+        "text_widget_class": "CodeViewText",
+        "tags": "()",
+        "text_widget_id": 1970637392,
+        "sequence": "TextInsert"
+    },
+    {
+        "time": "2018-04-04T22:08:02.471716",
+        "view_class": "ShellView",
+        "view_id": "ShellView",
+        "sequence": "ShowView"
+    },
+    {
+        "widget_class": "Workbench",
+        "widget_id": 1989592336,
+        "time": "2018-04-04T22:08:04.536407",
+        "sequence": "<FocusIn>"
+    },
+    {
+        "index": "1.0",
+        "time": "2018-04-04T22:08:04.565268",
+        "text_widget_context": "shell",
+        "text": "Python 3.5.3 (/usr/bin/python3)",
+        "text_widget_class": "ShellText",
+        "tags": "('welcome',)",
+        "text_widget_id": 1970504336,
+        "sequence": "TextInsert"
+    },
+    {
+        "index": "1.31",
+        "time": "2018-04-04T22:08:04.571134",
+        "text_widget_context": "shell",
+        "text": "\n",
+        "text_widget_class": "ShellText",
+        "tags": "('io',)",
+        "text_widget_id": 1970504336,
+        "sequence": "TextInsert"
+    },
+    {
+        "index": "2.0",
+        "time": "2018-04-04T22:08:04.573712",
+        "text_widget_context": "shell",
+        "text": ">>> ",
+        "text_widget_class": "ShellText",
+        "tags": "('toplevel', 'prompt')",
+        "text_widget_id": 1970504336,
+        "sequence": "TextInsert"
+    }
+]

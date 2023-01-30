@@ -1,0 +1,78 @@
+[
+    {
+        "sequence": "EditorTextCreated",
+        "text_widget_id": 1970854512,
+        "editor_class": "Editor",
+        "time": "2018-04-17T00:26:27.973834",
+        "text_widget_class": "CodeViewText",
+        "editor_id": 1970781520
+    },
+    {
+        "sequence": "Open",
+        "text_widget_id": 1970854512,
+        "filename": "/home/pi/Desktop/platoon/INF8405/RaspberryPi/camshift-example/track_2.py",
+        "text_widget_class": "CodeViewText",
+        "time": "2018-04-17T00:26:27.976034",
+        "editor_class": "Editor",
+        "editor_id": 1970781520
+    },
+    {
+        "sequence": "TextDelete",
+        "text_widget_id": 1970854512,
+        "time": "2018-04-17T00:26:27.976933",
+        "text_widget_class": "CodeViewText",
+        "index1": "1.0",
+        "index2": "2.0"
+    },
+    {
+        "sequence": "TextInsert",
+        "tags": "()",
+        "time": "2018-04-17T00:26:28.177938",
+        "index": "1.0",
+        "text": "import numpy as np\nimport argparse\nimport cv2\nimport time\nimport serial\nimport math\nfrom enum import Enum\n# initialize the current frame of the video, along with the list of\n# ROI points along with whether or not this is input mode\nframe = None\nroiPts = [(189,101), (192, 298), (411, 302), (408, 105)]\ninputMode = False\nisInit = False\nwidth = 640\nheight = 480\ncurrentState = 2\nserial = serial.Serial('/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_A100Q21Z-if00-port0')\ncounterW = 5\n\n\nclass turningState():\n\tTS0 = 0\n\tTS1 = 1\n\tTS2 = 2\n\tTS3 = 3\n\tTS4 = 4\n\nturningState = turningState()\n\ndef init(frame):\n\tglobal roiHist, roiBox, roiPts, isInit\n\torig = frame.copy()\n\n\t# determine the top-left and bottom-right points\n\troiPts = np.array(roiPts)\n\ts = roiPts.sum(axis = 1)\n\ttl = roiPts[np.argmin(s)]\n\tbr = roiPts[np.argmax(s)]\n\n\t# grab the ROI for the bounding box and convert it\n\t# to the HSV color space\n\troi = orig[tl[1]:br[1], tl[0]:br[0]]\n\troi = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)\n\t#roi = cv2.cvtColor(roi, cv2.COLOR_BGR2LAB)\n\n\t# compute a HSV histogram for the ROI and store the\n\t# bounding box\n\troiHist = cv2.calcHist([roi], [0], None, [16], [0, 180])\n\troiHist = cv2.normalize(roiHist, roiHist, 0, 255, cv2.NORM_MINMAX)\n\troiBox = (tl[0], tl[1], br[0], br[1])\n\tisInit = True\n\n\ndef main():\n\t# construct the argument parse and parse the arguments\n\tap = argparse.ArgumentParser()\n\tap.add_argument(\"-v\", \"--video\",\n\t\thelp = \"path to the (optional) video file\")\n\targs = vars(ap.parse_args())\n\n\t# grab the reference to the current frame, list of ROI\n\t# points and whether or not it is ROI selection mode\n\tglobal frame, roiPts, inputMode, roiBox, isInit\n\t\n\tcamera = cv2.VideoCapture(0)\n\n\t# setup the mouse callback\n\tcv2.namedWindow(\"frame\")\n\t\n\t# initialize the termination criteria for cam shift, indicating\n\t# a maximum of ten iterations or movement by a least one pixel\n\t# along with the bounding box of the ROI\n\ttermination = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 1)\n\t#counter = 0\n\n\twhile True:\n\t\tif isInit:\n\t\t\t# grab the current frame\n\t\t\t(grabbed, readFrame) = camera.read()\n\t\t\tframe = cv2.flip(readFrame, -1)\n\t\t\t# check to see if we have reached the end of the\n\t\t\t# video\n\t\t\tif not grabbed:\n\t\t\t\tbreak\n\n\t\t\t# if the see if the ROI has been computed\n\t\t\tif roiBox is not None:\n\t\t\t\t# convert the current frame to the HSV color space\n\t\t\t\t# and perform mean shift\n\t\t\t\thsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)\n\t\t\t\tbackProj = cv2.calcBackProject([hsv], [0], roiHist, [0, 180], 1)\n\n\t\t\t\t# apply cam shift to the back projection, convert the\n\t\t\t\t# points to a bounding box, and then draw them\n\t\t\t\t(r, roiBox) = cv2.CamShift(backProj, roiBox, termination)\n\t\t\t\tpts = np.int0(cv2.boxPoints(r))\n\t\t\t\tmoveRobot(pts)\n\t\t\t\t\n\t\t\t\tcv2.polylines(frame, [pts], True, (0, 255, 0), 2)\n\n\t\t\t# show the frame and record if the user presses a key\n\t\t\t#cv2.imshow(\"frame\",frame)\n\t\t\tkey = cv2.waitKey(1) & 0xFF\n\n\t\t\tif key == ord(\"q\"):\n\t\t\t\tserial.write('x'.encode())\n\t\t\t\tbreak\n\t\telse:\n\t\t\t(grabbed, readFrame) = camera.read()\n\t\t\tframeInit = cv2.flip(readFrame, -1)\n\t\t\tinit(frameInit)\n\n\tcamera.release()\n\tcv2.destroyAllWindows()\n\ndef getMinMax(pts):\n\tptMax = pts[0]\n\tptMin = pts[0]\n\tfor pt in pts:\n\t\tif pt[0] < ptMin[0] and pt[1] < ptMin[0] :\n\t\t\tptMin = pt\n\t\tif pt[0] > ptMax[0] and pt[1] > ptMax[1]:\n\t\t\tptMax = pt\n\treturn ptMin, ptMax\n\ndef moveRobot(pts):\n\tglobal width, height, turningState, currentState, counterW\n\tptMin, ptMax = getMinMax(pts)\n\t#print(\"ptMin\")\n\t#print(ptMin)\n\t#print(\"ptMax\")\n\t#print(ptMax)\n\tincX = int((ptMax[0] - ptMin[0])/2)\n\tincY = int((ptMax[1] - ptMin[1])/2)\n\tptMilieu = [ptMin[0] + incX, ptMin[1] + incY]\n\n\tif currentState == turningState.TS0:\n\t\tif ptMilieu[0] > 128:\n\t\t\tcurrentState = turningState.TS1\n\t\tserial.write(\"Q\".encode())\n\telif currentState == turningState.TS1:\n\t\tif ptMilieu[0] < 128:\n\t\t\tcurrentState = turningState.TS0\n\t\telif ptMilieu[0] > 256:\n\t\t\tcurrentState = turningState.TS2\n\t\tserial.write(\"Q\".encode())\n\telif currentState == turningState.TS2:\n\t\tif ptMilieu[0] < 256:\n\t\t\tcurrentState = turningState.TS1\n\t\telif ptMilieu[0] > 384:\n\t\t\tcurrentState = turningState.TS3\n\t\tif (int(math.sqrt(((ptMax[0] - ptMin[0]) ** 2) + ((ptMax[1] - ptMin[1]) ** 2))) < 250 and int(math.sqrt(((ptMax[0] - ptMin[0]) ** 2) + ((ptMax[1] - ptMin[1]) ** 2))) > 50):\n\t\t\tif counterW >= 5:\n\t\t\t\tserial.write(\"W\".encode())\n\t\t\t\tcounterW = 0\n\t\t\telse:\n\t\t\t\t counterW = counterW + 1\n\t\telse:\n\t\t\tserial.write(\"x\".encode())\n\telif currentState == turningState.TS3:\n\t\tif ptMilieu[0] < 384:\n\t\t\tcurrentState = turningState.TS2\n\t\telif ptMilieu[0] > 512:\n\t\t\tcurrentState = turningState.TS4\n\t\tserial.write(\"E\".encode())\n\telif currentState == turningState.TS4:\n\t\tif ptMilieu[0] < 512:\n\t\t\tcurrentState = turningState.TS3\n\t\tserial.write(\"E\".encode())\n\t#if(ptMilieu[0] < int(width/2) - 20):\n\t#\tprint(\"q\")\n\t#\tserial.write(\"Q\".encode())\n\t#elif(ptMilieu[0] > int(width/2) + 20):\n\t#\tprint(\"e\")\n\t#\tserial.write(\"E\".encode())\n\t\n\t\n\t#string = 'w'\n\t#serial.write(string.encode())\n\nif __name__ == \"__main__\":\n\tmain()\n",
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970854512
+    },
+    {
+        "view_id": 1970725808,
+        "sequence": "ShowView",
+        "time": "2018-04-17T00:26:28.220199",
+        "view_class": "ShellView"
+    },
+    {
+        "widget_class": "Workbench",
+        "sequence": "<FocusIn>",
+        "time": "2018-04-17T00:26:29.956160",
+        "widget_id": 1983172880
+    },
+    {
+        "sequence": "TextInsert",
+        "tags": "('welcome',)",
+        "time": "2018-04-17T00:26:29.990890",
+        "index": "1.0",
+        "text": "Python 3.5.3 (/usr/bin/python3)",
+        "text_widget_class": "ShellText",
+        "text_widget_id": 1970725456,
+        "text_widget_context": "shell"
+    },
+    {
+        "sequence": "TextInsert",
+        "tags": "('io',)",
+        "time": "2018-04-17T00:26:29.996702",
+        "index": "1.31",
+        "text": "\n",
+        "text_widget_class": "ShellText",
+        "text_widget_id": 1970725456,
+        "text_widget_context": "shell"
+    },
+    {
+        "sequence": "TextInsert",
+        "tags": "('toplevel', 'prompt')",
+        "time": "2018-04-17T00:26:29.999179",
+        "index": "2.0",
+        "text": ">>> ",
+        "text_widget_class": "ShellText",
+        "text_widget_id": 1970725456,
+        "text_widget_context": "shell"
+    }
+]

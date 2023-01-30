@@ -1,0 +1,458 @@
+[
+    {
+        "sequence": "EditorTextCreated",
+        "text_widget_id": 1970319312,
+        "editor_class": "Editor",
+        "text_widget_class": "CodeViewText",
+        "editor_id": 1970318992,
+        "time": "2023-01-19T19:53:58.537609"
+    },
+    {
+        "sequence": "Open",
+        "text_widget_id": 1970319312,
+        "editor_class": "Editor",
+        "editor_id": 1970318992,
+        "text_widget_class": "CodeViewText",
+        "filename": "/home/pi/Desktop/Bilal_Test_2/Camera.py",
+        "time": "2023-01-19T19:53:58.539838"
+    },
+    {
+        "index2": "2.0",
+        "sequence": "TextDelete",
+        "text_widget_id": 1970319312,
+        "index1": "1.0",
+        "text_widget_class": "CodeViewText",
+        "time": "2023-01-19T19:53:58.540869"
+    },
+    {
+        "sequence": "TextInsert",
+        "text_widget_id": 1970319312,
+        "index": "1.0",
+        "tags": "()",
+        "text_widget_class": "CodeViewText",
+        "time": "2023-01-19T19:53:58.747622",
+        "text": "import cv2\n\ndef show_webcam(mirror=False):\n    cam = cv2.VideoCapture(0)\n\n    while True:\n        ret_val, img = cam.read()\n        if mirror: \n            img = cv2.flip(img, 1)\n        cv2.imshow('webcam', img)\n        if cv2.waitKey(1) == 27: \n            break  # esc to quit\n    cv2.destroyAllWindows()\n\ndef main():\n    show_webcam(mirror=True)\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+        "view_id": 1970263952,
+        "time": "2023-01-19T19:53:58.805488",
+        "sequence": "ShowView",
+        "view_class": "ShellView"
+    },
+    {
+        "time": "2023-01-19T19:53:59.821084",
+        "sequence": "<FocusIn>",
+        "widget_class": "Workbench",
+        "widget_id": 1982713008
+    },
+    {
+        "sequence": "TextInsert",
+        "text_widget_id": 1970263792,
+        "index": "1.0",
+        "tags": "('welcome',)",
+        "text_widget_class": "ShellText",
+        "time": "2023-01-19T19:53:59.865669",
+        "text_widget_context": "shell",
+        "text": "Python 3.5.3 (/usr/bin/python3)"
+    },
+    {
+        "sequence": "TextInsert",
+        "text_widget_id": 1970263792,
+        "index": "1.31",
+        "tags": "('io',)",
+        "text_widget_class": "ShellText",
+        "time": "2023-01-19T19:53:59.870266",
+        "text_widget_context": "shell",
+        "text": "\n"
+    },
+    {
+        "sequence": "TextInsert",
+        "text_widget_id": 1970263792,
+        "index": "2.0",
+        "tags": "('toplevel', 'prompt')",
+        "text_widget_class": "ShellText",
+        "time": "2023-01-19T19:53:59.873868",
+        "text_widget_context": "shell",
+        "text": ">>> "
+    },
+    {
+        "time": "2023-01-19T19:54:04.006114",
+        "sequence": "<FocusOut>",
+        "widget_class": "Workbench",
+        "widget_id": 1982713008
+    },
+    {
+        "time": "2023-01-19T19:54:04.284915",
+        "sequence": "<FocusIn>",
+        "widget_class": "Workbench",
+        "widget_id": 1982713008
+    },
+    {
+        "time": "2023-01-19T19:54:06.110317",
+        "sequence": "<Button-1>",
+        "widget_class": "Button",
+        "widget_id": 1970352848
+    },
+    {
+        "index2": "3.0",
+        "sequence": "TextDelete",
+        "text_widget_id": 1970263792,
+        "index1": "2.4",
+        "text_widget_class": "ShellText",
+        "time": "2023-01-19T19:54:06.235654",
+        "text_widget_context": "shell"
+    },
+    {
+        "sequence": "TextInsert",
+        "text_widget_id": 1970263792,
+        "index": "2.4",
+        "tags": "('automagic', 'toplevel', 'command')",
+        "text_widget_class": "ShellText",
+        "time": "2023-01-19T19:54:06.239598",
+        "text_widget_context": "shell",
+        "text": "%Debug Camera.py\n"
+    },
+    {
+        "index2": "3.0",
+        "sequence": "TextDelete",
+        "text_widget_id": 1970263792,
+        "index1": "3.0",
+        "text_widget_class": "ShellText",
+        "time": "2023-01-19T19:54:06.243966",
+        "text_widget_context": "shell"
+    },
+    {
+        "sequence": "MagicCommand",
+        "time": "2023-01-19T19:54:06.246436",
+        "cmd_line": "%Debug Camera.py\n"
+    },
+    {
+        "sequence": "ShellCommand",
+        "command_text": "%Debug Camera.py\n",
+        "time": "2023-01-19T19:54:06.887533"
+    },
+    {
+        "time": "2023-01-19T19:54:52.606155",
+        "sequence": "<Button-1>",
+        "widget_class": "Button",
+        "widget_id": 1970316208
+    },
+    {
+        "sequence": "TextInsert",
+        "text_widget_id": 1970263792,
+        "index": "3.0",
+        "tags": "('io', 'stderr', 'vertically_spaced')",
+        "text_widget_class": "ShellText",
+        "time": "2023-01-19T19:54:52.793814",
+        "text_widget_context": "shell",
+        "text": "T"
+    },
+    {
+        "sequence": "TextInsert",
+        "text_widget_id": 1970263792,
+        "index": "3.1",
+        "tags": "('io', 'stderr')",
+        "text_widget_class": "ShellText",
+        "time": "2023-01-19T19:54:52.799588",
+        "text_widget_context": "shell",
+        "text": "raceback (most recent call last):\n"
+    },
+    {
+        "sequence": "TextInsert",
+        "text_widget_id": 1970263792,
+        "index": "4.0",
+        "tags": "('io', 'stderr')",
+        "text_widget_class": "ShellText",
+        "time": "2023-01-19T19:54:52.804096",
+        "text_widget_context": "shell",
+        "text": "  "
+    },
+    {
+        "sequence": "TextInsert",
+        "text_widget_id": 1970263792,
+        "index": "4.2",
+        "tags": "('io', 'stderr', 'hyperlink')",
+        "text_widget_class": "ShellText",
+        "time": "2023-01-19T19:54:52.811578",
+        "text_widget_context": "shell",
+        "text": "File \"/home/pi/Desktop/Bilal_Test_2/Camera.py\", line 1, in <module>"
+    },
+    {
+        "sequence": "TextInsert",
+        "text_widget_id": 1970263792,
+        "index": "4.69",
+        "tags": "('io', 'stderr')",
+        "text_widget_class": "ShellText",
+        "time": "2023-01-19T19:54:52.819649",
+        "text_widget_context": "shell",
+        "text": "\n"
+    },
+    {
+        "sequence": "TextInsert",
+        "text_widget_id": 1970263792,
+        "index": "5.0",
+        "tags": "('io', 'stderr')",
+        "text_widget_class": "ShellText",
+        "time": "2023-01-19T19:54:52.825190",
+        "text_widget_context": "shell",
+        "text": "    import cv2\n"
+    },
+    {
+        "sequence": "TextInsert",
+        "text_widget_id": 1970263792,
+        "index": "6.0",
+        "tags": "('io', 'stderr')",
+        "text_widget_class": "ShellText",
+        "time": "2023-01-19T19:54:52.829473",
+        "text_widget_context": "shell",
+        "text": "KeyboardInterrupt: Execution interrupted\n"
+    },
+    {
+        "sequence": "TextInsert",
+        "text_widget_id": 1970263792,
+        "index": "7.0",
+        "tags": "('toplevel', 'prompt', 'vertically_spaced')",
+        "text_widget_class": "ShellText",
+        "time": "2023-01-19T19:54:52.845682",
+        "text_widget_context": "shell",
+        "text": ">>> "
+    },
+    {
+        "time": "2023-01-19T19:54:54.881630",
+        "sequence": "<Button-1>",
+        "widget_class": "Button",
+        "widget_id": 1970266000
+    },
+    {
+        "index2": "8.0",
+        "sequence": "TextDelete",
+        "text_widget_id": 1970263792,
+        "index1": "7.4",
+        "text_widget_class": "ShellText",
+        "time": "2023-01-19T19:54:55.053124",
+        "text_widget_context": "shell"
+    },
+    {
+        "sequence": "TextInsert",
+        "text_widget_id": 1970263792,
+        "index": "7.4",
+        "tags": "('automagic', 'toplevel', 'command')",
+        "text_widget_class": "ShellText",
+        "time": "2023-01-19T19:54:55.059069",
+        "text_widget_context": "shell",
+        "text": "%Run Camera.py\n"
+    },
+    {
+        "index2": "8.0",
+        "sequence": "TextDelete",
+        "text_widget_id": 1970263792,
+        "index1": "8.0",
+        "text_widget_class": "ShellText",
+        "time": "2023-01-19T19:54:55.066037",
+        "text_widget_context": "shell"
+    },
+    {
+        "sequence": "MagicCommand",
+        "time": "2023-01-19T19:54:55.071285",
+        "cmd_line": "%Run Camera.py\n"
+    },
+    {
+        "sequence": "ShellCommand",
+        "command_text": "%Run Camera.py\n",
+        "time": "2023-01-19T19:54:56.244722"
+    },
+    {
+        "sequence": "TextInsert",
+        "text_widget_id": 1970263792,
+        "index": "8.0",
+        "tags": "('io', 'stderr', 'vertically_spaced')",
+        "text_widget_class": "ShellText",
+        "time": "2023-01-19T19:54:59.837645",
+        "text_widget_context": "shell",
+        "text": "T"
+    },
+    {
+        "sequence": "TextInsert",
+        "text_widget_id": 1970263792,
+        "index": "8.1",
+        "tags": "('io', 'stderr')",
+        "text_widget_class": "ShellText",
+        "time": "2023-01-19T19:54:59.848812",
+        "text_widget_context": "shell",
+        "text": "raceback (most recent call last):\n"
+    },
+    {
+        "sequence": "TextInsert",
+        "text_widget_id": 1970263792,
+        "index": "9.0",
+        "tags": "('io', 'stderr')",
+        "text_widget_class": "ShellText",
+        "time": "2023-01-19T19:54:59.852671",
+        "text_widget_context": "shell",
+        "text": "  "
+    },
+    {
+        "sequence": "TextInsert",
+        "text_widget_id": 1970263792,
+        "index": "9.2",
+        "tags": "('io', 'stderr', 'hyperlink')",
+        "text_widget_class": "ShellText",
+        "time": "2023-01-19T19:54:59.856356",
+        "text_widget_context": "shell",
+        "text": "File \"/home/pi/Desktop/Bilal_Test_2/Camera.py\", line 19, in <module>"
+    },
+    {
+        "sequence": "TextInsert",
+        "text_widget_id": 1970263792,
+        "index": "9.70",
+        "tags": "('io', 'stderr')",
+        "text_widget_class": "ShellText",
+        "time": "2023-01-19T19:54:59.860147",
+        "text_widget_context": "shell",
+        "text": "\n"
+    },
+    {
+        "sequence": "TextInsert",
+        "text_widget_id": 1970263792,
+        "index": "10.0",
+        "tags": "('io', 'stderr')",
+        "text_widget_class": "ShellText",
+        "time": "2023-01-19T19:54:59.864235",
+        "text_widget_context": "shell",
+        "text": "    main()\n"
+    },
+    {
+        "sequence": "TextInsert",
+        "text_widget_id": 1970263792,
+        "index": "11.0",
+        "tags": "('io', 'stderr')",
+        "text_widget_class": "ShellText",
+        "time": "2023-01-19T19:54:59.868581",
+        "text_widget_context": "shell",
+        "text": "  "
+    },
+    {
+        "sequence": "TextInsert",
+        "text_widget_id": 1970263792,
+        "index": "11.2",
+        "tags": "('io', 'stderr', 'hyperlink')",
+        "text_widget_class": "ShellText",
+        "time": "2023-01-19T19:54:59.873383",
+        "text_widget_context": "shell",
+        "text": "File \"/home/pi/Desktop/Bilal_Test_2/Camera.py\", line 16, in main"
+    },
+    {
+        "sequence": "TextInsert",
+        "text_widget_id": 1970263792,
+        "index": "11.66",
+        "tags": "('io', 'stderr')",
+        "text_widget_class": "ShellText",
+        "time": "2023-01-19T19:54:59.879856",
+        "text_widget_context": "shell",
+        "text": "\n"
+    },
+    {
+        "sequence": "TextInsert",
+        "text_widget_id": 1970263792,
+        "index": "12.0",
+        "tags": "('io', 'stderr')",
+        "text_widget_class": "ShellText",
+        "time": "2023-01-19T19:54:59.884569",
+        "text_widget_context": "shell",
+        "text": "    show_webcam(mirror=True)\n"
+    },
+    {
+        "sequence": "TextInsert",
+        "text_widget_id": 1970263792,
+        "index": "13.0",
+        "tags": "('io', 'stderr')",
+        "text_widget_class": "ShellText",
+        "time": "2023-01-19T19:54:59.889687",
+        "text_widget_context": "shell",
+        "text": "  "
+    },
+    {
+        "sequence": "TextInsert",
+        "text_widget_id": 1970263792,
+        "index": "13.2",
+        "tags": "('io', 'stderr', 'hyperlink')",
+        "text_widget_class": "ShellText",
+        "time": "2023-01-19T19:54:59.893626",
+        "text_widget_context": "shell",
+        "text": "File \"/home/pi/Desktop/Bilal_Test_2/Camera.py\", line 10, in show_webcam"
+    },
+    {
+        "sequence": "TextInsert",
+        "text_widget_id": 1970263792,
+        "index": "13.73",
+        "tags": "('io', 'stderr')",
+        "text_widget_class": "ShellText",
+        "time": "2023-01-19T19:54:59.897266",
+        "text_widget_context": "shell",
+        "text": "\n"
+    },
+    {
+        "sequence": "TextInsert",
+        "text_widget_id": 1970263792,
+        "index": "14.0",
+        "tags": "('io', 'stderr')",
+        "text_widget_class": "ShellText",
+        "time": "2023-01-19T19:54:59.901339",
+        "text_widget_context": "shell",
+        "text": "    cv2.imshow('webcam', img)\n"
+    },
+    {
+        "sequence": "TextInsert",
+        "text_widget_id": 1970263792,
+        "index": "15.0",
+        "tags": "('io', 'stderr')",
+        "text_widget_class": "ShellText",
+        "time": "2023-01-19T19:54:59.905367",
+        "text_widget_context": "shell",
+        "text": "cv2.error: /home/pi/opencv/modules/highgui/src/window.cpp:304: error: (-215) size.width>0 && size.height>0 in function imshow\n"
+    },
+    {
+        "sequence": "TextInsert",
+        "text_widget_id": 1970263792,
+        "index": "16.0",
+        "tags": "('io', 'stderr')",
+        "text_widget_class": "ShellText",
+        "time": "2023-01-19T19:54:59.909865",
+        "text_widget_context": "shell",
+        "text": "\n"
+    },
+    {
+        "sequence": "TextInsert",
+        "text_widget_id": 1970263792,
+        "index": "17.0",
+        "tags": "('toplevel', 'prompt', 'vertically_spaced')",
+        "text_widget_class": "ShellText",
+        "time": "2023-01-19T19:54:59.923985",
+        "text_widget_context": "shell",
+        "text": ">>> "
+    },
+    {
+        "time": "2023-01-19T19:55:11.338228",
+        "sequence": "<FocusOut>",
+        "widget_class": "Workbench",
+        "widget_id": 1982713008
+    },
+    {
+        "time": "2023-01-19T19:55:13.421433",
+        "sequence": "<FocusIn>",
+        "widget_class": "Workbench",
+        "widget_id": 1982713008
+    },
+    {
+        "time": "2023-01-19T19:55:15.234035",
+        "sequence": "<FocusOut>",
+        "widget_class": "Workbench",
+        "widget_id": 1982713008
+    },
+    {
+        "time": "2023-01-19T19:55:15.705674",
+        "sequence": "<FocusIn>",
+        "widget_class": "Workbench",
+        "widget_id": 1982713008
+    }
+]

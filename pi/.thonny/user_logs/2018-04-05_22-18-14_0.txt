@@ -1,0 +1,378 @@
+[
+    {
+        "time": "2018-04-05T22:18:14.917892",
+        "text_widget_class": "CodeViewText",
+        "editor_class": "Editor",
+        "editor_id": 1970556720,
+        "text_widget_id": 1970629040,
+        "sequence": "EditorTextCreated"
+    },
+    {
+        "time": "2018-04-05T22:18:14.920107",
+        "text_widget_class": "CodeViewText",
+        "editor_class": "Editor",
+        "editor_id": 1970556720,
+        "filename": "/home/pi/Desktop/platoon/platoon3.py",
+        "text_widget_id": 1970629040,
+        "sequence": "Open"
+    },
+    {
+        "time": "2018-04-05T22:18:14.921205",
+        "sequence": "TextDelete",
+        "index1": "1.0",
+        "index2": "2.0",
+        "text_widget_id": 1970629040,
+        "text_widget_class": "CodeViewText"
+    },
+    {
+        "index": "1.0",
+        "time": "2018-04-05T22:18:15.091439",
+        "sequence": "TextInsert",
+        "tags": "()",
+        "text_widget_id": 1970629040,
+        "text_widget_class": "CodeViewText",
+        "text": "# import the necessary packages\nfrom picamera.array import PiRGBArray\nfrom picamera import PiCamera\nimport time\nimport cv2 \nimport numpy as np\n\n\n# initialize the camera and grab a reference to the raw camera capture\ncamera = PiCamera()\ncamera.resolution = (640, 480)\ncamera.framerate = 32\ncamera.rotation = 180\nrawCapture = PiRGBArray(camera, size=(640, 480))\n\n\n\n\n\n\n\u00e7\n\n\n\n\n# allow the camera to warmup\ntime.sleep(0.1)\n\ncap = cv2.VideoCapture('slow.flv')\n# take first frame of the video\nret,frame = cap.read()\n# setup initial location of window\nr,h,c,w = 250,90,400,125  # simply hardcoded the values\ntrack_window = (c,r,w,h)\n# set up the ROI for tracking\nroi = frame[r:r+h, c:c+w]\nhsv_roi =  cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)\nmask = cv2.inRange(hsv_roi, np.array((0., 60.,32.)), np.array((180.,255.,255.)))\nroi_hist = cv2.calcHist([hsv_roi],[0],mask,[180],[0,180])\ncv2.normalize(roi_hist,roi_hist,0,255,cv2.NORM_MINMAX)\n# Setup the termination criteria, either 10 iteration or move by atleast 1 pt\nterm_crit = ( cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 1 )\nwhile(1):\n    ret ,frame = cap.read()\n    if ret == True:\n        hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)\n        dst = cv2.calcBackProject([hsv],[0],roi_hist,[0,180],1)\n        # apply meanshift to get the new location\n        ret, track_window = cv2.CamShift(dst, track_window, term_crit)\n        # Draw it on image\n        pts = cv2.boxPoints(ret)\n        pts = np.int0(pts)\n        img2 = cv2.polylines(frame,[pts],True, 255,2)\n        cv2.imshow('img2',img2)\n        k = cv2.waitKey(60) & 0xff\n        if k == 27:\n            break\n        else:\n            cv2.imwrite(chr(k)+\".jpg\",img2)\n    else:\n        break\ncv2.destroyAllWindows()\ncap.release()\n"
+    },
+    {
+        "view_class": "ShellView",
+        "view_id": "ShellView",
+        "sequence": "ShowView",
+        "time": "2018-04-05T22:18:15.122153"
+    },
+    {
+        "widget_class": "Workbench",
+        "time": "2018-04-05T22:18:16.359312",
+        "widget_id": 1989584112,
+        "sequence": "<FocusIn>"
+    },
+    {
+        "index": "1.0",
+        "time": "2018-04-05T22:18:16.393543",
+        "sequence": "TextInsert",
+        "text_widget_context": "shell",
+        "tags": "('welcome',)",
+        "text_widget_id": 1970501360,
+        "text_widget_class": "ShellText",
+        "text": "Python 3.5.3 (/usr/bin/python3)"
+    },
+    {
+        "index": "1.31",
+        "time": "2018-04-05T22:18:16.396583",
+        "sequence": "TextInsert",
+        "text_widget_context": "shell",
+        "tags": "('io',)",
+        "text_widget_id": 1970501360,
+        "text_widget_class": "ShellText",
+        "text": "\n"
+    },
+    {
+        "index": "2.0",
+        "time": "2018-04-05T22:18:16.398903",
+        "sequence": "TextInsert",
+        "text_widget_context": "shell",
+        "tags": "('toplevel', 'prompt')",
+        "text_widget_id": 1970501360,
+        "text_widget_class": "ShellText",
+        "text": ">>> "
+    },
+    {
+        "widget_class": "Workbench",
+        "time": "2018-04-05T22:21:44.254963",
+        "widget_id": 1989584112,
+        "sequence": "<FocusOut>"
+    },
+    {
+        "widget_class": "Workbench",
+        "time": "2018-04-05T22:21:54.684452",
+        "widget_id": 1989584112,
+        "sequence": "<FocusIn>"
+    },
+    {
+        "widget_class": "Workbench",
+        "time": "2018-04-05T22:21:54.844753",
+        "widget_id": 1989584112,
+        "sequence": "<FocusOut>"
+    },
+    {
+        "time": "2018-04-05T22:24:44.354645",
+        "text_widget_class": "CodeViewText",
+        "editor_class": "Editor",
+        "editor_id": 1952000144,
+        "text_widget_id": 1952000912,
+        "sequence": "EditorTextCreated"
+    },
+    {
+        "time": "2018-04-05T22:24:44.356817",
+        "text_widget_class": "CodeViewText",
+        "editor_class": "Editor",
+        "editor_id": 1952000144,
+        "filename": "/home/pi/Desktop/platoon/INF8405/RaspberryPi/platoon3.py",
+        "text_widget_id": 1952000912,
+        "sequence": "Open"
+    },
+    {
+        "time": "2018-04-05T22:24:44.357942",
+        "sequence": "TextDelete",
+        "index1": "1.0",
+        "index2": "2.0",
+        "text_widget_id": 1952000912,
+        "text_widget_class": "CodeViewText"
+    },
+    {
+        "index": "1.0",
+        "time": "2018-04-05T22:24:44.391040",
+        "sequence": "TextInsert",
+        "tags": "()",
+        "text_widget_id": 1952000912,
+        "text_widget_class": "CodeViewText",
+        "text": "import numpy as np\nimport cv2 as cv\n\n\ncamera = PiCamera()\ncamera.resolution = (640, 480)\ncamera.framerate = 32\ncamera.rotation = 180\nrawCapture = PiRGBArray(camera, size=(640, 480))\n\n\n# allow the camera to warmup\ntime.sleep(0.1)\n\nframeInit = camera.capture(rawCapture, format=\"bgr\")\nframeImg = frameInit.array\nr,h,c,w = 250,90,400,125  # simply hardcoded the values\ntrack_window = (c,r,w,h)\n# set up the ROI for tracking\nroi = frameImg[r:r+h, c:c+w]\nhsv_roi =  cv.cvtColor(roi, cv.COLOR_BGR2HSV)\nmask = cv.inRange(hsv_roi, np.array((0., 60.,32.)), np.array((180.,255.,255.)))\nroi_hist = cv.calcHist([hsv_roi],[0],mask,[180],[0,180])\ncv.normalize(roi_hist,roi_hist,0,255,cv.NORM_MINMAX)\n\n# capture frames from the camera\nfor frame in camera.capture_continuous(rawCapture, format=\"bgr\", use_video_port=True):\n    img = frame.array\n    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)\n    dst = cv2.calcBackProject([hsv],[0],roi_hist,[0,180],1)\n    # apply meanshift to get the new location\n    ret, track_window = cv2.CamShift(dst, track_window, term_crit)\n    # Draw it on image\n    pts = cv2.boxPoints(ret)\n    pts = np.int0(pts)\n    img2 = cv2.polylines(img,[pts],True, 255,2)\n    cv2.imshow('img2',img2)\n    key = cv.waitKey(1) & 0xFF\n    if key == ord(\"q\"):\n        break\n"
+    },
+    {
+        "widget_class": "Workbench",
+        "time": "2018-04-05T22:24:44.477409",
+        "widget_id": 1989584112,
+        "sequence": "<FocusIn>"
+    },
+    {
+        "widget_class": "Workbench",
+        "time": "2018-04-05T22:24:50.494618",
+        "widget_id": 1989584112,
+        "sequence": "<FocusOut>"
+    },
+    {
+        "widget_class": "Workbench",
+        "time": "2018-04-05T22:24:50.902480",
+        "widget_id": 1989584112,
+        "sequence": "<FocusIn>"
+    },
+    {
+        "widget_class": "Workbench",
+        "time": "2018-04-05T22:24:53.337696",
+        "widget_id": 1989584112,
+        "sequence": "<FocusOut>"
+    },
+    {
+        "widget_class": "Workbench",
+        "time": "2018-04-05T22:24:58.324734",
+        "widget_id": 1989584112,
+        "sequence": "<FocusIn>"
+    },
+    {
+        "widget_class": "EditorNotebook",
+        "time": "2018-04-05T22:24:59.855326",
+        "widget_id": 1970455760,
+        "sequence": "<Button-1>"
+    },
+    {
+        "time": "2018-04-05T22:25:01.771887",
+        "text_widget_class": "CodeViewText",
+        "editor_class": "Editor",
+        "editor_id": 1952001360,
+        "text_widget_id": 1951998576,
+        "sequence": "EditorTextCreated"
+    },
+    {
+        "time": "2018-04-05T22:25:01.778671",
+        "text_widget_class": "CodeViewText",
+        "editor_class": "Editor",
+        "editor_id": 1952001360,
+        "filename": "/home/pi/Desktop/platoon/INF8405/RaspberryPi/platoon2.py",
+        "text_widget_id": 1951998576,
+        "sequence": "Open"
+    },
+    {
+        "time": "2018-04-05T22:25:01.779827",
+        "sequence": "TextDelete",
+        "index1": "1.0",
+        "index2": "2.0",
+        "text_widget_id": 1951998576,
+        "text_widget_class": "CodeViewText"
+    },
+    {
+        "index": "1.0",
+        "time": "2018-04-05T22:25:01.810813",
+        "sequence": "TextInsert",
+        "tags": "()",
+        "text_widget_id": 1951998576,
+        "text_widget_class": "CodeViewText",
+        "text": "from picamera.array import PiRGBArray\nfrom picamera import PiCamera\nimport time\nimport numpy as np\nimport cv2 as cv\n\ncamera = PiCamera()\ncamera.resolution = (640, 480)\ncamera.framerate = 32\ncamera.rotation = 180\nrawCapture = PiRGBArray(camera, size=(640, 480))\n\n# allow the camera to warmup\ntime.sleep(0.1)\n\n# capture frames from the camera\nfor frame in camera.capture_continuous(rawCapture, format=\"bgr\", use_video_port=True):\n    # grab the raw NumPy array representing the image, then initialize the timestamp\n    # and occupied/unoccupied text\n    img = frame.array\n    face_cascade = cv.CascadeClassifier('/home/pi/opencv/data/haarcascades/haarcascade_frontalface_default.xml')\n#img = cv.imread('sachin.jpg')\n    gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)\n    faces = face_cascade.detectMultiScale(gray, 1.3, 5)\n    for (x,y,w,h) in faces:\n        cv.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)\n        roi_gray = gray[y:y+h, x:x+w]\n        roi_color = img[y:y+h, x:x+w]\n        \n            \n    cv.imshow(\"Frame\", img)\n    key = cv.waitKey(1) & 0xFF\n\n    # clear the stream in preparation for the next frame\n    rawCapture.truncate(0)\n\n    # if the `q` key was pressed, break from the loop\n    if key == ord(\"q\"):\n        break\n\n"
+    },
+    {
+        "time": "2018-04-05T22:25:03.696250",
+        "widget_class": "CodeViewText",
+        "text_widget_id": 1951998576,
+        "widget_id": 1951998576,
+        "text_widget_class": "CodeViewText",
+        "sequence": "<Button-1>"
+    },
+    {
+        "time": "2018-04-05T22:25:05.517651",
+        "widget_class": "CodeViewText",
+        "text_widget_id": 1951998576,
+        "widget_id": 1951998576,
+        "text_widget_class": "CodeViewText",
+        "sequence": "<Button-1>"
+    },
+    {
+        "time": "2018-04-05T22:25:06.954860",
+        "widget_class": "CodeViewText",
+        "text_widget_id": 1951998576,
+        "widget_id": 1951998576,
+        "text_widget_class": "CodeViewText",
+        "sequence": "<Button-3>"
+    },
+    {
+        "widget_class": "Workbench",
+        "time": "2018-04-05T22:25:06.959008",
+        "widget_id": 1989584112,
+        "sequence": "<FocusOut>"
+    },
+    {
+        "widget_class": "Menu",
+        "time": "2018-04-05T22:25:07.924667",
+        "widget_id": 1971015056,
+        "sequence": "<Button-1>"
+    },
+    {
+        "time": "2018-04-05T22:25:08.014133",
+        "widget_class": "CodeViewText",
+        "text_widget_id": 1951998576,
+        "widget_id": 1951998576,
+        "text_widget_class": "CodeViewText",
+        "sequence": "<<Copy>>"
+    },
+    {
+        "command_id": "Copy",
+        "denied": "False",
+        "sequence": "Command",
+        "time": "2018-04-05T22:25:08.014788"
+    },
+    {
+        "widget_class": "Workbench",
+        "time": "2018-04-05T22:25:08.016704",
+        "widget_id": 1989584112,
+        "sequence": "<FocusIn>"
+    },
+    {
+        "widget_class": "Workbench",
+        "time": "2018-04-05T22:25:08.026607",
+        "widget_id": 1989584112,
+        "sequence": "<FocusOut>"
+    },
+    {
+        "widget_class": "Workbench",
+        "time": "2018-04-05T22:25:08.028369",
+        "widget_id": 1989584112,
+        "sequence": "<FocusIn>"
+    },
+    {
+        "widget_class": "EditorNotebook",
+        "time": "2018-04-05T22:25:09.072001",
+        "widget_id": 1970455760,
+        "sequence": "<Button-1>"
+    },
+    {
+        "widget_class": "EditorNotebook",
+        "time": "2018-04-05T22:25:09.863024",
+        "widget_id": 1970455760,
+        "sequence": "<Button-1>"
+    },
+    {
+        "widget_class": "EditorNotebook",
+        "time": "2018-04-05T22:25:10.490976",
+        "widget_id": 1970455760,
+        "sequence": "<Button-1>"
+    },
+    {
+        "time": "2018-04-05T22:25:11.944818",
+        "widget_class": "CodeViewText",
+        "text_widget_id": 1952000912,
+        "widget_id": 1952000912,
+        "text_widget_class": "CodeViewText",
+        "sequence": "<Button-1>"
+    },
+    {
+        "time": "2018-04-05T22:25:12.413433",
+        "widget_class": "CodeViewText",
+        "text_widget_id": 1952000912,
+        "widget_id": 1952000912,
+        "text_widget_class": "CodeViewText",
+        "sequence": "<Button-1>"
+    },
+    {
+        "time": "2018-04-05T22:25:12.716819",
+        "widget_class": "CodeViewText",
+        "text_widget_id": 1952000912,
+        "widget_id": 1952000912,
+        "text_widget_class": "CodeViewText",
+        "sequence": "<Button-3>"
+    },
+    {
+        "widget_class": "Workbench",
+        "time": "2018-04-05T22:25:12.721032",
+        "widget_id": 1989584112,
+        "sequence": "<FocusOut>"
+    },
+    {
+        "widget_class": "Menu",
+        "time": "2018-04-05T22:25:13.891445",
+        "widget_id": 1971015056,
+        "sequence": "<Button-1>"
+    },
+    {
+        "index": "3.0",
+        "time": "2018-04-05T22:25:13.990610",
+        "sequence": "TextInsert",
+        "tags": "None",
+        "text_widget_id": 1952000912,
+        "text_widget_class": "CodeViewText",
+        "text": "from picamera.array import PiRGBArray\nfrom picamera import PiCamera\nimport time"
+    },
+    {
+        "time": "2018-04-05T22:25:13.992515",
+        "widget_class": "CodeViewText",
+        "text_widget_id": 1952000912,
+        "widget_id": 1952000912,
+        "text_widget_class": "CodeViewText",
+        "sequence": "<<Paste>>"
+    },
+    {
+        "command_id": "Paste",
+        "denied": "False",
+        "sequence": "Command",
+        "time": "2018-04-05T22:25:13.993055"
+    },
+    {
+        "widget_class": "Workbench",
+        "time": "2018-04-05T22:25:13.994818",
+        "widget_id": 1989584112,
+        "sequence": "<FocusIn>"
+    },
+    {
+        "widget_class": "Workbench",
+        "time": "2018-04-05T22:25:14.003966",
+        "widget_id": 1989584112,
+        "sequence": "<FocusOut>"
+    },
+    {
+        "widget_class": "Workbench",
+        "time": "2018-04-05T22:25:14.005645",
+        "widget_id": 1989584112,
+        "sequence": "<FocusIn>"
+    },
+    {
+        "time": "2018-04-05T22:25:16.029133",
+        "text_widget_class": "CodeViewText",
+        "editor_class": "Editor",
+        "editor_id": 1952000144,
+        "filename": "/home/pi/Desktop/platoon/INF8405/RaspberryPi/platoon3.py",
+        "text_widget_id": 1952000912,
+        "sequence": "Save"
+    },
+    {
+        "command_id": "save_file",
+        "denied": "False",
+        "sequence": "Command",
+        "time": "2018-04-05T22:25:16.039428"
+    }
+]

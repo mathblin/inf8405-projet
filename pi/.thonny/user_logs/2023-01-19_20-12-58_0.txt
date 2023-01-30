@@ -1,0 +1,166 @@
+[
+    {
+        "time": "2023-01-19T20:12:58.987818",
+        "editor_id": 1970936880,
+        "sequence": "EditorTextCreated",
+        "text_widget_id": 1970935024,
+        "text_widget_class": "CodeViewText",
+        "editor_class": "Editor"
+    },
+    {
+        "time": "2023-01-19T20:12:58.990183",
+        "editor_id": 1970936880,
+        "sequence": "Open",
+        "text_widget_id": 1970935024,
+        "text_widget_class": "CodeViewText",
+        "editor_class": "Editor",
+        "filename": "/home/pi/Desktop/Bilal_Test_2/Camera.py"
+    },
+    {
+        "index1": "1.0",
+        "time": "2023-01-19T20:12:58.991264",
+        "sequence": "TextDelete",
+        "text_widget_id": 1970935024,
+        "text_widget_class": "CodeViewText",
+        "index2": "2.0"
+    },
+    {
+        "time": "2023-01-19T20:12:59.160321",
+        "tags": "()",
+        "index": "1.0",
+        "sequence": "TextInsert",
+        "text": "import cv2\n\ndef show_webcam(mirror=False):\n    cam = cv2.VideoCapture(0)\n\n    while True:\n        ret_val, img = cam.read()\n        if mirror: \n            img = cv2.flip(img, 1)\n        cv2.imshow('webcam', img)\n        if cv2.waitKey(1) == 27: \n            break  # esc to quit\n    cv2.destroyAllWindows()\n\ndef main():\n    show_webcam(mirror=True)\n\nif __name__ == '__main__':\n    main()\n",
+        "text_widget_id": 1970935024,
+        "text_widget_class": "CodeViewText"
+    },
+    {
+        "view_id": 1970877872,
+        "sequence": "ShowView",
+        "time": "2023-01-19T20:12:59.189457",
+        "view_class": "ShellView"
+    },
+    {
+        "sequence": "<FocusIn>",
+        "widget_id": 1983739120,
+        "time": "2023-01-19T20:13:00.123568",
+        "widget_class": "Workbench"
+    },
+    {
+        "time": "2023-01-19T20:13:00.156204",
+        "tags": "('welcome',)",
+        "index": "1.0",
+        "text_widget_context": "shell",
+        "sequence": "TextInsert",
+        "text": "Python 3.5.3 (/usr/bin/python3)",
+        "text_widget_id": 1970877680,
+        "text_widget_class": "ShellText"
+    },
+    {
+        "time": "2023-01-19T20:13:00.159398",
+        "tags": "('io',)",
+        "index": "1.31",
+        "text_widget_context": "shell",
+        "sequence": "TextInsert",
+        "text": "\n",
+        "text_widget_id": 1970877680,
+        "text_widget_class": "ShellText"
+    },
+    {
+        "time": "2023-01-19T20:13:00.162079",
+        "tags": "('toplevel', 'prompt')",
+        "index": "2.0",
+        "text_widget_context": "shell",
+        "sequence": "TextInsert",
+        "text": ">>> ",
+        "text_widget_id": 1970877680,
+        "text_widget_class": "ShellText"
+    },
+    {
+        "sequence": "<Button-1>",
+        "widget_id": 1970831056,
+        "time": "2023-01-19T20:13:11.750874",
+        "widget_class": "Button"
+    },
+    {
+        "sequence": "<FocusOut>",
+        "widget_id": 1983739120,
+        "time": "2023-01-19T20:13:12.129216",
+        "widget_class": "Workbench"
+    },
+    {
+        "sequence": "<Button-1>",
+        "time": "2023-01-19T20:13:15.575283",
+        "widget": ".__tk_filedialog.contents.icons.cHull.canvas"
+    },
+    {
+        "sequence": "<Button-1>",
+        "time": "2023-01-19T20:13:19.530682",
+        "widget": ".__tk_filedialog.contents.f2.cancel"
+    },
+    {
+        "sequence": "<FocusIn>",
+        "widget_id": 1983739120,
+        "time": "2023-01-19T20:13:19.641649",
+        "widget_class": "Workbench"
+    },
+    {
+        "sequence": "<Button-1>",
+        "widget_id": 1970829840,
+        "time": "2023-01-19T20:13:22.894877",
+        "widget_class": "Button"
+    },
+    {
+        "time": "2023-01-19T20:13:23.079169",
+        "editor_id": 1971031504,
+        "sequence": "EditorTextCreated",
+        "text_widget_id": 1971030992,
+        "text_widget_class": "CodeViewText",
+        "editor_class": "Editor"
+    },
+    {
+        "time": "2023-01-19T20:13:23.083631",
+        "editor_id": 1971031504,
+        "sequence": "NewFile",
+        "text_widget_id": 1971030992,
+        "text_widget_class": "CodeViewText",
+        "editor_class": "Editor"
+    },
+    {
+        "sequence": "<Button-1>",
+        "widget_id": 1970828976,
+        "time": "2023-01-19T20:13:24.578404",
+        "widget_class": "EditorNotebook"
+    },
+    {
+        "sequence": "<FocusOut>",
+        "widget_id": 1983739120,
+        "time": "2023-01-19T20:14:47.666883",
+        "widget_class": "Workbench"
+    },
+    {
+        "sequence": "<FocusIn>",
+        "widget_id": 1983739120,
+        "time": "2023-01-19T20:14:48.545429",
+        "widget_class": "Workbench"
+    },
+    {
+        "sequence": "<FocusOut>",
+        "widget_id": 1983739120,
+        "time": "2023-01-19T20:14:50.936860",
+        "widget_class": "Workbench"
+    },
+    {
+        "sequence": "<FocusIn>",
+        "widget_id": 1983739120,
+        "time": "2023-01-19T20:16:17.958260",
+        "widget_class": "Workbench"
+    },
+    {
+        "time": "2023-01-19T20:16:18.079909",
+        "sequence": "<Button-1>",
+        "widget_id": 1970935024,
+        "text_widget_id": 1970935024,
+        "text_widget_class": "CodeViewText",
+        "widget_class": "CodeViewText"
+    }
+]

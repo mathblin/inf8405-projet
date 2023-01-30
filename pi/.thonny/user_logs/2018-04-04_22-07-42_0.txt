@@ -1,0 +1,78 @@
+[
+    {
+        "editor_class": "Editor",
+        "time": "2018-04-04T22:07:43.032891",
+        "text_widget_id": 1970395504,
+        "sequence": "EditorTextCreated",
+        "text_widget_class": "CodeViewText",
+        "editor_id": 1970323024
+    },
+    {
+        "editor_class": "Editor",
+        "time": "2018-04-04T22:07:43.035638",
+        "text_widget_id": 1970395504,
+        "filename": "/home/pi/Desktop/Bilal_Test_2/51.py",
+        "text_widget_class": "CodeViewText",
+        "editor_id": 1970323024,
+        "sequence": "Open"
+    },
+    {
+        "index1": "1.0",
+        "time": "2018-04-04T22:07:43.036880",
+        "text_widget_id": 1970395504,
+        "sequence": "TextDelete",
+        "index2": "2.0",
+        "text_widget_class": "CodeViewText"
+    },
+    {
+        "index": "1.0",
+        "tags": "()",
+        "time": "2018-04-04T22:07:43.221813",
+        "text_widget_id": 1970395504,
+        "sequence": "TextInsert",
+        "text_widget_class": "CodeViewText",
+        "text": "# -*- coding: utf-8 -*-\n\n#from picamera.array import PiRGBArray\n#from picamera import PiCamera\n#import time\nimport _thread\nimport io\nimport picamera\nimport logging\nimport socketserver\nfrom threading import Condition\nfrom http import server\nimport cv2\nimport numpy as np\n\n\n\n# initialize the camera and grab a reference to the raw camera capture\nclass StreamingOutput(object):\n    def __init__(self):\n        self.frame = None\n        self.buffer = io.BytesIO()\n        self.condition = Condition()\n        self.cvStream = None\n    def write(self, buf):\n        if buf.startswith(b'\\xff\\xd8'):\n            # New frame, copy the existing buffer's content and notify all\n            # clients it's available\n            self.buffer.truncate()\n            with self.condition:\n                #buff = self.buffer\n                #self.array = np.frombuffer(buff)\n                #self.frame = self.buffer.getvalue()\n                self.frame = self.buffer.getvalue()\n                self.cvStream = buf\n                self.condition.notify_all()\n            self.buffer.seek(0)\n        return self.buffer.write(buf)\n    \n    \noutput = StreamingOutput()\n\ndef captureCv():\n    while True:\n        with output.condition:\n            output.condition.wait()\n            #print(output.cvStream)\n            #print(output.cvStream)\n            \n            fr = np.frombuffer(output.frame, dtype=np.uint)\n            #arr = np.asarray(frame)\n        # grab the raw NumPy array representing the image, then initialize the timestamp\n        # and occupied/unoccupied text\n            #image = frame.array\n        #cameraCv.rotation = 180\n        # show the frame\n            cv2.imshow(\"Frame\", fr)\n        #key = cv2.waitKey(1) & 0xFF\n    \n        # clear the stream in preparation for the next frame\n        #rawCapture.truncate(0)\n\n# Web streaming example\n# Source code from the official PiCamera package\n# http://picamera.readthedocs.io/en/latest/recipes2.html#web-streaming\n\nPAGE=\"\"\"\\\n<html>\n<body bgcolor=\"#000000\">\n<img src=\"stream.mjpg\" width=\"640\" height=\"480\">\n</body>\n</html>\n\"\"\"\n\n\n\nclass StreamingHandler(server.BaseHTTPRequestHandler):\n    def do_GET(self):\n        if self.path == '/':\n            self.send_response(301)\n            self.send_header('Location', '/index.html')\n            self.end_headers()\n        elif self.path == '/index.html':\n            content = PAGE.encode('utf-8')\n            self.send_response(200)\n            self.send_header('Content-Type', 'text/html')\n            self.send_header('Content-Length', len(content))\n            self.end_headers()\n            self.wfile.write(content)\n        elif self.path == '/stream.mjpg':\n            self.send_response(200)\n            self.send_header('Age', 0)\n            self.send_header('Cache-Control', 'no-cache, private')\n            self.send_header('Pragma', 'no-cache')\n            self.send_header('Content-Type', 'multipart/x-mixed-replace; boundary=FRAME')\n            self.end_headers()\n            try:\n                while True:\n                    with output.condition:\n                        output.condition.wait()\n                        frame = output.frame\n                    self.wfile.write(b'--FRAME\\r\\n')\n                    self.send_header('Content-Type', 'image/jpeg')\n                    self.send_header('Content-Length', len(frame))\n                    self.end_headers()\n                    self.wfile.write(frame)\n                    self.wfile.write(b'\\r\\n')\n            except Exception as e:\n                logging.warning(\n                    'Removed streaming client %s: %s',\n                    self.client_address, str(e))\n        else:\n            self.send_error(404)\n            self.end_headers()\n\nclass StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):\n    allow_reuse_address = True\n    daemon_threads = True\n\nwith picamera.PiCamera(resolution='640x480', framerate=24) as camera:\n    \n    #Uncomment the next line to change your Pi's Camera rotation (in degrees)\n    camera.rotation = 180\n    camera.start_recording(output, format='mjpeg')\n    _thread.start_new_thread(captureCv, ())\n    try:\n        address = ('', 8000)\n        server = StreamingServer(address, StreamingHandler)\n        server.serve_forever()\n    finally:\n        camera.stop_recording()\n"
+    },
+    {
+        "sequence": "ShowView",
+        "view_class": "ShellView",
+        "time": "2018-04-04T22:07:43.263456",
+        "view_id": "ShellView"
+    },
+    {
+        "widget_class": "Workbench",
+        "sequence": "<FocusIn>",
+        "time": "2018-04-04T22:07:44.757635",
+        "widget_id": 1983602384
+    },
+    {
+        "text_widget_context": "shell",
+        "index": "1.0",
+        "tags": "('welcome',)",
+        "time": "2018-04-04T22:07:44.792679",
+        "text_widget_id": 1970267504,
+        "sequence": "TextInsert",
+        "text_widget_class": "ShellText",
+        "text": "Python 3.5.3 (/usr/bin/python3)"
+    },
+    {
+        "text_widget_context": "shell",
+        "index": "1.31",
+        "tags": "('io',)",
+        "time": "2018-04-04T22:07:44.799381",
+        "text_widget_id": 1970267504,
+        "sequence": "TextInsert",
+        "text_widget_class": "ShellText",
+        "text": "\n"
+    },
+    {
+        "text_widget_context": "shell",
+        "index": "2.0",
+        "tags": "('toplevel', 'prompt')",
+        "time": "2018-04-04T22:07:44.802108",
+        "text_widget_id": 1970267504,
+        "sequence": "TextInsert",
+        "text_widget_class": "ShellText",
+        "text": ">>> "
+    }
+]

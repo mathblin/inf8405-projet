@@ -1,0 +1,163 @@
+[
+    {
+        "sequence": "EditorTextCreated",
+        "time": "2018-01-22T03:43:06.254014",
+        "text_widget_class": "CodeViewText",
+        "editor_id": 1970866864,
+        "text_widget_id": 1970934320,
+        "editor_class": "Editor"
+    },
+    {
+        "sequence": "Open",
+        "time": "2018-01-22T03:43:06.256365",
+        "text_widget_class": "CodeViewText",
+        "editor_id": 1970866864,
+        "text_widget_id": 1970934320,
+        "editor_class": "Editor",
+        "filename": "/home/pi/Desktop/Bilal_Test/server.py"
+    },
+    {
+        "sequence": "TextDelete",
+        "time": "2018-01-22T03:43:06.257725",
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970934320,
+        "index1": "1.0",
+        "index2": "2.0"
+    },
+    {
+        "sequence": "TextInsert",
+        "text": "# Web streaming example\n# Source code from the official PiCamera package\n# http://picamera.readthedocs.io/en/latest/recipes2.html#web-streaming\n\nimport io\nimport picamera\nimport logging\nimport socketserver\nfrom threading import Condition\nfrom http import server\n\nPAGE=\"\"\"\\\n<html>\n<head>\n<title>Raspberry Pi - Surveillance Camera</title>\n</head>\n<body>\n<center><h1>Raspberry Pi - Surveillance Camera</h1></center>\n<center><img src=\"stream.mjpg\" width=\"640\" height=\"480\"></center>\n</body>\n</html>\n\"\"\"\n\nclass StreamingOutput(object):\n    def __init__(self):\n        self.frame = None\n        self.buffer = io.BytesIO()\n        self.condition = Condition()\n\n    def write(self, buf):\n        if buf.startswith(b'\\xff\\xd8'):\n            # New frame, copy the existing buffer's content and notify all\n            # clients it's available\n            self.buffer.truncate()\n            with self.condition:\n                self.frame = self.buffer.getvalue()\n                self.condition.notify_all()\n            self.buffer.seek(0)\n        return self.buffer.write(buf)\n\nclass StreamingHandler(server.BaseHTTPRequestHandler):\n    def do_GET(self):\n        if self.path == '/':\n            self.send_response(301)\n            self.send_header('Location', '/index.html')\n            self.end_headers()\n        elif self.path == '/index.html':\n            content = PAGE.encode('utf-8')\n            self.send_response(200)\n            self.send_header('Content-Type', 'text/html')\n            self.send_header('Content-Length', len(content))\n            self.end_headers()\n            self.wfile.write(content)\n        elif self.path == '/stream.mjpg':\n            self.send_response(200)\n            self.send_header('Age', 0)\n            self.send_header('Cache-Control', 'no-cache, private')\n            self.send_header('Pragma', 'no-cache')\n            self.send_header('Content-Type', 'multipart/x-mixed-replace; boundary=FRAME')\n            self.end_headers()\n            try:\n                while True:\n                    with output.condition:\n                        output.condition.wait()\n                        frame = output.frame\n                    self.wfile.write(b'--FRAME\\r\\n')\n                    self.send_header('Content-Type', 'image/jpeg')\n                    self.send_header('Content-Length', len(frame))\n                    self.end_headers()\n                    self.wfile.write(frame)\n                    self.wfile.write(b'\\r\\n')\n            except Exception as e:\n                logging.warning(\n                    'Removed streaming client %s: %s',\n                    self.client_address, str(e))\n        else:\n            self.send_error(404)\n            self.end_headers()\n\nclass StreamingServer(socketserver.ThreadingMixIn, server.HTTPServer):\n    allow_reuse_address = True\n    daemon_threads = True\n\nwith picamera.PiCamera(resolution='640x480', framerate=24) as camera:\n    output = StreamingOutput()\n    #Uncomment the next line to change your Pi's Camera rotation (in degrees)\n    #camera.rotation = 90\n    camera.start_recording(output, format='mjpeg')\n    try:\n        address = ('', 8000)\n        server = StreamingServer(address, StreamingHandler)\n        server.serve_forever()\n    finally:\n        camera.stop_recording()",
+        "text_widget_class": "CodeViewText",
+        "tags": "()",
+        "text_widget_id": 1970934320,
+        "time": "2018-01-22T03:43:06.429536",
+        "index": "1.0"
+    },
+    {
+        "sequence": "ShowView",
+        "view_class": "ShellView",
+        "time": "2018-01-22T03:43:06.465140",
+        "view_id": "ShellView"
+    },
+    {
+        "sequence": "<FocusIn>",
+        "time": "2018-01-22T03:43:07.690798",
+        "widget_class": "Workbench",
+        "widget_id": 1984183280
+    },
+    {
+        "sequence": "TextInsert",
+        "text": "Python 3.5.3 (/usr/bin/python3)",
+        "text_widget_class": "ShellText",
+        "tags": "('welcome',)",
+        "text_widget_context": "shell",
+        "text_widget_id": 1970777776,
+        "time": "2018-01-22T03:43:07.718038",
+        "index": "1.0"
+    },
+    {
+        "sequence": "TextInsert",
+        "text": "\n",
+        "text_widget_class": "ShellText",
+        "tags": "('io',)",
+        "text_widget_context": "shell",
+        "text_widget_id": 1970777776,
+        "time": "2018-01-22T03:43:07.724366",
+        "index": "1.31"
+    },
+    {
+        "sequence": "TextInsert",
+        "text": ">>> ",
+        "text_widget_class": "ShellText",
+        "tags": "('toplevel', 'prompt')",
+        "text_widget_context": "shell",
+        "text_widget_id": 1970777776,
+        "time": "2018-01-22T03:43:07.726765",
+        "index": "2.0"
+    },
+    {
+        "sequence": "<Button-1>",
+        "time": "2018-01-22T03:43:18.211133",
+        "text_widget_class": "CodeViewText",
+        "widget_id": 1970934320,
+        "text_widget_id": 1970934320,
+        "widget_class": "CodeViewText"
+    },
+    {
+        "sequence": "<Button-1>",
+        "time": "2018-01-22T03:43:18.685670",
+        "text_widget_class": "CodeViewText",
+        "widget_id": 1970934320,
+        "text_widget_id": 1970934320,
+        "widget_class": "CodeViewText"
+    },
+    {
+        "sequence": "<Button-1>",
+        "time": "2018-01-22T03:43:19.345162",
+        "text_widget_class": "CodeViewText",
+        "widget_id": 1970934320,
+        "text_widget_id": 1970934320,
+        "widget_class": "CodeViewText"
+    },
+    {
+        "sequence": "TextDelete",
+        "time": "2018-01-22T03:43:19.696584",
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970934320,
+        "index1": "90.25",
+        "index2": "None"
+    },
+    {
+        "sequence": "TextDelete",
+        "time": "2018-01-22T03:43:19.901242",
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970934320,
+        "index1": "90.24",
+        "index2": "None"
+    },
+    {
+        "sequence": "TextInsert",
+        "text": "1",
+        "text_widget_class": "CodeViewText",
+        "tags": "None",
+        "text_widget_id": 1970934320,
+        "time": "2018-01-22T03:43:20.520562",
+        "index": "90.24"
+    },
+    {
+        "sequence": "TextInsert",
+        "text": "6",
+        "text_widget_class": "CodeViewText",
+        "tags": "None",
+        "text_widget_id": 1970934320,
+        "time": "2018-01-22T03:43:20.948320",
+        "index": "90.25"
+    },
+    {
+        "sequence": "Save",
+        "time": "2018-01-22T03:43:21.648551",
+        "text_widget_class": "CodeViewText",
+        "editor_id": 1970866864,
+        "text_widget_id": 1970934320,
+        "editor_class": "Editor",
+        "filename": "/home/pi/Desktop/Bilal_Test/server.py"
+    },
+    {
+        "sequence": "Command",
+        "time": "2018-01-22T03:43:21.655368",
+        "command_id": "save_file",
+        "denied": "False"
+    },
+    {
+        "sequence": "<FocusOut>",
+        "time": "2018-01-22T03:43:35.522833",
+        "widget_class": "Workbench",
+        "widget_id": 1984183280
+    },
+    {
+        "sequence": "<FocusIn>",
+        "time": "2018-01-22T04:38:05.584312",
+        "widget_class": "Workbench",
+        "widget_id": 1984183280
+    }
+]

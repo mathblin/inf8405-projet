@@ -1,0 +1,98 @@
+[
+    {
+        "editor_class": "Editor",
+        "text_widget_class": "CodeViewText",
+        "time": "2018-04-04T22:29:39.565153",
+        "editor_id": 1970830064,
+        "sequence": "EditorTextCreated",
+        "text_widget_id": 1970903088
+    },
+    {
+        "editor_class": "Editor",
+        "filename": "/home/pi/Desktop/platoon/platoon.py",
+        "text_widget_class": "CodeViewText",
+        "time": "2018-04-04T22:29:39.567449",
+        "editor_id": 1970830064,
+        "sequence": "Open",
+        "text_widget_id": 1970903088
+    },
+    {
+        "index2": "2.0",
+        "text_widget_class": "CodeViewText",
+        "index1": "1.0",
+        "time": "2018-04-04T22:29:39.568576",
+        "sequence": "TextDelete",
+        "text_widget_id": 1970903088
+    },
+    {
+        "tags": "()",
+        "text_widget_class": "CodeViewText",
+        "index": "1.0",
+        "text": "# import the necessary packages\nfrom picamera.array import PiRGBArray\nfrom picamera import PiCamera\nimport time\nimport cv2\n\n# initialize the camera and grab a reference to the raw camera capture\ncamera = PiCamera()\ncamera.resolution = (640, 480)\ncamera.framerate = 32\ncamera.rotation = 180\nrawCapture = PiRGBArray(camera, size=(640, 480))\n\n# allow the camera to warmup\ntime.sleep(0.1)\n\n# capture frames from the camera\nfor frame in camera.capture_continuous(rawCapture, format=\"bgr\", use_video_port=True):\n    # grab the raw NumPy array representing the image, then initialize the timestamp\n    # and occupied/unoccupied text\n    image = frame.array\n    image =cv2.medianBlur(image,5)\n    \n\n    # show the frame\n    cv2.imshow(\"Frame\", image)\n    key = cv2.waitKey(1) & 0xFF\n\n    # clear the stream in preparation for the next frame\n    rawCapture.truncate(0)\n\n    # if the `q` key was pressed, break from the loop\n    if key == ord(\"q\"):\n        break\n",
+        "time": "2018-04-04T22:29:39.755123",
+        "sequence": "TextInsert",
+        "text_widget_id": 1970903088
+    },
+    {
+        "view_id": 1970770384,
+        "time": "2018-04-04T22:29:39.790434",
+        "view_class": "ShellView",
+        "sequence": "ShowView"
+    },
+    {
+        "time": "2018-04-04T22:29:40.961936",
+        "widget_class": "Workbench",
+        "sequence": "<FocusIn>",
+        "widget_id": 1990475536
+    },
+    {
+        "tags": "('welcome',)",
+        "text_widget_class": "ShellText",
+        "index": "1.0",
+        "text": "Python 3.5.3 (/usr/bin/python3)",
+        "text_widget_context": "shell",
+        "time": "2018-04-04T22:29:41.010291",
+        "sequence": "TextInsert",
+        "text_widget_id": 1970770896
+    },
+    {
+        "tags": "('io',)",
+        "text_widget_class": "ShellText",
+        "index": "1.31",
+        "text": "\n",
+        "text_widget_context": "shell",
+        "time": "2018-04-04T22:29:41.018081",
+        "sequence": "TextInsert",
+        "text_widget_id": 1970770896
+    },
+    {
+        "tags": "('toplevel', 'prompt')",
+        "text_widget_class": "ShellText",
+        "index": "2.0",
+        "text": ">>> ",
+        "text_widget_context": "shell",
+        "time": "2018-04-04T22:29:41.020489",
+        "sequence": "TextInsert",
+        "text_widget_id": 1970770896
+    },
+    {
+        "time": "2018-04-04T22:29:47.830346",
+        "widget_class": "Workbench",
+        "sequence": "<FocusOut>",
+        "widget_id": 1990475536
+    },
+    {
+        "time": "2018-04-04T22:31:18.809931",
+        "widget_class": "Workbench",
+        "sequence": "<FocusIn>",
+        "widget_id": 1990475536
+    },
+    {
+        "text_widget_class": "CodeViewText",
+        "time": "2018-04-04T22:31:18.851420",
+        "widget_id": 1970903088,
+        "widget_class": "CodeViewText",
+        "sequence": "<Button-1>",
+        "text_widget_id": 1970903088
+    }
+]

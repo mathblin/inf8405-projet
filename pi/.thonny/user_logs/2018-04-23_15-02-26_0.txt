@@ -1,0 +1,78 @@
+[
+    {
+        "editor_class": "Editor",
+        "text_widget_class": "CodeViewText",
+        "sequence": "EditorTextCreated",
+        "editor_id": 1970632784,
+        "text_widget_id": 1970705168,
+        "time": "2018-04-23T15:02:26.676360"
+    },
+    {
+        "editor_class": "Editor",
+        "text_widget_class": "CodeViewText",
+        "filename": "/home/pi/Desktop/platoon/INF8405/RaspberryPi/server/platoon.py",
+        "sequence": "Open",
+        "editor_id": 1970632784,
+        "text_widget_id": 1970705168,
+        "time": "2018-04-23T15:02:26.678679"
+    },
+    {
+        "index1": "1.0",
+        "time": "2018-04-23T15:02:26.679741",
+        "text_widget_class": "CodeViewText",
+        "sequence": "TextDelete",
+        "index2": "2.0",
+        "text_widget_id": 1970705168
+    },
+    {
+        "text": "#!/usr/bin/env python\nimport RPi.GPIO as GPIO\nimport track_2\nLedPin   = 20\nTouchPin = 17\nledBlue =  16\n\ndef setup():\n        GPIO.setmode(GPIO.BCM)       # Numbers GPIOs by physical location\n        GPIO.setup(LedPin, GPIO.OUT)   # Set LedPin's mode is output\n        GPIO.setup(ledBlue, GPIO.OUT) \n        GPIO.setup(TouchPin, GPIO.IN, pull_up_down=GPIO.PUD_UP)\n        GPIO.output(ledBlue, GPIO.HIGH)\ndef loop():\n        while True:\n                if GPIO.input(TouchPin) == GPIO.HIGH:\n                        GPIO.output(ledBlue, GPIO.LOW)\n                        GPIO.output(LedPin, GPIO.HIGH) # led off\n                        track_2.main()\n\n\ndef destroy():\n        GPIO.output(LedPin, GPIO.LOW)     # led off\n        GPIO.cleanup()                     # Release resource\n\nif __name__ == '__main__':     # Program start from here\n        setup()\n        try:\n                loop()\n        except KeyboardInterrupt:  # When 'Ctrl+C' is pressed, the child program destroy() will be  executed.\n                destroy()\n",
+        "time": "2018-04-23T15:02:26.871513",
+        "text_widget_class": "CodeViewText",
+        "sequence": "TextInsert",
+        "tags": "()",
+        "text_widget_id": 1970705168,
+        "index": "1.0"
+    },
+    {
+        "view_class": "ShellView",
+        "time": "2018-04-23T15:02:26.900372",
+        "sequence": "ShowView",
+        "view_id": "ShellView"
+    },
+    {
+        "widget_id": 1983027952,
+        "time": "2018-04-23T15:02:27.929008",
+        "sequence": "<FocusIn>",
+        "widget_class": "Workbench"
+    },
+    {
+        "text": "Python 3.5.3 (/usr/bin/python3)",
+        "time": "2018-04-23T15:02:27.970400",
+        "text_widget_class": "ShellText",
+        "text_widget_context": "shell",
+        "sequence": "TextInsert",
+        "tags": "('welcome',)",
+        "text_widget_id": 1970578064,
+        "index": "1.0"
+    },
+    {
+        "text": "\n",
+        "time": "2018-04-23T15:02:27.980708",
+        "text_widget_class": "ShellText",
+        "text_widget_context": "shell",
+        "sequence": "TextInsert",
+        "tags": "('io',)",
+        "text_widget_id": 1970578064,
+        "index": "1.31"
+    },
+    {
+        "text": ">>> ",
+        "time": "2018-04-23T15:02:27.983800",
+        "text_widget_class": "ShellText",
+        "text_widget_context": "shell",
+        "sequence": "TextInsert",
+        "tags": "('toplevel', 'prompt')",
+        "text_widget_id": 1970578064,
+        "index": "2.0"
+    }
+]

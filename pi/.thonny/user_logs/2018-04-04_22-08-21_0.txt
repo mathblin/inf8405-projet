@@ -1,0 +1,134 @@
+[
+    {
+        "text_widget_class": "CodeViewText",
+        "editor_id": 1970642128,
+        "sequence": "EditorTextCreated",
+        "time": "2018-04-04T22:08:21.328276",
+        "text_widget_id": 1970712848,
+        "editor_class": "Editor"
+    },
+    {
+        "text_widget_class": "CodeViewText",
+        "editor_id": 1970642128,
+        "sequence": "Open",
+        "filename": "/home/pi/Desktop/Bilal_Test_2/test.py",
+        "time": "2018-04-04T22:08:21.335609",
+        "text_widget_id": 1970712848,
+        "editor_class": "Editor"
+    },
+    {
+        "text_widget_class": "CodeViewText",
+        "sequence": "TextDelete",
+        "time": "2018-04-04T22:08:21.336682",
+        "index1": "1.0",
+        "text_widget_id": 1970712848,
+        "index2": "2.0"
+    },
+    {
+        "text_widget_class": "CodeViewText",
+        "text": "from picamera.array import PiRGBArray\nfrom picamera import PiCamera\nimport time\nimport cv2\n \n# initialize the camera and grab a reference to the raw camera capture\ncamera = PiCamera()\ncamera.resolution = (320, 288)\ncamera.framerate = 25\nrawCapture = PiRGBArray(camera, size=(320, 288))\n \n# allow the camera to warmup\ntime.sleep(0.1)\n \n# capture frames from the camera\nfor frame in camera.capture_continuous(rawCapture, format=\"bgr\", use_video_port=True):\n    # grab the raw NumPy array representing the image, then initialize the timestamp\n    # and occupied/unoccupied text\n    image = frame.array\n    camera.rotation = 180\n    # show the frame\n    cv2.imshow(\"Frame\", image)\n    key = cv2.waitKey(1) & 0xFF\n \n    # clear the stream in preparation for the next frame\n    rawCapture.truncate(0)\n \n    # if the `q` key was pressed, break from the loop\n    if key == ord(\"q\"):\n        break\n",
+        "sequence": "TextInsert",
+        "time": "2018-04-04T22:08:21.513776",
+        "tags": "()",
+        "index": "1.0",
+        "text_widget_id": 1970712848
+    },
+    {
+        "view_class": "ShellView",
+        "time": "2018-04-04T22:08:21.544571",
+        "sequence": "ShowView",
+        "view_id": "ShellView"
+    },
+    {
+        "sequence": "<FocusIn>",
+        "widget_id": 1989670160,
+        "widget_class": "Workbench",
+        "time": "2018-04-04T22:08:22.725494"
+    },
+    {
+        "text_widget_class": "ShellText",
+        "text": "Python 3.5.3 (/usr/bin/python3)",
+        "sequence": "TextInsert",
+        "text_widget_context": "shell",
+        "time": "2018-04-04T22:08:22.778433",
+        "tags": "('welcome',)",
+        "index": "1.0",
+        "text_widget_id": 1970581744
+    },
+    {
+        "text_widget_class": "ShellText",
+        "text": "\n",
+        "sequence": "TextInsert",
+        "text_widget_context": "shell",
+        "time": "2018-04-04T22:08:22.781885",
+        "tags": "('io',)",
+        "index": "1.31",
+        "text_widget_id": 1970581744
+    },
+    {
+        "text_widget_class": "ShellText",
+        "text": ">>> ",
+        "sequence": "TextInsert",
+        "text_widget_context": "shell",
+        "time": "2018-04-04T22:08:22.785195",
+        "tags": "('toplevel', 'prompt')",
+        "index": "2.0",
+        "text_widget_id": 1970581744
+    },
+    {
+        "sequence": "<FocusOut>",
+        "widget_id": 1989670160,
+        "widget_class": "Workbench",
+        "time": "2018-04-04T22:08:29.738533"
+    },
+    {
+        "sequence": "<FocusIn>",
+        "widget_id": 1989670160,
+        "widget_class": "Workbench",
+        "time": "2018-04-04T22:08:34.275340"
+    },
+    {
+        "sequence": "<FocusOut>",
+        "widget_id": 1989670160,
+        "widget_class": "Workbench",
+        "time": "2018-04-04T22:08:37.434526"
+    },
+    {
+        "sequence": "<FocusIn>",
+        "widget_id": 1989670160,
+        "widget_class": "Workbench",
+        "time": "2018-04-04T22:09:11.911885"
+    },
+    {
+        "text_widget_class": "CodeViewText",
+        "widget_id": 1970712848,
+        "widget_class": "CodeViewText",
+        "sequence": "<Button-1>",
+        "time": "2018-04-04T22:09:11.952703",
+        "text_widget_id": 1970712848
+    },
+    {
+        "sequence": "<FocusOut>",
+        "widget_id": 1989670160,
+        "widget_class": "Workbench",
+        "time": "2018-04-04T22:09:17.223994"
+    },
+    {
+        "sequence": "<FocusIn>",
+        "widget_id": 1989670160,
+        "widget_class": "Workbench",
+        "time": "2018-04-04T22:09:37.474870"
+    },
+    {
+        "sequence": "<FocusOut>",
+        "widget_id": 1989670160,
+        "widget_class": "Workbench",
+        "time": "2018-04-04T22:09:39.914653"
+    },
+    {
+        "sequence": "<FocusIn>",
+        "widget_id": 1989670160,
+        "widget_class": "Workbench",
+        "time": "2018-04-04T22:09:53.117757"
+    }
+]

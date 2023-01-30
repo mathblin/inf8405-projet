@@ -1,0 +1,236 @@
+[
+    {
+        "time": "2023-01-19T19:52:40.344308",
+        "editor_id": 1970921040,
+        "editor_class": "Editor",
+        "sequence": "EditorTextCreated",
+        "text_widget_class": "CodeViewText",
+        "text_widget_id": 1970921104
+    },
+    {
+        "time": "2023-01-19T19:52:40.346408",
+        "editor_id": 1970921040,
+        "editor_class": "Editor",
+        "text_widget_class": "CodeViewText",
+        "filename": "/home/pi/Desktop/Bilal_Test_2/Camera.py",
+        "sequence": "Open",
+        "text_widget_id": 1970921104
+    },
+    {
+        "time": "2023-01-19T19:52:40.347640",
+        "text_widget_class": "CodeViewText",
+        "sequence": "TextDelete",
+        "index1": "1.0",
+        "index2": "2.0",
+        "text_widget_id": 1970921104
+    },
+    {
+        "time": "2023-01-19T19:52:40.514429",
+        "text_widget_class": "CodeViewText",
+        "sequence": "TextInsert",
+        "tags": "()",
+        "index": "1.0",
+        "text_widget_id": 1970921104,
+        "text": "import cv2\n\ndef show_webcam(mirror=False):\n    cam = cv2.VideoCapture(0)\n\n    while True:\n        ret_val, img = cam.read()\n        if mirror: \n            img = cv2.flip(img, 1)\n        cv2.imshow('webcam', img)\n        if cv2.waitKey(1) == 27: \n            break  # esc to quit\n    cv2.destroyAllWindows()\n\ndef main():\n    show_webcam(mirror=True)\n\nif __name__ == '__main__':\n    main()\n"
+    },
+    {
+        "time": "2023-01-19T19:52:40.544341",
+        "sequence": "ShowView",
+        "view_id": "ShellView",
+        "view_class": "ShellView"
+    },
+    {
+        "widget_id": 1983315408,
+        "widget_class": "Workbench",
+        "time": "2023-01-19T19:52:41.397923",
+        "sequence": "<FocusIn>"
+    },
+    {
+        "time": "2023-01-19T19:52:41.532324",
+        "sequence": "TextInsert",
+        "text": "Python 3.5.3 (/usr/bin/python3)",
+        "tags": "('welcome',)",
+        "index": "1.0",
+        "text_widget_id": 1970861328,
+        "text_widget_class": "ShellText",
+        "text_widget_context": "shell"
+    },
+    {
+        "time": "2023-01-19T19:52:41.537251",
+        "sequence": "TextInsert",
+        "text": "\n",
+        "tags": "('io',)",
+        "index": "1.31",
+        "text_widget_id": 1970861328,
+        "text_widget_class": "ShellText",
+        "text_widget_context": "shell"
+    },
+    {
+        "time": "2023-01-19T19:52:41.541545",
+        "sequence": "TextInsert",
+        "text": ">>> ",
+        "tags": "('toplevel', 'prompt')",
+        "index": "2.0",
+        "text_widget_id": 1970861328,
+        "text_widget_class": "ShellText",
+        "text_widget_context": "shell"
+    },
+    {
+        "widget_id": 1983315408,
+        "widget_class": "Workbench",
+        "time": "2023-01-19T19:52:46.223091",
+        "sequence": "<FocusOut>"
+    },
+    {
+        "widget_id": 1983315408,
+        "widget_class": "Workbench",
+        "time": "2023-01-19T19:52:47.198261",
+        "sequence": "<FocusIn>"
+    },
+    {
+        "widget_id": 1970861328,
+        "widget_class": "ShellText",
+        "text_widget_class": "ShellText",
+        "sequence": "<Button-1>",
+        "text_widget_id": 1970861328,
+        "time": "2023-01-19T19:52:48.825054",
+        "text_widget_context": "shell"
+    },
+    {
+        "widget_id": 1970863888,
+        "widget_class": "Button",
+        "time": "2023-01-19T19:52:50.014687",
+        "sequence": "<Button-1>"
+    },
+    {
+        "time": "2023-01-19T19:52:50.115176",
+        "text_widget_class": "ShellText",
+        "sequence": "TextDelete",
+        "index1": "2.4",
+        "index2": "3.0",
+        "text_widget_id": 1970861328,
+        "text_widget_context": "shell"
+    },
+    {
+        "time": "2023-01-19T19:52:50.118808",
+        "sequence": "TextInsert",
+        "text": "%Run Camera.py\n",
+        "tags": "('automagic', 'toplevel', 'command')",
+        "index": "2.4",
+        "text_widget_id": 1970861328,
+        "text_widget_class": "ShellText",
+        "text_widget_context": "shell"
+    },
+    {
+        "time": "2023-01-19T19:52:50.123408",
+        "text_widget_class": "ShellText",
+        "sequence": "TextDelete",
+        "index1": "3.0",
+        "index2": "3.0",
+        "text_widget_id": 1970861328,
+        "text_widget_context": "shell"
+    },
+    {
+        "time": "2023-01-19T19:52:50.126078",
+        "cmd_line": "%Run Camera.py\n",
+        "sequence": "MagicCommand"
+    },
+    {
+        "time": "2023-01-19T19:52:50.772282",
+        "command_text": "%Run Camera.py\n",
+        "sequence": "ShellCommand"
+    },
+    {
+        "widget_id": 1983315408,
+        "widget_class": "Workbench",
+        "time": "2023-01-19T19:52:53.277740",
+        "sequence": "<FocusOut>"
+    },
+    {
+        "widget_id": 1983315408,
+        "widget_class": "Workbench",
+        "time": "2023-01-19T19:52:53.506613",
+        "sequence": "<FocusIn>"
+    },
+    {
+        "widget_id": 1983315408,
+        "widget_class": "Workbench",
+        "time": "2023-01-19T19:52:58.100561",
+        "sequence": "<FocusOut>"
+    },
+    {
+        "widget_id": 1983315408,
+        "widget_class": "Workbench",
+        "time": "2023-01-19T19:52:58.324735",
+        "sequence": "<FocusIn>"
+    },
+    {
+        "widget_id": 1983315408,
+        "widget_class": "Workbench",
+        "time": "2023-01-19T19:53:00.127858",
+        "sequence": "<FocusOut>"
+    },
+    {
+        "widget_id": 1983315408,
+        "widget_class": "Workbench",
+        "time": "2023-01-19T19:53:01.442584",
+        "sequence": "<FocusIn>"
+    },
+    {
+        "widget_id": 1983315408,
+        "widget_class": "Workbench",
+        "time": "2023-01-19T19:53:05.222719",
+        "sequence": "<FocusOut>"
+    },
+    {
+        "widget_id": 1983315408,
+        "widget_class": "Workbench",
+        "time": "2023-01-19T19:53:26.734990",
+        "sequence": "<FocusIn>"
+    },
+    {
+        "widget_id": 1983315408,
+        "widget_class": "Workbench",
+        "time": "2023-01-19T19:53:26.830932",
+        "sequence": "<FocusOut>"
+    },
+    {
+        "widget_id": 1983315408,
+        "widget_class": "Workbench",
+        "time": "2023-01-19T19:53:27.626204",
+        "sequence": "<FocusIn>"
+    },
+    {
+        "widget_id": 1983315408,
+        "widget_class": "Workbench",
+        "time": "2023-01-19T19:53:28.689559",
+        "sequence": "<FocusOut>"
+    },
+    {
+        "widget_id": 1983315408,
+        "widget_class": "Workbench",
+        "time": "2023-01-19T19:53:32.671647",
+        "sequence": "<FocusIn>"
+    },
+    {
+        "widget_id": 1970918352,
+        "widget_class": "Button",
+        "time": "2023-01-19T19:53:34.279384",
+        "sequence": "<Button-1>"
+    },
+    {
+        "widget_id": 1970861328,
+        "widget_class": "ShellText",
+        "text_widget_class": "ShellText",
+        "sequence": "<Button-1>",
+        "text_widget_id": 1970861328,
+        "time": "2023-01-19T19:53:37.824753",
+        "text_widget_context": "shell"
+    },
+    {
+        "widget_id": 1970918352,
+        "widget_class": "Button",
+        "time": "2023-01-19T19:53:39.568592",
+        "sequence": "<Button-1>"
+    }
+]

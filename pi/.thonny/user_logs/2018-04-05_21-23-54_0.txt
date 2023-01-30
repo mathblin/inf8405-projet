@@ -1,0 +1,102 @@
+[
+    {
+        "time": "2018-04-05T21:23:55.004454",
+        "sequence": "EditorTextCreated",
+        "editor_id": 1971018832,
+        "text_widget_id": 1971089680,
+        "editor_class": "Editor",
+        "text_widget_class": "CodeViewText"
+    },
+    {
+        "time": "2018-04-05T21:23:55.014205",
+        "sequence": "Open",
+        "editor_id": 1971018832,
+        "text_widget_id": 1971089680,
+        "editor_class": "Editor",
+        "text_widget_class": "CodeViewText",
+        "filename": "/home/pi/Desktop/platoon/platoon.py"
+    },
+    {
+        "text_widget_id": 1971089680,
+        "index1": "1.0",
+        "time": "2018-04-05T21:23:55.022346",
+        "index2": "2.0",
+        "text_widget_class": "CodeViewText",
+        "sequence": "TextDelete"
+    },
+    {
+        "time": "2018-04-05T21:23:55.246468",
+        "sequence": "TextInsert",
+        "text": "# import the necessary packages\nfrom picamera.array import PiRGBArray\nfrom picamera import PiCamera\nimport time\nimport cv2 \nimport numpy as np\n\n\n# initialize the camera and grab a reference to the raw camera capture\ncamera = PiCamera()\ncamera.resolution = (640, 480)\ncamera.framerate = 32\ncamera.rotation = 180\nrawCapture = PiRGBArray(camera, size=(640, 480))\n\n# allow the camera to warmup\ntime.sleep(0.1)\n\n# capture frames from the camera\nfor frame in camera.capture_continuous(rawCapture, format=\"bgr\", use_video_port=True):\n    # grab the raw NumPy array representing the image, then initialize the timestamp\n    # and occupied/unoccupied text\n    image = frame.array\n    image =cv2.medianBlur(image,1)\n##    output=image.copy()\n    cimg = cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)\n    circles = cv2.HoughCircles(cimg,cv2.CV_HOUGH_GARDIENT, 1, 20,param1=10,param2=1,minRadius=0, maxRadius=0)\n    if circles.all() != None:\n        #print(\"NoneType\")\n        circles = np.uint16(np.around(circles.astype(np.double),3))\n        \n##        for (x,y,r) in circles\n##            cv2.circle(output, (x,y),r,(0,255,0),4)\n##            cv2.rectangle(output, (x-5, y-5), (x+5,y+5),(0,)\n\n        for i in circles[0,:]:\n            # draw the outer circle\n            cv2.circle(cimg,(i[0],i[1]),i[2],(0,255,0),2)\n            # draw the center of the circle\n            cv2.circle(cimg,(i[0],i[1]),2,(0,0,255),3) \n\n    # show the frame\n    cv2.imshow(\"Frame\", cimg)\n    key = cv2.waitKey(1) & 0xFF\n\n    # clear the stream in preparation for the next frame\n    rawCapture.truncate(0)\n\n    # if the `q` key was pressed, break from the loop\n    if key == ord(\"q\"):\n        break\n",
+        "text_widget_id": 1971089680,
+        "text_widget_class": "CodeViewText",
+        "index": "1.0",
+        "tags": "()"
+    },
+    {
+        "time": "2018-04-05T21:23:55.285192",
+        "sequence": "ShowView",
+        "view_class": "ShellView",
+        "view_id": "ShellView"
+    },
+    {
+        "time": "2018-04-05T21:23:56.640812",
+        "widget_class": "Workbench",
+        "widget_id": 1984302160,
+        "sequence": "<FocusIn>"
+    },
+    {
+        "time": "2018-04-05T21:23:56.695987",
+        "index": "1.0",
+        "text": "Python 3.5.3 (/usr/bin/python3)",
+        "text_widget_id": 1970962704,
+        "text_widget_context": "shell",
+        "text_widget_class": "ShellText",
+        "sequence": "TextInsert",
+        "tags": "('welcome',)"
+    },
+    {
+        "time": "2018-04-05T21:23:56.702860",
+        "index": "1.31",
+        "text": "\n",
+        "text_widget_id": 1970962704,
+        "text_widget_context": "shell",
+        "text_widget_class": "ShellText",
+        "sequence": "TextInsert",
+        "tags": "('io',)"
+    },
+    {
+        "time": "2018-04-05T21:23:56.705409",
+        "index": "2.0",
+        "text": ">>> ",
+        "text_widget_id": 1970962704,
+        "text_widget_context": "shell",
+        "text_widget_class": "ShellText",
+        "sequence": "TextInsert",
+        "tags": "('toplevel', 'prompt')"
+    },
+    {
+        "time": "2018-04-05T21:40:45.359388",
+        "widget_class": "Workbench",
+        "widget_id": 1984302160,
+        "sequence": "<FocusOut>"
+    },
+    {
+        "time": "2018-04-05T21:53:11.389382",
+        "widget_class": "Workbench",
+        "widget_id": 1984302160,
+        "sequence": "<FocusIn>"
+    },
+    {
+        "time": "2018-04-05T21:53:11.526500",
+        "widget_class": "Workbench",
+        "widget_id": 1984302160,
+        "sequence": "<FocusOut>"
+    },
+    {
+        "time": "2018-04-05T22:01:26.592784",
+        "widget_class": "Workbench",
+        "widget_id": 1984302160,
+        "sequence": "<FocusIn>"
+    }
+]
