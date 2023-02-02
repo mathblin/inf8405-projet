@@ -1,4 +1,5 @@
 * [Git de Bilal](https://github.com/bilal684/INF8405)
+* [Trello/DashBoard](https://trello.com/b/Kum6uc9j/projet-robot)
 
 # Robot SMOL
 
