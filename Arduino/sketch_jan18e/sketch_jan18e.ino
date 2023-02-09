@@ -71,12 +71,22 @@ void setup(void)
 } 
 void loop(void) 
 {
-   bool DEBUG = true;
+   bool DEBUG = false;
+  vitesse = vitesseMax;
    if (DEBUG)
     {
-      vitesse = vitesseMax;
+      String msg = "";
+      if(Serial.available()){
+        msg = Serial.readString();
+        if (msg == "w"){
+          advance(vitesse, vitesse);
+          delay(2000);
+          stop();
+        }
+      }
       // advance(vitesse, vitesse);
-      turn_L_360(vitesse, vitesse);
+      // advance(vitesse, vitesse);
+      // turn_L_360(vitesse, vitesse);
     }
    else
    {
