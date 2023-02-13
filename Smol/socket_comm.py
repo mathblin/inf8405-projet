@@ -1,55 +1,68 @@
 import sys
 import socket
 DEBUGGER_MODE = None
-s, conn, addr = (None, None, None)
+server, conn, addr = (None, None, None)
 HOST, PORT = (None, None)
 def init_socket(inHOST, inPORT, DEBUG_MODE=None):
     global HOST
     global PORT
     global DEBUGGER_MODE
-    global s
+    global server
     global conn
     global addr
     HOST, PORT = inHOST, inPORT
     DEBUGGER_MODE = DEBUG_MODE
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+    # Next line is to avoit the TIME_WAIT state of connected sockets. 
+    # Even if we close our socket, it can cause lingering consequences for some time (even minutes). 
+    # Why: A socket flag can be set to disable the behavior. Flag: SO_REUSEADDR
+    # Inspired by Jean-Paul Calderone: https://stackoverflow.com/questions/5040491/python-socket-doesnt-close-connection-properly
+    # More reasons: http://www.unixguide.net/network/socketfaq/4.5.shtml
+    server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
+    # Other options:
     #socket.socket: must use to create a socket.
     #socket.AF_INET: Address Format, Internet = IP Addresses.
     #socket.SOCK_STREAM: two-way, connection-based byte streams.
     print ("socket created")
 
-    #Bind socket to Host and Port
+    # Bind socket to Host and Port
     try:
-        s.bind((HOST, PORT))
+        server.bind((HOST, PORT))
     except socket.error as err:
     #  print ('Bind Failed, Error Code: ' + str(err[0]) + ', Message: ' + err[1]
         sys.exit()
 
     print ('Socket Bind Success!')
 
-
     #listen(): This method sets up and start TCP listener.
-    s.listen(10)
+    server.listen(10)
     print ('Socket is now listening')
 
-    conn, addr = s.accept()
+    conn, addr = server.accept()
     print ('Connect with ' + addr[0] + ':' + str(addr[1]))
 
     # sys.exit(help(conn.timeout))
     conn.settimeout(5.0)
 
 def close_socket():
-    s.close()
+    conn.close()
+    server.close()
 
 def manage_socket_exception(command):
     close_socket()
-    if not DEBUGGER_MODE:
-        init_socket(HOST, PORT) # QoS
+    if command == 'exceded timout\n':
+        print(command)
+    elif command == '':
+        print('exceded timout, empty command\n')
     else:
-        if command == 'exceded timout':
-            sys.exit(command)
-        elif command == '':
-            sys.exit('exceded timout, empty command')
+        print('exceded timout\n')
+    
+    if DEBUGGER_MODE:
+        sys.exit('Exited while being in debugger mode')
+    else:
+        init_socket(HOST, PORT) # QoS
 
 
 def get_comman_from_socket():
