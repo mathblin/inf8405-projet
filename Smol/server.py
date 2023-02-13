@@ -10,7 +10,7 @@ DEBUGGER_MODE = True
 init_serial(DEBUGGER_MODE)
 
 # Arduino communication test if True
-DEBUG_SERIAL_COMM = False
+DEBUG_SERIAL_COMM = True
 if DEBUG_SERIAL_COMM:
     test_serial_comm()
 
