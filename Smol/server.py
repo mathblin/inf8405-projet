@@ -4,7 +4,7 @@ from time import sleep
 from serial_comm import *
 from socket_comm import *
 
-DEBUGGER_MODE = True
+DEBUGGER_MODE = False
 
 # Arduino communication init
 init_serial(DEBUGGER_MODE)
