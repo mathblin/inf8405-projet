@@ -3,7 +3,10 @@ import socket
 DEBUGGER_MODE = None
 server, conn, addr = (None, None, None)
 HOST, PORT = (None, None)
+
 def init_socket(inHOST, inPORT, DEBUG_MODE=None):
+    """Initializing the socket with Android App"""
+
     global HOST
     global PORT
     global DEBUGGER_MODE
@@ -47,10 +50,13 @@ def init_socket(inHOST, inPORT, DEBUG_MODE=None):
     conn.settimeout(5.0)
 
 def close_socket():
+    """Closing the socket with Android App"""
     conn.close()
     server.close()
 
 def manage_socket_exception(command):
+    """Managing exception from sockets"""
+
     close_socket()
     if command == 'exceded timout\n':
         print(command)
@@ -66,10 +72,12 @@ def manage_socket_exception(command):
 
 
 def get_comman_from_socket():
+    """Fonction to get commands from the Android application"""
+
     try:
         recvCommand = conn.recv(64)
         
-        return recvCommand.decode('utf-8')
+        return recvCommand.decode('utf-8').lower()
 
     except:
         return 'exceded timout'

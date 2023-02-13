@@ -24,6 +24,7 @@ HOST = HOST_MATH
 PORT = 5050
 
 init_socket(HOST, PORT, DEBUGGER_MODE)
+
 while 1:
     command = get_comman_from_socket()
     if command == 'exceded timout':
