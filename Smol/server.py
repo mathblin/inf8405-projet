@@ -1,5 +1,3 @@
-import sys
-import socket
 from time import sleep
 from serial_comm import *
 from socket_comm import *
