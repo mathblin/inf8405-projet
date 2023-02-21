@@ -7,7 +7,7 @@ from time import time, sleep
 serialInst = None
 DEBUGGER_MODE = None
 previous_time = 0
-ARDUINO_SERIAL_COMM_MIN_TIME_DIFF = 1.5
+ARDUINO_SERIAL_COMM_MIN_TIME_DIFF = 0
 
 def init_serial(DEBUG_MODE = None):
     """Initialisation of the server socket

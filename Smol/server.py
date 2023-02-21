@@ -15,9 +15,9 @@ if DEBUG_SERIAL_COMM:
 
 #HOST = '132.207.186.54' #this is your localhost
 #HOST = '127.0.0.1' #this is your localhost
-# HOST = '10.200.0.163' # Math
+HOST_MATH = '10.200.0.163' # Math
 # HOST = '169.254.137.33' # Math
-HOST_MATH = '10.0.0.158' # Math
+# HOST_MATH = '10.0.0.158' # Math
 HOST = HOST_MATH
 PORT = 5050
 
