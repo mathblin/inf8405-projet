@@ -22,3 +22,6 @@
 ## Steps for the installation of a driver for Kotlin
 * General link : [Windows driver](https://developer.android.com/studio/run/oem-usb?hl=fr#InstallingDriver)
 * For Samsung tablet : [Samsung Windows driver](https://developer.samsung.com/android-usb-driver)
+
+## Pour connecter un PC au robot
+[VNC Viewer](https://www.realvnc.com/fr/connect/download/viewer/)
