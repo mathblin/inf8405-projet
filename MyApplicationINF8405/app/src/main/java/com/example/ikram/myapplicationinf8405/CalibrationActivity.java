@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.webkit.WebView;
 
@@ -40,6 +42,13 @@ public class CalibrationActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
+
+        //System.out.println("ligne000");
+        Bundle extras = getIntent().getExtras();
+        // System.out.println(extras.getString("ip"));
+        //  System.out.println("ligne111");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calibration);
 
@@ -48,16 +57,31 @@ public class CalibrationActivity extends AppCompatActivity {
         buttonMax = this.findViewById(R.id.buttonMax);
         buttonStart = this.findViewById(R.id.buttonStart);
         buttonReset = this.findViewById(R.id.buttonReset);
-        buttonStart.setEnabled(false);
+        buttonStart.setEnabled(true);
 
         //Set up sensors and accelerometer
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensorAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
+        Switch switchMode = findViewById(R.id.switch2);
+        switchMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    switchMode.setText("Mode automatique activé");
+                } else {
+                    switchMode.setText("Mode automatique désactivé");
+                }
+            }
+        });
+
         // Set TextView
         textMin = findViewById(R.id.minValue);
         textMax = findViewById(R.id.maxValue);
         textPosition = findViewById(R.id.positionValue);
+        /// System.out.println("textPositionn1:" + textPosition.getText().toString( ));
+        //  System.out.println("textPositionn2:" + textMax.getText().toString( ));
+        //  System.out.println("textPositionn3:" + textMin.getText().toString( ));
 
         // Set event listeners for buttons
         buttonMin = findViewById(R.id.buttonMin);
@@ -90,15 +114,18 @@ public class CalibrationActivity extends AppCompatActivity {
         buttonStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                System.out.println("testtt");
+                Bundle extras = getIntent().getExtras();
+                System.out.println(extras.getString("ip"));
                 max_acceleration = max_acceleration * -1; // To remove the negative
 
                 Intent i = new Intent(CalibrationActivity.this, VideoActivity.class);
 
-                Bundle extras = getIntent().getExtras();
                 String adresseIP;
                 if (extras != null && !extras.getString("ip").equals("")) {
                     adresseIP = extras.getString("ip");
+
+
                 } else {
                     adresseIP = "http://webcam.aui.ma/axis-cgi/mjpg/video.cgi?resolution=CIF&amp";
                 }
@@ -199,6 +226,8 @@ public class CalibrationActivity extends AppCompatActivity {
                     buttonMax.setEnabled(true);
                 }
                 textPosition.setText(String.valueOf(relative_linear_acceleration[0]));
+                //  System.out.println(textPosition.getText().toString());
+                // samir System.out.println("textPosition.getText().toString()");
             }
         }
     };

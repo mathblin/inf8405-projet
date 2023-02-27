@@ -37,16 +37,24 @@ public class VideoActivity extends Activity {
 
     // VideoView && URL
     private VideoView mv;
-    String URL = "http://132.207.186.11:8000";
+    //String URL = "http://132.207.186.54:5000";
+    String URL = "http://192.168.55.3:5000";
+     // String URL = "http://10.0.0.238:5000";
 
+   // String URL = "http://webcam.aui.ma/axis-cgi/mjpg/video.cgi?resolution=CIF&amp0";
     // Server port and thread
+
     public static final int SERVERPORT = 5050;
-    public static final String SERVER_IP = "132.207.186.11"; //10.200.26.68
+   // public static final String SERVER_IP = "132.207.186.11"; //10.200.26.68
+    //public static final String SERVER_IP = "10.0.0.62"; //10.200.26.68
+  //  public static final String SERVER_IP = "10.200.61.168"; //10.200.26.68
+    public static final String SERVER_IP = "10.200.0.163"; //10.200.26.68
+
 
     ClientThread clientThread;
     Thread thread;
 
-    //Declare sensors
+    //Declare
     SensorManager sensorManager;
     Sensor sensorAccelerometer;
 
@@ -73,6 +81,12 @@ public class VideoActivity extends Activity {
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+        System.out.println("ligne000");
+        Bundle extras = getIntent().getExtras();
+        System.out.println(extras.getString("ip"));
+        System.out.println("ligne111");
+
+
         //mv = new VideoView(this);
         setContentView(R.layout.activity_video_view);
         WebView webView = (WebView) findViewById(R.id.webView);
@@ -80,7 +94,9 @@ public class VideoActivity extends Activity {
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         webView.setRight(50);
-        webView.loadUrl(URL);
+        System.out.println("ligne000");
+          webView.loadUrl(URL);
+      //  webView.loadUrl("http://"+extras.getString("ip")+":5000");
 
 
 
@@ -89,7 +105,6 @@ public class VideoActivity extends Activity {
         sensorAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         //get extras passed from previous activity
-        Bundle extras = getIntent().getExtras();
         /*if (extras != null && !extras.getString("ip").equals("")) {
             URL = extras.getString("ip");
         } else {
@@ -144,6 +159,8 @@ public class VideoActivity extends Activity {
         super.onDestroy();
         if (null != clientThread) {
             clientThread.sendMessage("Disconnect");
+            System.out.println("testsamir123456");
+
             clientThread = null;
         }
     }
@@ -153,7 +170,7 @@ public class VideoActivity extends Activity {
         public void onAccuracyChanged(Sensor sensor, int acc) { }
 
         public void onSensorChanged(SensorEvent event) {
-
+            System.out.println("0000");
             // Get the acceleration from sensors. Raw data
             linear_acceleration[0] = event.values[0] ;
             linear_acceleration[1] = event.values[1] ;
@@ -164,105 +181,119 @@ public class VideoActivity extends Activity {
 
             if (m == linear_acceleration[0]){
                 stopValue = m - posXYZ[0];
+                System.out.println("00001");
             }
             else{
                 stopValue = m - linear_acceleration[0];
+                System.out.println("00002");
             }
 
             if(Math.abs(linear_acceleration[1]) <= 2.0 && stopValue < topIntervalX && stopValue < bottomIntervalX)
             {
                 clientThread.sendMessage("x");
+                System.out.println("00003");
             }
 
-                if (Math.abs(linear_acceleration[1]) > 2.0) // Pritorite pour tourner
+            if (Math.abs(linear_acceleration[1]) > 2.0) // Pritorite pour tourner
+            {
+
+                // QEAD
+
+                if (linear_acceleration[1] > posXYZ[1]) // droite
                 {
+                    System.out.println("0000droite");
+                    double sendValue = linear_acceleration[1] - posXYZ[1];
+                    sendValue = Math.floor(sendValue);
 
-                    // QEAD
-
-                    if (linear_acceleration[1] > posXYZ[1]) // droite
-                    {
-                        double sendValue = linear_acceleration[1] - posXYZ[1];
-                        sendValue = Math.floor(sendValue);
-
-                        if (sendValue >= 8.0) {
-                            sendValue = 8.0;
-                            if (sendValue != lastValueEQ) {
-                                clientThread.sendMessage("d");
-                            }
-                        } else {
-                            if (sendValue > lastValueEQ) {
-                                clientThread.sendMessage("E");
-                                clientThread.sendMessage("E");
-
-                            } else if (sendValue < lastValueEQ) {
-                                clientThread.sendMessage("e");
-                                clientThread.sendMessage("e");
-                            }
+                    if (sendValue >= 8.0) {
+                        sendValue = 8.0;
+                        if (sendValue != lastValueEQ) {
+                            clientThread.sendMessage("d");
+                            System.out.println("0000d");
                         }
-                        lastValueEQ = sendValue;
-                    } else // gauche
-                    {
-                        double sendValue = posXYZ[1] - linear_acceleration[1];
-                        sendValue = Math.floor(sendValue);
+                    } else {
+                        if (sendValue > lastValueEQ) {
+                            clientThread.sendMessage("E");
+                            clientThread.sendMessage("E");
+                            System.out.println("0000e");
 
-                        if (sendValue >= 8.0) {
-                            sendValue = 8.0;
-                            if (sendValue != lastValueEQ) {
-                                clientThread.sendMessage("a");
-                            }
-                        } else {
-                            if (sendValue > lastValueEQ) {
-                                clientThread.sendMessage("Q");
-                                clientThread.sendMessage("Q");
-
-                            } else if (sendValue < lastValueEQ) {
-                                clientThread.sendMessage("q");
-                                clientThread.sendMessage("q");
-                            }
+                        } else if (sendValue < lastValueEQ) {
+                            clientThread.sendMessage("e");
+                            clientThread.sendMessage("e");
+                            System.out.println("0000Esmal");
                         }
-                        lastValueEQ = sendValue;
                     }
-                } else // priorite avancer
+                    lastValueEQ = sendValue;
+                } else // gauche
                 {
-                    // WS
-                    if (linear_acceleration[0] > posXYZ[0]) // reculer
-                    {
-                        double sendValue = linear_acceleration[0] - posXYZ[0];
-                        sendValue = Math.floor(sendValue);
+                    double sendValue = posXYZ[1] - linear_acceleration[1];
+                    sendValue = Math.floor(sendValue);
 
-                        if (sendValue < bottomIntervalX) {
-                            clientThread.sendMessage("x");
-                        } else {
-                            if (sendValue > lastValueWS) {
-                                clientThread.sendMessage("S");
-                                clientThread.sendMessage("S");
-                            } else if (sendValue < lastValueWS) {
-                                clientThread.sendMessage("s");
-                                clientThread.sendMessage("s");
-                            }
+                    if (sendValue >= 8.0) {
+                        sendValue = 8.0;
+                        if (sendValue != lastValueEQ) {
+                            clientThread.sendMessage("a");
+                            System.out.println("0000a");
                         }
+                    } else {
+                        if (sendValue > lastValueEQ) {
+                            clientThread.sendMessage("Q");
+                            clientThread.sendMessage("Q");
+                            System.out.println("0000q");
 
-                        lastValueWS = sendValue;
-                    } else // avancer
-                    {
-                        double sendValue = posXYZ[0] - linear_acceleration[0];
-                        sendValue = Math.floor(sendValue);
-
-                        if (sendValue < topIntervalX) {
-                            clientThread.sendMessage("x");
-                        } else {
-                            if (sendValue > lastValueWS) {
-                                clientThread.sendMessage("W");
-                                clientThread.sendMessage("W");
-
-                            } else if (sendValue < lastValueWS) {
-                                clientThread.sendMessage("w");
-                                clientThread.sendMessage("w");
-                            }
+                        } else if (sendValue < lastValueEQ) {
+                            clientThread.sendMessage("q");
+                            clientThread.sendMessage("q");
+                            System.out.println("0000qsmal");
                         }
-                        lastValueWS = sendValue;
                     }
+                    lastValueEQ = sendValue;
                 }
+            } else // priorite avancer
+            {
+                // WS
+                if (linear_acceleration[0] > posXYZ[0]) // reculer
+                {
+                    double sendValue = linear_acceleration[0] - posXYZ[0];
+                    sendValue = Math.floor(sendValue);
+
+                    if (sendValue < bottomIntervalX) {
+                        clientThread.sendMessage("x");
+                        System.out.println("0000xligne257");
+                    } else {
+                        if (sendValue > lastValueWS) {
+                            clientThread.sendMessage("S");
+                            clientThread.sendMessage("S");
+                            System.out.println("0000s262");
+                        } else if (sendValue < lastValueWS) {
+                            clientThread.sendMessage("s");
+                            clientThread.sendMessage("s");
+                            System.out.println("0000266");
+                        }
+                    }
+
+                    lastValueWS = sendValue;
+                } else // avancer
+                {
+                    double sendValue = posXYZ[0] - linear_acceleration[0];
+                    sendValue = Math.floor(sendValue);
+
+                    if (sendValue < topIntervalX) {
+                        clientThread.sendMessage("x");
+                    } else {
+                        if (sendValue > lastValueWS) {
+                            clientThread.sendMessage("W");
+                            clientThread.sendMessage("W");
+                            System.out.println("0000pppppppppppppppppppppppppWWW");
+
+                        } else if (sendValue < lastValueWS) {
+                            clientThread.sendMessage("w");
+                            clientThread.sendMessage("w");
+                        }
+                    }
+                    lastValueWS = sendValue;
+                }
+            }
         }
     };
 
@@ -302,20 +333,23 @@ public class VideoActivity extends Activity {
     // source : http://www.coderzheaven.com/2017/05/01/client-server-programming-in-android-send-message-to-the-client-and-back/
     // Class for client thread with socket to send message
     class ClientThread implements Runnable {
-
         private Socket socket;
 
         @Override
         public void run() {
 
+            System.out.println("tests000000000000000000amirk0"+SERVERPORT);
             try {
                 InetAddress serverAddr = InetAddress.getByName(SERVER_IP);
                 socket = new Socket(serverAddr, SERVERPORT);
+                System.out.println("teseeeeeeeeeeeeeeeetsamirk1"+SERVERPORT);
 
             } catch (UnknownHostException e1) {
                 e1.printStackTrace();
+                System.out.println("catcfrrrrrrrrrrrrrrrrrrrrrrrrrrrrh1");
             } catch (IOException e1) {
                 e1.printStackTrace();
+                System.out.println("catffffffffffffffffffffffffffch2");
             }
         }
 

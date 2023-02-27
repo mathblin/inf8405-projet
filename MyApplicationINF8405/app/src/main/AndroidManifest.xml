@@ -22,7 +22,14 @@
             </intent-filter>
         </activity>
         <activity android:name=".CalibrationActivity"
-                  android:screenOrientation="landscape">
+                  android:screenOrientation="landscape"
+            android:parentActivityName=".MainActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+
+
         </activity>
         <activity
             android:name=".VideoActivity"
