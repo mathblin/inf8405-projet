@@ -7,51 +7,43 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
+import android.view.WindowManager;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+
+
+import com.jackandphantom.joystickview.JoyStickView;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import java.io.IOException;
-import java.net.URI;
-import java.util.ArrayList;
-import android.os.StrictMode;
-import android.view.Gravity;
-import android.view.WindowManager;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-
 import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.URI;
 import java.net.UnknownHostException;
 
-public class VideoActivity extends Activity {
+public class VideoActivityMan extends Activity {
     private static final String TAG = "VideoActivity";
 
-    // VideoView && URL
     private VideoView mv;
-    //String URL = "http://132.207.186.54:5000";
-   // String URL = "http://192.168.55.3:5000";
-     // String URL = "http://10.0.0.238:5000";
-
-    String URL = "https://www.youtube.com/watch?v=tpnzrolB0vs&ab_channel=VladetNikita";
-    // Server port and thread
+    String URL = "http://webcam.aui.ma/axis-cgi/mjpg/video.cgi?resolution=CIF&amp0";
 
     public static final int SERVERPORT = 5050;
-   // public static final String SERVER_IP = "132.207.186.11"; //10.200.26.68
-    //public static final String SERVER_IP = "10.0.0.62"; //10.200.26.68
-  //  public static final String SERVER_IP = "10.200.61.168"; //10.200.26.68
-    public static final String SERVER_IP = "10.200.0.163"; //10.200.26.68
 
+    public static final String SERVER_IP = "10.0.0.62"; //10.200.26.68
 
-    ClientThread clientThread;
+    VideoActivityMan.ClientThread clientThread;
     Thread thread;
 
     //Declare
@@ -76,63 +68,71 @@ public class VideoActivity extends Activity {
     double lastValueWS = 0.0;
     double lastValueEQ = 0.0;
 
+
+
+
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-      //  System.out.println("ligne000");
         Bundle extras = getIntent().getExtras();
-        //System.out.println(extras.getString("ip"));
-     //   System.out.println("ligne111");
-
-
         //mv = new VideoView(this);
-        setContentView(R.layout.activity_video_view);
+        setContentView(R.layout.activity_video_man);
         WebView webView = (WebView) findViewById(R.id.webView);
         webView.setWebViewClient(new WebViewClient());
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         webView.setRight(50);
-        System.out.println("ligne000");
-          webView.loadUrl(URL);
-      //  webView.loadUrl("http://"+extras.getString("ip")+":5000");
+        //   System.out.println("ligne000");
+        webView.loadUrl(URL);
 
 
-
-        //Set up sensors and accelerometer
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensorAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-
-        //get extras passed from previous activity
-        /*if (extras != null && !extras.getString("ip").equals("")) {
-            URL = extras.getString("ip");
-        } else {
-            URL = "http://webcam.aui.ma/axis-cgi/mjpg/video.cgi?resolution=CIF&amp";
-        }
-*/
-        if(extras != null){
+        if (extras != null) {
             maxAcceleration = extras.getDouble("maxAcceleration");
             minAcceleration = extras.getDouble("minAcceleration");
             posXYZ = extras.getDoubleArray("posXYZ");
         }
 
-        topIntervalX = maxAcceleration/stopInterval;
-        bottomIntervalX = minAcceleration/stopInterval;
+        topIntervalX = maxAcceleration / stopInterval;
+        bottomIntervalX = minAcceleration / stopInterval;
 
         // Initialize and start thread
-        clientThread = new ClientThread();
+        clientThread = new VideoActivityMan.ClientThread();
         thread = new Thread(clientThread);
 
-        if (android.os.Build.VERSION.SDK_INT > 9)
-        {
+        if (android.os.Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
         thread.start();
 
-        // Execute URL for video
-        //new DoRead().execute(URL);
+
+
+        //  webView.loadUrl("http://"+extras.getString("ip")+":5000");
+        JoyStickView joyStick = findViewById(R.id.circleView);
+        joyStick.setOnMoveListener(new JoyStickView.OnMoveListener() {
+            @Override
+            public void onMove(double angle, float strength) {
+                // System.out.println("angle: " + angle + ", strength: " + strength);
+               float  speed = (float) (strength * 1.75 +80);
+                clientThread.sendMessage("angle : " + angle +" et vitesse : " + speed);
+            }
+
+            public void onButtonReleased() {
+                // Button is released
+                //  System.out.println("Button released");
+            }
+
+        });
+
+
+
+
+
+
     }
 
     //On resume, register accelerometer listener
@@ -164,6 +164,10 @@ public class VideoActivity extends Activity {
             clientThread = null;
         }
     }
+
+
+
+
 
     //Accelerometer listener, set the values
     public SensorEventListener accelerometerListener = new SensorEventListener() {
@@ -296,7 +300,6 @@ public class VideoActivity extends Activity {
             }
         }
     };
-
     // Class for async task of video stream
     public class DoRead extends AsyncTask<String, Void, VideoStreamActivity> {
         protected VideoStreamActivity doInBackground(String... url) {
@@ -329,27 +332,22 @@ public class VideoActivity extends Activity {
         }
     }
 
-    // source : https://stackoverflow.com/questions/25093546/android-os-networkonmainthreadexception-at-android-os-strictmodeandroidblockgua
-    // source : http://www.coderzheaven.com/2017/05/01/client-server-programming-in-android-send-message-to-the-client-and-back/
     // Class for client thread with socket to send message
     class ClientThread implements Runnable {
+
         private Socket socket;
 
         @Override
         public void run() {
 
-            System.out.println("tests000000000000000000amirk0"+SERVERPORT);
             try {
                 InetAddress serverAddr = InetAddress.getByName(SERVER_IP);
                 socket = new Socket(serverAddr, SERVERPORT);
-                System.out.println("teseeeeeeeeeeeeeeeetsamirk1"+SERVERPORT);
 
             } catch (UnknownHostException e1) {
                 e1.printStackTrace();
-                System.out.println("catcfrrrrrrrrrrrrrrrrrrrrrrrrrrrrh1");
             } catch (IOException e1) {
                 e1.printStackTrace();
-                System.out.println("catffffffffffffffffffffffffffch2");
             }
         }
 
@@ -366,3 +364,4 @@ public class VideoActivity extends Activity {
         }
     }
 }
+

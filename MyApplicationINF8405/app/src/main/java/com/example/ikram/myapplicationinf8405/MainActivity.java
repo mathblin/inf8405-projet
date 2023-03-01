@@ -26,19 +26,7 @@ public class MainActivity extends AppCompatActivity {
     String URL = "http://webcam.aui.ma/axis-cgi/mjpg/video.cgi?resolution=CIF&amp";
     String youtubeUrl = "https://www.youtube.com/watch?v=4Zv0GZUQjZc&ab_channel=Freenove";
 
-    private int value = 0;
-    private boolean buttonPressed = false;
-    private final Handler handler = new Handler();
-    private final Runnable repeatAction = new Runnable() {
-        @Override
-        public void run() {
-            if (buttonPressed) {
-                value++;
-                handler.postDelayed(this, 20);
-                System.out.println("command test");
-            }
-        }
-    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -23,6 +23,7 @@ public class CalibrationActivity extends AppCompatActivity {
 
     //Assign initial values to acceleration, first time sensor change, initial device position
     boolean firstTime = false;
+    boolean isChecked = false;
     double[] posXYZ = {0, 0, 0};
     double[] linear_acceleration = {0, 0, 0};
     double[] relative_linear_acceleration = {0, 0, 0};
@@ -66,11 +67,14 @@ public class CalibrationActivity extends AppCompatActivity {
         Switch switchMode = findViewById(R.id.switch2);
         switchMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked2) {
+                if (isChecked2) {
                     switchMode.setText("Mode automatique activé");
+                    isChecked= false;
+
                 } else {
                     switchMode.setText("Mode automatique désactivé");
+                    isChecked= true;
                 }
             }
         });
@@ -119,7 +123,8 @@ public class CalibrationActivity extends AppCompatActivity {
                 System.out.println(extras.getString("ip"));
                 max_acceleration = max_acceleration * -1; // To remove the negative
 
-                Intent i = new Intent(CalibrationActivity.this, VideoActivity.class);
+                Intent auto = new Intent(CalibrationActivity.this, VideoActivity.class);
+                Intent man = new Intent(CalibrationActivity.this, VideoActivityMan.class);
 
                 String adresseIP;
                 if (extras != null && !extras.getString("ip").equals("")) {
@@ -130,11 +135,31 @@ public class CalibrationActivity extends AppCompatActivity {
                     adresseIP = "http://webcam.aui.ma/axis-cgi/mjpg/video.cgi?resolution=CIF&amp";
                 }
 
-                i.putExtra("ip", adresseIP);
-                i.putExtra("maxAcceleration", max_acceleration);
-                i.putExtra("minAcceleration", min_acceleration);
-                i.putExtra("posXYZ", posXYZ);
-                startActivity(i);
+                auto.putExtra("ip", adresseIP);
+                auto.putExtra("maxAcceleration", max_acceleration);
+                auto.putExtra("minAcceleration", min_acceleration);
+                auto.putExtra("posXYZ", posXYZ);
+
+                man.putExtra("ip", adresseIP);
+                man.putExtra("maxAcceleration", max_acceleration);
+                man.putExtra("minAcceleration", min_acceleration);
+                man.putExtra("posXYZ", posXYZ);
+
+                //startActivity(i);
+                if (isChecked){
+                    startActivity(auto);
+                    System.out.println("isCheckedtrue" + isChecked);
+                    System.out.println(isChecked);
+
+                } else {
+                    System.out.println("isCheckedfalse" + isChecked );
+
+
+
+                    startActivity(man);
+
+
+                }
             }
         });
 
