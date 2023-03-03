@@ -1,19 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="true"
+        tools:replace="android:label"
         android:icon="@mipmap/ic_launcher"
         android:label="RobotController"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".MainActivity"
             android:screenOrientation="landscape"
+
+
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,8 +35,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
 
-
         </activity>
+
+
         <activity
             android:name=".VideoActivity"
             android:screenOrientation="landscape"
@@ -43,6 +50,7 @@
             android:keepScreenOn="true"
             android:exported="true">
         </activity>
+
         <activity android:name=".VideoStreamActivity">
         </activity>
 
