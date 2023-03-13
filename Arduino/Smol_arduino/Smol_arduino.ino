@@ -27,6 +27,31 @@ int vitesseIncrementRotation = 15;
 int vitesseRotationMin = 80;
 int vitesseLow = vitesseRotationMin;
 
+// Ajout projet Smol
+int vitesseDifference = vitesseMax - vitesseMin;
+int left_strength;
+int right_strength;
+float strength_scaler = 100;
+
+// getValue function taken from this link:
+// https://stackoverflow.com/questions/9072320/split-string-into-string-array
+ String getValue(String data, char separator, int index)
+{
+  int found = 0;
+  int strIndex[] = {0, -1};
+  int maxIndex = data.length()-1;
+
+  for(int i=0; i<=maxIndex && found<=index; i++){
+    if(data.charAt(i)==separator || i==maxIndex){
+        found++;
+        strIndex[0] = strIndex[1]+1;
+        strIndex[1] = (i == maxIndex) ? i+1 : i;
+    }
+  }
+
+  return found>index ? data.substring(strIndex[0], strIndex[1]) : "";
+}
+
 void stop(void)                    //Stop
 {
   digitalWrite(E1,LOW);   
@@ -61,32 +86,102 @@ void turn_R_360 (char a,char b)             //Turn Right
   digitalWrite(M2,LOW);
 } 
 
+enum
+{
+  FIRST, SECOND, THIRD, FOURTH, FRONT, RIGHT, LEFT, BACK
+};
+
+int getCadrans(int angle)
+{
+  if (angle < 90)                 return FIRST;   // 0
+  if (angle > 90 && angle <= 180)  return SECOND;  // 1
+  if (angle > 180 && angle < 270) return THIRD;   // 2
+  if (angle > 270 && angle < 360) return FOURTH;  // 3
+  if (angle == 90)                return FRONT;   // 4
+  if (angle == 0 || angle == 360) return RIGHT;   // 5
+  if (angle == 180)               return LEFT;    // 6
+  if (angle == 270)               return BACK;    // 7
+
+  return 100;                                     // Erreur
+}
+
+void advance_joystick(String* msg, float* angle_radi, float* sin_res, float* cos_res, float* strength, int* cad)
+{
+  // Calcul d'angles: https://arduinogetstarted.com/reference/arduino-sin ... adapter pour cos
+  *strength = getValue(*msg, ',', 1).toInt();
+  String angle = getValue(*msg, ',', 0);
+  *angle_radi = angle.toInt() * M_PI / 180;
+  *sin_res = sin(*angle_radi);
+  *cos_res = cos(*angle_radi);
+  *cad = getCadrans(angle.toInt());
+
+  float speed_scaler = (*strength / strength_scaler);
+
+  switch(*cad) {
+    case FIRST:
+    case FOURTH:
+    // left_strength = vitesseMin + vitesseDifference * *cos_res; // TODO: Enlever si pas necessaire
+    // right_strength = vitesseMin + vitesseDifference * *sin_res; // TODO: Enlever si pas necessaire
+    left_strength = vitesseMin + vitesseDifference * speed_scaler;
+    right_strength = vitesseMin + vitesseDifference * *sin_res * speed_scaler;
+    break;
+    case SECOND:
+    case THIRD:
+    right_strength = vitesseMin + vitesseDifference * speed_scaler;
+    left_strength = vitesseMin + vitesseDifference * abs(*sin_res) * speed_scaler;
+    break;
+  }
+
+  switch(*cad) {
+    case FIRST:
+    case SECOND:
+    advance(left_strength, right_strength);
+    break;
+    case THIRD:
+    case FOURTH:
+    back_off(left_strength, right_strength);
+    break;
+  }
+
+}
+
 void setup(void) 
 { 
   int i;
   for(i=4;i<=7;i++)
     pinMode(i, OUTPUT);  
   Serial.begin(9600);      //Set Baud Rate
-  Serial.println("Run keyboard control");
+  // Serial.println("Run keyboard control");
 } 
 void loop(void) 
 {
-   bool DEBUG = false;
+  // Serial.println("Hello");
+  bool DEBUG = true;
   vitesse = vitesseMax;
    if (DEBUG)
     {
       String msg = "";
+      String angle = "";
+      float strength = 0;
+      float angle_rad;
+      float sin_result;
+      float cos_result;
+      int cad;
+
       if(Serial.available()){
         msg = Serial.readString();
-        if (msg == "w"){
-          advance(vitesse, vitesse);
-          delay(2000);
-          stop();
+
+        advance_joystick(&msg, &angle_rad, &sin_result, &cos_result, &strength, &cad);
+
+        if (Serial.availableForWrite() > 30){
+          
+          Serial.print("sin:" + String(sin_result) + " cos:" + String(cos_result) + " str:"+  String(strength) + " cad:" + String(cad) \
+          + " <--: " + String(left_strength) + " -->: " + String(right_strength));
         }
+        
+        delay(2000);
+        stop();
       }
-      // advance(vitesse, vitesse);
-      // advance(vitesse, vitesse);
-      // turn_L_360(vitesse, vitesse);
     }
    else
    {

@@ -2,13 +2,13 @@ from time import sleep
 from serial_comm import *
 from socket_comm import *
 
-DEBUGGER_MODE = False
+DEBUGGER_MODE = True
 
 # Arduino communication init
 init_serial(DEBUGGER_MODE)
 
 # Arduino communication test if True
-DEBUG_SERIAL_COMM = False
+DEBUG_SERIAL_COMM = True
 if DEBUG_SERIAL_COMM:
     test_serial_comm()
 

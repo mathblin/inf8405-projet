@@ -77,7 +77,7 @@ def get_comman_from_socket():
     try:
         recvCommand = conn.recv(64)
         
-        return recvCommand.decode('utf-8').lower()
+        return recvCommand.decode('utf-8').lower() # TODO: change that
 
     except:
         return 'exceded timout'

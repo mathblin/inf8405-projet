@@ -8,6 +8,8 @@ serialInst = None
 DEBUGGER_MODE = None
 previous_time = 0
 ARDUINO_SERIAL_COMM_MIN_TIME_DIFF = 0
+previous_read_time = 0
+ARDUINO_SERIAL_READ_TIMEOUT = 0.5
 
 def init_serial(DEBUG_MODE = None):
     """Initialisation of the server socket
@@ -45,9 +47,9 @@ def init_serial(DEBUG_MODE = None):
                 portVar = com_path + str(val)
                 print(portVar)
                 INVALID_COMM_PORT = False
-    serialInst = serial.Serial(portVar)
+    serialInst = serial.Serial(portVar, timeout=ARDUINO_SERIAL_READ_TIMEOUT)
     previous_time = time()
-    sleep(ARDUINO_SERIAL_COMM_MIN_TIME_DIFF)
+    sleep(1)
     # serialInst = serial.Serial('/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_A100Q8UX-if00-port0')
 
 def can_send_command_to_arduino():
@@ -57,11 +59,24 @@ def can_send_command_to_arduino():
     global previous_time
     current_time = time()
     time_diff = current_time - previous_time
-    print('time diff:', time_diff)
+    # print('time diff:', time_diff)
     can_send_command = time_diff > ARDUINO_SERIAL_COMM_MIN_TIME_DIFF
     if can_send_command:
         previous_time = current_time
     return can_send_command
+
+def can_read_message_from_arduino():
+    """This fonction verify if enough time has passed in between two 
+    serial communication on the arduino
+    """
+    global previous_read_time
+    current_time = time()
+    time_diff = current_time - previous_read_time
+    # print('time diff:', previous_read_time)
+    can_read_message = time_diff > ARDUINO_SERIAL_READ_TIMEOUT
+    if can_read_message:
+        previous_read_time = current_time
+    return can_read_message
 
 
 def write_command_to_arduino(command):
@@ -70,8 +85,14 @@ def write_command_to_arduino(command):
     """
     if can_send_command_to_arduino():
         serialInst.write(command.encode("UTF-8"))
+        serialInst.flush()
 
-    
+def blocking_read_from_arduino():
+    while (serialInst.inWaiting() == 0):
+            pass
+    packetIn = serialInst.readline()
+    packetIn = packetIn.decode("UTF-8").strip('\r\n')
+    print(packetIn)
 
 def test_serial_comm():
     """Fonction to test serial communication without socket"""
@@ -79,6 +100,10 @@ def test_serial_comm():
         command = input("Your Arduino command: ")
 
         if command == "q":
+            print(serialInst.timeout)
+            serialInst.close()
             exit()
 
         write_command_to_arduino(command)
+
+        if DEBUGGER_MODE: blocking_read_from_arduino()
