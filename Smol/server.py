@@ -10,9 +10,8 @@ if DEBUGGER_MODE: show_flags_from_argparser()
 init_serial(DEBUGGER_MODE)
 
 # Arduino communication test if True
-DEBUG_SERIAL_COMM = False
-if DEBUG_SERIAL_COMM:
-    test_serial_comm()
+DEBUG_SERIAL_COMM = args.serial
+if DEBUG_SERIAL_COMM: test_serial_comm()
 
 HOST = args.ip[0] if args.ip else DEFAULT_HOST
 PORT = args.port[0] if args.port else DEFAULT_PORT
