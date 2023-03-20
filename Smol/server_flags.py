@@ -16,12 +16,16 @@ parser.add_argument('-serial', required=False, dest='serial', action='store_true
 # Parsing the arguments
 args = parser.parse_args()
 
+# 
+DEBUGGER_MODE = args.debug
+DEBUG_SERIAL_COMM = args.serial
+
 # debug function to show args
 def show_flags_from_argparser():
     if args.debug:
         print('# Debugger mode #')
     if args.debug:
-        print("\nHere's your flags:")
+        print("\nHere are your flags:")
     if args.ip:
         print(' Server IP address:', args.ip[0])
     if args.port:
@@ -29,3 +33,5 @@ def show_flags_from_argparser():
     if args.serial:
         print(' Serial mode')
     print('')
+
+if DEBUGGER_MODE: show_flags_from_argparser()
