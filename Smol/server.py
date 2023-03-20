@@ -1,25 +1,21 @@
 from time import sleep
 from serial_comm import *
 from socket_comm import *
+from server_flags import *
 
-DEBUGGER_MODE = True
+DEBUGGER_MODE = args.debug
+if DEBUGGER_MODE: show_flags_from_argparser()
 
 # Arduino communication init
 init_serial(DEBUGGER_MODE)
 
 # Arduino communication test if True
-DEBUG_SERIAL_COMM = True
+DEBUG_SERIAL_COMM = False
 if DEBUG_SERIAL_COMM:
     test_serial_comm()
 
-
-#HOST = '132.207.186.54' #this is your localhost
-#HOST = '127.0.0.1' #this is your localhost
-HOST_MATH = '10.200.0.163' # Math
-# HOST = '169.254.137.33' # Math
-# HOST_MATH = '10.0.0.158' # Math
-HOST = HOST_MATH
-PORT = 5050
+HOST = args.ip[0] if args.ip else DEFAULT_HOST
+PORT = args.port[0] if args.port else DEFAULT_PORT
 
 init_socket(HOST, PORT, DEBUGGER_MODE)
 
