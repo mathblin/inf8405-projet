@@ -1,7 +1,7 @@
 import serial.tools.list_ports
 import sys
 from time import time, sleep
-
+from server_flags import args
 # serialInst = serial.Serial('/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_A100Q8UX-if00-port0')
 
 serialInst = None
@@ -50,7 +50,6 @@ def init_serial(DEBUG_MODE = None):
     serialInst = serial.Serial(portVar, timeout=ARDUINO_SERIAL_READ_TIMEOUT)
     previous_time = time()
     sleep(1)
-    # serialInst = serial.Serial('/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_A100Q8UX-if00-port0')
 
 def can_send_command_to_arduino():
     """This fonction verify if enough time has passed in between two 
@@ -84,10 +83,13 @@ def write_command_to_arduino(command):
     to the Arduino
     """
     if can_send_command_to_arduino():
+        command = str(int(args.debug)) + ',' + command
+        print('Server print send command:', command, "\n")
         serialInst.write(command.encode("UTF-8"))
         serialInst.flush()
 
 def blocking_read_from_arduino():
+    """Fonction to test serial communication with verbose data from Arduino"""
     while (serialInst.inWaiting() == 0):
             pass
     packetIn = serialInst.readline()

@@ -34,7 +34,10 @@ int vitesseIncrement = 17;
 int vitesseIncrementRotation = 15;
 int vitesseRotationMin = 80;
 int vitesseLow = vitesseRotationMin;
-int MODE_JOYSTICK = 0, MODE_GYROSCOPE = 1;
+// int MODE_JOYSTICK = 0, MODE_GYROSCOPE = 1;
+enum CONTROL_MODE {
+  MODE_JOYSTICK = 0, MODE_GYROSCOPE = 1
+};
 
 // Ajout projet Smol
 int vitesseDifference = vitesseMax - vitesseMin;
@@ -95,6 +98,7 @@ void turn_R_360 (char a,char b)             //Turn Right
   digitalWrite(M2,LOW);
 } 
 
+/////////////////// JOYSTICK ///////////////////
 enum
 {
   FIRST, SECOND, THIRD, FOURTH, FRONT, RIGHT, LEFT, BACK
@@ -161,66 +165,36 @@ void advance_joystick(String* msg, float* angle_radi, float* sin_res, float* cos
 
 }
 
-// void mode_joystick(String* msg)
-// {
+String angle = "";
+float strength = 0;
+float angle_rad;
+float sin_result;
+float cos_result;
+int cad;
 
-// }
-
-void setup(void) 
-{ 
-  int i;
-  for(i=4;i<=7;i++)
-    pinMode(i, OUTPUT);  
-  Serial.begin(9600);      //Set Baud Rate
-  // Serial.println("Run keyboard control");
-} 
-void loop(void) 
+void mode_joystick(String* msg)
 {
-  bool debug = false;
+  advance_joystick(msg, &angle_rad, &sin_result, &cos_result, &strength, &cad);
 
-  String msg = "";
-  int mode = 1000;
+  if (Serial.availableForWrite() > 30){
+    
+    Serial.print("sin:" + String(sin_result) + " cos:" + String(cos_result) + " str:"+  String(strength) + " cad:" + String(cad) \
+    + " <--: " + String(left_strength) + " -->: " + String(right_strength));
+  }
+  
+  delay(2000);
+  stop();
+}
+////////////////////////////////////////////////
 
-  while(!Serial.available());
-
-  if(Serial.available()){
-    msg = Serial.readString();
-
-    mode = getValue(msg, ',', MODE_POSITION).toInt();
-    debug = getValue(msg, ',', DEBUG_POSITION).toInt();
-
-    if (mode == MODE_JOYSTICK)
-    {
-      String angle = "";
-      float strength = 0;
-      float angle_rad;
-      float sin_result;
-      float cos_result;
-      int cad;
-
-      advance_joystick(&msg, &angle_rad, &sin_result, &cos_result, &strength, &cad);
-
-      if (Serial.availableForWrite() > 30){
-        
-        Serial.print("sin:" + String(sin_result) + " cos:" + String(cos_result) + " str:"+  String(strength) + " cad:" + String(cad) \
-        + " <--: " + String(left_strength) + " -->: " + String(right_strength));
-      }
-      
-      delay(2000);
-      stop();
-    }
-    else if (mode == MODE_GYROSCOPE)
-    {
-      if (Serial.availableForWrite() > 30) Serial.print("mode :" + String(mode) + " debug: " + String(debug));
+/////////////////// GYROSCOPE //////////////////
+void mode_gyroscope(String* msg)
+{
+  // if (Serial.availableForWrite() > 30) Serial.print("mode :" + String(mode) + " debug: " + String(debug));
       vitesse = vitesseMax;
 
       {
-
-          while(!Serial.available());
-
-          advance (vitesse,vitesse); //move forward in max speed
-
-        char command = Serial.read();
+        char command = getValue(*msg, ',', LETTER_POSITION)[0];
         
         if(command != -1)
         {
@@ -542,7 +516,42 @@ void loop(void)
           stop();
         }
       }
-    }    
+}
+
+
+void setup(void) 
+{ 
+  int i;
+  for(i=4;i<=7;i++)
+    pinMode(i, OUTPUT);  
+  Serial.begin(9600);      //Set Baud Rate
+  // Serial.println("Run keyboard control");
+} 
+void loop(void) 
+{
+  bool debug = false;
+
+  String msg = "";
+  int mode = 1000;
+
+  while(!Serial.available());
+
+  if(Serial.available()){
+    msg = Serial.readString();
+
+    mode = getValue(msg, ',', MODE_POSITION).toInt();
+    debug = getValue(msg, ',', DEBUG_POSITION).toInt();
+
+    switch(mode)
+    {
+    case MODE_JOYSTICK:
+      mode_joystick(&msg);
+    break;
+    case MODE_GYROSCOPE:
+      if (Serial.availableForWrite() > 30) Serial.print("mode :" + String(mode) + " debug: " + String(debug));
+      mode_gyroscope(&msg);
+    break;
+    } 
   }
 
 }
