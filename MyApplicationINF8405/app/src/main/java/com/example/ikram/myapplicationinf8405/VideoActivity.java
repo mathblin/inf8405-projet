@@ -54,7 +54,8 @@ public class VideoActivity extends Activity {
    // public static final String SERVER_IP = "132.207.186.11"; //10.200.26.68
     //public static final String SERVER_IP = "10.0.0.62"; //10.200.26.68
   //  public static final String SERVER_IP = "10.200.61.168"; //10.200.26.68
-    public static final String SERVER_IP = "10.200.0.163"; //10.200.26.68
+  // public static final String SERVER_IP = "10.200.0.163"; //10.200.26.68 192.168.56.1
+    public static final String SERVER_IP = "192.168.56.1"; //10.200.26.68
 
 
     ClientThread clientThread;
@@ -236,13 +237,30 @@ public class VideoActivity extends Activity {
         joyStick.setListener(new JoyStick.JoyStickListener() {
             @Override
             public void onMove(JoyStick joyStick, double angle, double power, int direction) {
-                //   System.out.println("Button released" + angle + power);
-                // Faire quelque chose avec les données d'angle, de puissance et de direction
-                String command = "0," + angle +  ","+ power  ;
 
-                // Afficher le tag dans la console
+                double angleDegrees = Math.toDegrees(angle);
+
+                if (angleDegrees <0){
+                    double angleFinal =  (180 + Math.abs(angleDegrees));
+                    angleDegrees = angleFinal;
+                } else {
+                    double  angleFinal = (int) (180 -angleDegrees);
+                    angleDegrees = angleFinal;
+                }
+
+
+
+                int test1 = (int) Math.floor(power);
+                int test2 = (int) Math.floor(angleDegrees);
+
+
+
+
+
+                String command = "0," + test2 +  ","+ test1  ;
                 Log.d("JoyStick", tag);
-                String angleText = "Angle: " + angle;
+
+
 
                 clientThread.sendMessage(command);
 
