@@ -8,6 +8,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -23,7 +24,7 @@ public class CalibrationActivity extends AppCompatActivity {
 
     //Assign initial values to acceleration, first time sensor change, initial device position
     boolean firstTime = false;
-    boolean isChecked = false;
+    boolean isChecked ;
     double[] posXYZ = {0, 0, 0};
     double[] linear_acceleration = {0, 0, 0};
     double[] relative_linear_acceleration = {0, 0, 0};
@@ -68,13 +69,26 @@ public class CalibrationActivity extends AppCompatActivity {
         switchMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked2) {
+               Intent auto = new Intent(CalibrationActivity.this, VideoActivity.class);
+
+
+
+
+
+
                 if (isChecked2) {
-                    switchMode.setText("Mode automatique activé");
+                    switchMode.setText("Mode GYROSCOPE");
+
                     isChecked= false;
+                    Log.d("mode", String.valueOf(isChecked));
+                    auto.putExtra("isCheckedCaliber", isChecked);
+
 
                 } else {
-                    switchMode.setText("Mode automatique désactivé");
+                    switchMode.setText("Mode JOYSTICK   ");
                     isChecked= true;
+                    Log.d("mode", String.valueOf(isChecked));
+                    auto.putExtra("isCheckedCaliber", isChecked);
                 }
             }
         });
@@ -140,26 +154,28 @@ public class CalibrationActivity extends AppCompatActivity {
                 auto.putExtra("minAcceleration", min_acceleration);
                 auto.putExtra("posXYZ", posXYZ);
 
+
                 man.putExtra("ip", adresseIP);
                 man.putExtra("maxAcceleration", max_acceleration);
                 man.putExtra("minAcceleration", min_acceleration);
                 man.putExtra("posXYZ", posXYZ);
-
+                auto.putExtra("isCheckedCaliber", isChecked);
+                startActivity(auto);
                 //startActivity(i);
-                if (isChecked){
-                    startActivity(auto);
-                    System.out.println("isCheckedtrue" + isChecked);
-                    System.out.println(isChecked);
-
-                } else {
-                    System.out.println("isCheckedfalse" + isChecked );
-
-
-
-                    startActivity(man);
-
-
-                }
+//                if (isChecked){
+//                    startActivity(man);
+//                    System.out.println("isCheckedtrue" + isChecked);
+//                    System.out.println(isChecked);
+//
+//                } else {
+//                    System.out.println("isCheckedfalse" + isChecked );
+//
+//
+//
+//                    startActivity(auto);
+//
+//
+//                }
             }
         });
 
@@ -175,6 +191,7 @@ public class CalibrationActivity extends AppCompatActivity {
                 buttonStart.setEnabled(false);
             }
         });
+
     }
 
     //On resume, register accelerometer listener

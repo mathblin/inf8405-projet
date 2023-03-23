@@ -282,34 +282,25 @@ public class VideoActivityMan extends Activity {
 
 
         joyStick.setListener(new JoyStick.JoyStickListener() {
-
-
             @Override
             public void onMove(JoyStick joyStick, double angle, double power, int direction) {
              //   System.out.println("Button released" + angle + power);
                 // Faire quelque chose avec les données d'angle, de puissance et de direction
-                String tag = "Angle: " + angle;
+                String tag = "Angle: " + power  ;
 
                 // Afficher le tag dans la console
                 Log.d("JoyStick", tag);
                 String angleText = "Angle: " + angle;
-
             }
-
             @Override
             public void onTap() {
                 // Gérer le tap sur le joystick
             }
-
             @Override
             public void onDoubleTap() {
                 // Gérer le double tap sur le joystick
             }
-
-
             public void onLongPress() {
-
-
                 // Gérer le double tap sur le joystick
             }
         });
@@ -326,7 +317,8 @@ public class VideoActivityMan extends Activity {
             public void onMove(double angle, float strength) {
 
                 float speed = (float) (strength * 1.75 + 80);
-                clientThread.sendMessage("angle : " + angle + " et vitesse : " + speed);
+
+
             }
 
             public void onButtonReleased() {

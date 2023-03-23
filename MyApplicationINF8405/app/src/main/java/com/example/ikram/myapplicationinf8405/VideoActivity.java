@@ -20,10 +20,16 @@ import java.net.URI;
 import java.util.ArrayList;
 import android.os.StrictMode;
 import android.view.Gravity;
+import android.view.View;
 import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.CompoundButton;
+import android.widget.Switch;
+
+import com.erz.joysticklibrary.JoyStick;
+import com.jackandphantom.joystickview.JoyStickView;
 
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
@@ -41,7 +47,7 @@ public class VideoActivity extends Activity {
    // String URL = "http://192.168.55.3:5000";
      // String URL = "http://10.0.0.238:5000";
 
-    String URL = "https://www.youtube.com/watch?v=tpnzrolB0vs&ab_channel=VladetNikita";
+    String URL = "https://www.youtube.com/watch?v=4Zv0GZUQjZc&ab_channel=Freenove";
     // Server port and thread
 
     public static final int SERVERPORT = 5050;
@@ -61,6 +67,9 @@ public class VideoActivity extends Activity {
     //Assign initial values to acceleration, first time sensor change, initial device position
     double[] linear_acceleration = {0, 0, 0};
     double[] posXYZ = {0, 0, 0};
+    boolean isChecked;
+
+
 
     // Max acceleration and Min acceleration
     double maxAcceleration;
@@ -77,12 +86,34 @@ public class VideoActivity extends Activity {
     double lastValueEQ = 0.0;
 
     public void onCreate(Bundle savedInstanceState) {
+        Bundle extras = getIntent().getExtras();
+        if(extras != null){
+            maxAcceleration = extras.getDouble("maxAcceleration");
+            minAcceleration = extras.getDouble("minAcceleration");
+            posXYZ = extras.getDoubleArray("posXYZ");
+            isChecked =  extras.getBoolean("isCheckedCaliber", false);
+        }
+
+
+
+
+
+
+
+
+
+        String tag = "Angle: " + isChecked +  " esp"+  posXYZ ;
+        // Afficher le tag dans la console
+        Log.d("JoyStick2", tag);
+
+
+
         super.onCreate(savedInstanceState);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
       //  System.out.println("ligne000");
-        Bundle extras = getIntent().getExtras();
+       // Bundle extras = getIntent().getExtras();
         //System.out.println(extras.getString("ip"));
      //   System.out.println("ligne111");
 
@@ -111,11 +142,6 @@ public class VideoActivity extends Activity {
             URL = "http://webcam.aui.ma/axis-cgi/mjpg/video.cgi?resolution=CIF&amp";
         }
 */
-        if(extras != null){
-            maxAcceleration = extras.getDouble("maxAcceleration");
-            minAcceleration = extras.getDouble("minAcceleration");
-            posXYZ = extras.getDoubleArray("posXYZ");
-        }
 
         topIntervalX = maxAcceleration/stopInterval;
         bottomIntervalX = minAcceleration/stopInterval;
@@ -130,6 +156,110 @@ public class VideoActivity extends Activity {
             StrictMode.setThreadPolicy(policy);
         }
         thread.start();
+
+        JoyStick joyStick = (JoyStick) findViewById(R.id.joy11);
+        Switch switchMode = findViewById(R.id.switchmode);
+        if (isChecked){
+
+            joyStick.setVisibility(View.VISIBLE);
+            switchMode.setText("Mode JOYSTICK start");
+            switchMode.setChecked(isChecked);
+
+        }else {
+
+
+            joyStick.setVisibility(View.INVISIBLE);
+            switchMode.setText("Mode GYROSCOPE start");
+            switchMode.setChecked(isChecked);
+        }
+
+
+        joyStick.setListener(new JoyStick.JoyStickListener() {
+
+
+            @Override
+            public void onMove(JoyStick joyStick, double angle, double power, int direction) {
+                //   System.out.println("Button released" + angle + power);
+                // Faire quelque chose avec les données d'angle, de puissance et de direction
+                String tag = "Angle: " + power;
+
+                // Afficher le tag dans la console
+                Log.d("JoyStick", tag);
+
+                String angleText = "Angle: " + angle;
+
+            }
+
+            @Override
+            public void onTap() {
+                // Gérer le tap sur le joystick
+            }
+
+            @Override
+            public void onDoubleTap() {
+                // Gérer le double tap sur le joystick
+            }
+
+
+            public void onLongPress() {
+
+
+                // Gérer le double tap sur le joystick
+            }
+        });
+
+
+        switchMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked2) {
+
+//                String test2 = "check ischeked avant " + isChecked;
+
+                Log.d("mode",  "ischecked :"+isChecked );
+                Log.d("mode",  "ischecked2 : " + isChecked2);
+
+                    if (isChecked2) {
+                        switchMode.setText("Mode JOYSTICK3 ");
+                        joyStick.setVisibility(View.VISIBLE);
+
+
+                    } else {
+
+                        switchMode.setText("Mode gyro ");
+                        joyStick.setVisibility(View.INVISIBLE);
+
+                }
+
+            }
+        });
+
+        joyStick.setListener(new JoyStick.JoyStickListener() {
+            @Override
+            public void onMove(JoyStick joyStick, double angle, double power, int direction) {
+                //   System.out.println("Button released" + angle + power);
+                // Faire quelque chose avec les données d'angle, de puissance et de direction
+                String command = "0," + angle +  ","+ power  ;
+
+                // Afficher le tag dans la console
+                Log.d("JoyStick", tag);
+                String angleText = "Angle: " + angle;
+
+                clientThread.sendMessage(command);
+
+            }
+            @Override
+            public void onTap() {
+                // Gérer le tap sur le joystick
+            }
+            @Override
+            public void onDoubleTap() {
+                // Gérer le double tap sur le joystick
+            }
+            public void onLongPress() {
+                // Gérer le double tap sur le joystick
+            }
+        });
+
 
         // Execute URL for video
         //new DoRead().execute(URL);
