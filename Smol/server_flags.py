@@ -1,6 +1,6 @@
 import argparse     # For flag arguments
 
-DEFAULT_HOST = '10.0.0.158'
+DEFAULT_HOST = '10.200.0.163'
 DEFAULT_PORT = 5050
 DEBUG_SERIAL_COMM_DEFAULT = False
 
