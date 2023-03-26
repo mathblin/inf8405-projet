@@ -40,6 +40,13 @@ void advance_joystick(String* msg, float* angle_radi, float* sin_res, float* cos
   *cos_res = cos(*angle_radi);
   *cad = getCadrans(angle.toInt());
 
+  if (*strength == 0)
+  {
+    left_strength = right_strength = 0;
+    stop();
+    return;
+  }
+
   float speed_scaler = (*strength / strength_scaler);
 
   switch(*cad) {
@@ -107,6 +114,4 @@ void mode_joystick(String* msg, bool* debug)
     + " <--: " + String(left_strength) + " -->: " + String(right_strength));
   }
   
-  delay(2000);
-  stop();
 }
