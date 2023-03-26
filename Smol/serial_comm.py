@@ -2,6 +2,7 @@ import serial.tools.list_ports
 import sys
 from time import time, sleep
 from server_flags import args
+from enum import Enum
 # serialInst = serial.Serial('/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_A100Q8UX-if00-port0')
 
 serialInst = None
@@ -10,12 +11,14 @@ previous_time = 0
 ARDUINO_SERIAL_COMM_MIN_TIME_DIFF = 0
 previous_read_time = 0
 ARDUINO_SERIAL_READ_TIMEOUT = 0.5
+class CONTROL_MODE(Enum):
+  MODE_JOYSTICK = 0
+  MODE_GYROSCOPE = 1
 
 def init_serial(DEBUG_MODE = None):
     """Initialisation of the server socket
     It can differenciate if it is used by Windows or Linux
     """
-    
     global current_time
     global previous_time
     global DEBUGGER_MODE
@@ -84,7 +87,6 @@ def write_command_to_arduino(command):
     """
     if can_send_command_to_arduino():
         command = str(int(args.debug)) + ',' + command
-        print('Server print send command:', command, "\n")
         serialInst.write(command.encode("UTF-8"))
         serialInst.flush()
 
@@ -94,18 +96,25 @@ def blocking_read_from_arduino():
             pass
     packetIn = serialInst.readline()
     packetIn = packetIn.decode("UTF-8").strip('\r\n')
-    print(packetIn)
+    print("Arduino's answer:", packetIn)
 
 def test_serial_comm():
     """Fonction to test serial communication without socket"""
     while True:
-        command = input("Your Arduino command: ")
+        command = input("Your Arduino command (h for help, q to quit): ")
 
-        if command == "q":
+        if command == "h":
+            message = """Command: (Mode, args...)
+            Joystick: ({0}, angle, power)
+            Gyroscope: ({1}, letter)
+            """.format(CONTROL_MODE.MODE_JOYSTICK.value, CONTROL_MODE.MODE_GYROSCOPE.value)
+            print(message)
+
+        elif command == "q":
             print(serialInst.timeout)
             serialInst.close()
             exit()
+        else:
+            write_command_to_arduino(command)
 
-        write_command_to_arduino(command)
-
-        if DEBUGGER_MODE: blocking_read_from_arduino()
+            if DEBUGGER_MODE: blocking_read_from_arduino()
