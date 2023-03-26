@@ -17,4 +17,4 @@ enum State {
 
 void mode_gyroscope(String* msg, bool* debug);
 
-#endif // GYSROSCOPE_H
+#endif  // GYSROSCOPE_H
