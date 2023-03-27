@@ -10,6 +10,16 @@
     <string name="_0_000">0.000</string>
     <string name="start">Start</string>
     <string name="reset">Reset</string>
-    <string name="calibrate">Calibrate</string>
+
+    <string name="accelerateur">Accelerateur</string>
+    <string name="frein">Frein</string>
+
+    <string name="calibrate">Start</string>
+    <string name="welcome">Welcome to Smol\n smol\n text</string>
+    <string name="team"> INF8405 : Lau, Math, Aniki, Samir   </string>
+
+
+
     <string name="position">Position</string>
+
 </resources>
