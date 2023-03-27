@@ -48,19 +48,19 @@ public class VideoActivity extends Activity {
      // String URL = "http://10.0.0.238:5000";
 
     String URL = "https://www.youtube.com/watch?v=4Zv0GZUQjZc&ab_channel=Freenove";
+    String mode = "0,";
     // Server port and thread
 
     public static final int SERVERPORT = 5050;
    // public static final String SERVER_IP = "132.207.186.11"; //10.200.26.68
-    //public static final String SERVER_IP = "10.0.0.62"; //10.200.26.68
-  //  public static final String SERVER_IP = "10.200.61.168"; //10.200.26.68
+    public static final String SERVER_IP = "10.0.0.62"; //10.200.26.68
+    //public static final String SERVER_IP = "10.200.61.168"; //10.200.26.68
   // public static final String SERVER_IP = "10.200.0.163"; //10.200.26.68 192.168.56.1
-    public static final String SERVER_IP = "192.168.56.1"; //10.200.26.68
+  //  public static final String SERVER_IP = "192.168.56.1"; //10.200.26.68
 
 
     ClientThread clientThread;
     Thread thread;
-
     //Declare
     SensorManager sensorManager;
     Sensor sensorAccelerometer;
@@ -85,7 +85,7 @@ public class VideoActivity extends Activity {
 
     double lastValueWS = 0.0;
     double lastValueEQ = 0.0;
-
+    boolean swichMode;
     public void onCreate(Bundle savedInstanceState) {
         Bundle extras = getIntent().getExtras();
         if(extras != null){
@@ -94,31 +94,15 @@ public class VideoActivity extends Activity {
             posXYZ = extras.getDoubleArray("posXYZ");
             isChecked =  extras.getBoolean("isCheckedCaliber", false);
         }
-
-
-
-
-
-
-
-
-
+        swichMode = isChecked;
         String tag = "Angle: " + isChecked +  " esp"+  posXYZ ;
         // Afficher le tag dans la console
         Log.d("JoyStick2", tag);
 
 
-
         super.onCreate(savedInstanceState);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-      //  System.out.println("ligne000");
-       // Bundle extras = getIntent().getExtras();
-        //System.out.println(extras.getString("ip"));
-     //   System.out.println("ligne111");
-
-
         //mv = new VideoView(this);
         setContentView(R.layout.activity_video_view);
         WebView webView = (WebView) findViewById(R.id.webView);
@@ -126,7 +110,6 @@ public class VideoActivity extends Activity {
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         webView.setRight(50);
-        System.out.println("ligne000");
           webView.loadUrl(URL);
       //  webView.loadUrl("http://"+extras.getString("ip")+":5000");
 
@@ -150,6 +133,9 @@ public class VideoActivity extends Activity {
         // Initialize and start thread
         clientThread = new ClientThread();
         thread = new Thread(clientThread);
+
+
+
 
         if (android.os.Build.VERSION.SDK_INT > 9)
         {
@@ -180,7 +166,6 @@ public class VideoActivity extends Activity {
 
             @Override
             public void onMove(JoyStick joyStick, double angle, double power, int direction) {
-                //   System.out.println("Button released" + angle + power);
                 // Faire quelque chose avec les données d'angle, de puissance et de direction
                 String tag = "Angle: " + power;
 
@@ -193,19 +178,13 @@ public class VideoActivity extends Activity {
 
             @Override
             public void onTap() {
-                // Gérer le tap sur le joystick
             }
 
             @Override
             public void onDoubleTap() {
-                // Gérer le double tap sur le joystick
             }
 
-
             public void onLongPress() {
-
-
-                // Gérer le double tap sur le joystick
             }
         });
 
@@ -216,53 +195,62 @@ public class VideoActivity extends Activity {
 
 //                String test2 = "check ischeked avant " + isChecked;
 
-                Log.d("mode",  "ischecked :"+isChecked );
-                Log.d("mode",  "ischecked2 : " + isChecked2);
+                Log.d("mode2",  "ischecked :"+isChecked );
+                Log.d("mode2",  "ischecked2 : " + isChecked2);
 
                     if (isChecked2) {
                         switchMode.setText("Mode JOYSTICK3 ");
                         joyStick.setVisibility(View.VISIBLE);
+                        swichMode = true;
 
 
                     } else {
 
                         switchMode.setText("Mode gyro ");
                         joyStick.setVisibility(View.INVISIBLE);
+                        swichMode = false;
 
                 }
 
             }
+
         });
 
         joyStick.setListener(new JoyStick.JoyStickListener() {
             @Override
             public void onMove(JoyStick joyStick, double angle, double power, int direction) {
-
                 double angleDegrees = Math.toDegrees(angle);
-
                 if (angleDegrees <0){
                     double angleFinal =  (180 + Math.abs(angleDegrees));
+                    angleDegrees = angleFinal;
+                } else if (angleDegrees == 0)  {
+                    double  angleFinal = (int) 0;
                     angleDegrees = angleFinal;
                 } else {
                     double  angleFinal = (int) (180 -angleDegrees);
                     angleDegrees = angleFinal;
                 }
 
-
-
                 int test1 = (int) Math.floor(power);
                 int test2 = (int) Math.floor(angleDegrees);
-
-
-
-
-
-                String command = "0," + test2 +  ","+ test1  ;
-                Log.d("JoyStick", tag);
-
-
-
+                String command = mode + test2 +  ","+ test1 +";" ;
+                Log.d("JoyStick", command);
                 clientThread.sendMessage(command);
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        clientThread.sendMessage(command);
+                    }
+                }).start();
+
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+
 
             }
             @Override
@@ -307,18 +295,23 @@ public class VideoActivity extends Activity {
         super.onDestroy();
         if (null != clientThread) {
             clientThread.sendMessage("Disconnect");
-            System.out.println("testsamir123456");
-
             clientThread = null;
         }
     }
 
     //Accelerometer listener, set the values
     public SensorEventListener accelerometerListener = new SensorEventListener() {
+
+
+
+
         public void onAccuracyChanged(Sensor sensor, int acc) { }
 
+
+
+
         public void onSensorChanged(SensorEvent event) {
-            System.out.println("0000");
+            if (!swichMode){
             // Get the acceleration from sensors. Raw data
             linear_acceleration[0] = event.values[0] ;
             linear_acceleration[1] = event.values[1] ;
@@ -329,17 +322,14 @@ public class VideoActivity extends Activity {
 
             if (m == linear_acceleration[0]){
                 stopValue = m - posXYZ[0];
-                System.out.println("00001");
             }
             else{
                 stopValue = m - linear_acceleration[0];
-                System.out.println("00002");
             }
 
             if(Math.abs(linear_acceleration[1]) <= 2.0 && stopValue < topIntervalX && stopValue < bottomIntervalX)
             {
-                clientThread.sendMessage("x");
-                System.out.println("00003");
+                clientThread.sendMessage("1,x");
             }
 
             if (Math.abs(linear_acceleration[1]) > 2.0) // Pritorite pour tourner
@@ -349,26 +339,22 @@ public class VideoActivity extends Activity {
 
                 if (linear_acceleration[1] > posXYZ[1]) // droite
                 {
-                    System.out.println("0000droite");
                     double sendValue = linear_acceleration[1] - posXYZ[1];
                     sendValue = Math.floor(sendValue);
 
                     if (sendValue >= 8.0) {
                         sendValue = 8.0;
                         if (sendValue != lastValueEQ) {
-                            clientThread.sendMessage("d");
-                            System.out.println("0000d");
+                            clientThread.sendMessage("1,d");
                         }
                     } else {
                         if (sendValue > lastValueEQ) {
-                            clientThread.sendMessage("E");
-                            clientThread.sendMessage("E");
-                            System.out.println("0000e");
+                            clientThread.sendMessage("1,E");
+                            clientThread.sendMessage("1,E");
 
                         } else if (sendValue < lastValueEQ) {
-                            clientThread.sendMessage("e");
-                            clientThread.sendMessage("e");
-                            System.out.println("0000Esmal");
+                            clientThread.sendMessage("1,e");
+                            clientThread.sendMessage("1,e");
                         }
                     }
                     lastValueEQ = sendValue;
@@ -380,19 +366,16 @@ public class VideoActivity extends Activity {
                     if (sendValue >= 8.0) {
                         sendValue = 8.0;
                         if (sendValue != lastValueEQ) {
-                            clientThread.sendMessage("a");
-                            System.out.println("0000a");
+                            clientThread.sendMessage("1,a");
                         }
                     } else {
                         if (sendValue > lastValueEQ) {
-                            clientThread.sendMessage("Q");
-                            clientThread.sendMessage("Q");
-                            System.out.println("0000q");
+                            clientThread.sendMessage("1,Q");
+                            clientThread.sendMessage("1,Q");
 
                         } else if (sendValue < lastValueEQ) {
-                            clientThread.sendMessage("q");
-                            clientThread.sendMessage("q");
-                            System.out.println("0000qsmal");
+                            clientThread.sendMessage("1,q");
+                            clientThread.sendMessage("1,q");
                         }
                     }
                     lastValueEQ = sendValue;
@@ -406,17 +389,14 @@ public class VideoActivity extends Activity {
                     sendValue = Math.floor(sendValue);
 
                     if (sendValue < bottomIntervalX) {
-                        clientThread.sendMessage("x");
-                        System.out.println("0000xligne257");
+                        clientThread.sendMessage("1,x");
                     } else {
                         if (sendValue > lastValueWS) {
+                            clientThread.sendMessage("1,S");
                             clientThread.sendMessage("S");
-                            clientThread.sendMessage("S");
-                            System.out.println("0000s262");
                         } else if (sendValue < lastValueWS) {
-                            clientThread.sendMessage("s");
-                            clientThread.sendMessage("s");
-                            System.out.println("0000266");
+                            clientThread.sendMessage("1,s");
+                            clientThread.sendMessage("1,s");
                         }
                     }
 
@@ -427,21 +407,22 @@ public class VideoActivity extends Activity {
                     sendValue = Math.floor(sendValue);
 
                     if (sendValue < topIntervalX) {
-                        clientThread.sendMessage("x");
+                        clientThread.sendMessage("1,x");
                     } else {
                         if (sendValue > lastValueWS) {
-                            clientThread.sendMessage("W");
-                            clientThread.sendMessage("W");
-                            System.out.println("0000pppppppppppppppppppppppppWWW");
+                            clientThread.sendMessage("1,W");
+                            clientThread.sendMessage("1,W");
 
                         } else if (sendValue < lastValueWS) {
-                            clientThread.sendMessage("w");
-                            clientThread.sendMessage("w");
+                            clientThread.sendMessage("1,w");
+                            clientThread.sendMessage("1,w");
                         }
                     }
                     lastValueWS = sendValue;
                 }
             }
+        }
+
         }
     };
 
@@ -476,7 +457,6 @@ public class VideoActivity extends Activity {
             mv.showFps(true);
         }
     }
-
     // source : https://stackoverflow.com/questions/25093546/android-os-networkonmainthreadexception-at-android-os-strictmodeandroidblockgua
     // source : http://www.coderzheaven.com/2017/05/01/client-server-programming-in-android-send-message-to-the-client-and-back/
     // Class for client thread with socket to send message
@@ -486,18 +466,14 @@ public class VideoActivity extends Activity {
         @Override
         public void run() {
 
-            System.out.println("tests000000000000000000amirk0"+SERVERPORT);
             try {
                 InetAddress serverAddr = InetAddress.getByName(SERVER_IP);
                 socket = new Socket(serverAddr, SERVERPORT);
-                System.out.println("teseeeeeeeeeeeeeeeetsamirk1"+SERVERPORT);
 
             } catch (UnknownHostException e1) {
                 e1.printStackTrace();
-                System.out.println("catcfrrrrrrrrrrrrrrrrrrrrrrrrrrrrh1");
             } catch (IOException e1) {
                 e1.printStackTrace();
-                System.out.println("catffffffffffffffffffffffffffch2");
             }
         }
 
