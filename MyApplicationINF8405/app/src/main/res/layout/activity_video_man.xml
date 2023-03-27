@@ -1,0 +1,87 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:attribute="value"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    tools:context="com.example.ikram.myapplicationinf8405.VideoActivityMan">
+
+    <WebView
+        android:id="@+id/webView"
+        android:layout_width="wrap_content"
+        android:layout_height="39dp"
+        android:layout_centerInParent="true" />
+
+<!--        <com.erz.joysticklibrary.JoyStick-->
+<!--        android:id="@+id/joy2"-->
+<!--        android:layout_width="200dp"-->
+<!--        android:layout_height="200dp"-->
+<!--        android:layout_alignParentStart="true" android:layout_alignParentLeft="true"-->
+<!--        android:layout_alignParentTop="true"-->
+<!--        android:layout_gravity="bottom|right"-->
+
+<!--        app:buttonColor="#55ff0000"-->
+
+<!--        app:padColor="#55ffffff"-->
+<!--        app:percentage="25"-->
+<!--        app:stayPut="true" />-->
+
+    <com.erz.joysticklibrary.JoyStick
+        android:id="@+id/joy1"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="-3dp"
+        android:layout_marginLeft="-3dp"
+        android:layout_marginTop="514dp" />
+
+    <com.jackandphantom.joystickview.JoyStickView
+        android:id="@+id/circleView"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginRight="16dp"
+        app:innerCircleColor="#0000FF"
+            app:outerCircleBorderColor="#0000FF"
+            app:outerCircleBorderWidth="2"
+        app:outerCircleColor="#08E6D5B7"
+        />
+
+    <TextView
+        android:id="@+id/text_view"
+        android:layout_width="232dp"
+        android:layout_height="80dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="67dp"
+        android:layout_marginLeft="67dp"
+        android:layout_marginTop="191dp"
+        android:background="#D1AC26"
+        android:text="Hello World!" />
+
+    <!--    <com.jackandphantom.joystickview.JoyStickView-->
+<!--        android:id="@+id/circleView"-->
+<!--        android:layout_width="200dp"-->
+<!--        android:layout_height="200dp"-->
+<!--        android:layout_alignParentBottom="true"-->
+<!--        android:layout_alignParentRight="true"-->
+<!--        android:layout_marginBottom="16dp"-->
+<!--        android:layout_marginRight="16dp"-->
+<!--        app:innerCircleColor="#0000FF"-->
+<!--        app:outerCircleBorderColor="#FF0000"-->
+<!--        app:outerCircleBorderWidth="10"-->
+<!--        app:outerCircleColor="#80E6D5B7"-->
+<!--        app:shadowColor="#CCCCCC"-->
+<!--        app:shadowRadius="30" />-->
+
+
+
+</RelativeLayout>
