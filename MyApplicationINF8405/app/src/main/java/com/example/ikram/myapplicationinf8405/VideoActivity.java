@@ -235,7 +235,7 @@ public class VideoActivity extends Activity {
                 int test2 = (int) Math.floor(angleDegrees);
                 String command = mode + test2 +  ","+ test1 +";" ;
                 Log.d("JoyStick", command);
-                clientThread.sendMessage(command);
+               // clientThread.sendMessage(command);
 
                 new Thread(new Runnable() {
                     @Override
@@ -329,7 +329,7 @@ public class VideoActivity extends Activity {
 
             if(Math.abs(linear_acceleration[1]) <= 2.0 && stopValue < topIntervalX && stopValue < bottomIntervalX)
             {
-                clientThread.sendMessage("1,x");
+                clientThread.sendMessage("1,x;");
             }
 
             if (Math.abs(linear_acceleration[1]) > 2.0) // Pritorite pour tourner
@@ -345,16 +345,16 @@ public class VideoActivity extends Activity {
                     if (sendValue >= 8.0) {
                         sendValue = 8.0;
                         if (sendValue != lastValueEQ) {
-                            clientThread.sendMessage("1,d");
+                            clientThread.sendMessage("1,d;");
                         }
                     } else {
                         if (sendValue > lastValueEQ) {
-                            clientThread.sendMessage("1,E");
-                            clientThread.sendMessage("1,E");
+                            clientThread.sendMessage("1,E;");
+                            clientThread.sendMessage("1,E;");
 
                         } else if (sendValue < lastValueEQ) {
-                            clientThread.sendMessage("1,e");
-                            clientThread.sendMessage("1,e");
+                            clientThread.sendMessage("1,e;");
+                            clientThread.sendMessage("1,e;");
                         }
                     }
                     lastValueEQ = sendValue;
@@ -366,16 +366,16 @@ public class VideoActivity extends Activity {
                     if (sendValue >= 8.0) {
                         sendValue = 8.0;
                         if (sendValue != lastValueEQ) {
-                            clientThread.sendMessage("1,a");
+                            clientThread.sendMessage("1,a;");
                         }
                     } else {
                         if (sendValue > lastValueEQ) {
-                            clientThread.sendMessage("1,Q");
-                            clientThread.sendMessage("1,Q");
+                            clientThread.sendMessage("1,Q;");
+                            clientThread.sendMessage("1,Q;");
 
                         } else if (sendValue < lastValueEQ) {
-                            clientThread.sendMessage("1,q");
-                            clientThread.sendMessage("1,q");
+                            clientThread.sendMessage("1,q;");
+                            clientThread.sendMessage("1,q;");
                         }
                     }
                     lastValueEQ = sendValue;
@@ -389,14 +389,14 @@ public class VideoActivity extends Activity {
                     sendValue = Math.floor(sendValue);
 
                     if (sendValue < bottomIntervalX) {
-                        clientThread.sendMessage("1,x");
+                        clientThread.sendMessage("1,x;");
                     } else {
                         if (sendValue > lastValueWS) {
-                            clientThread.sendMessage("1,S");
-                            clientThread.sendMessage("S");
+                            clientThread.sendMessage("1,S;");
+                            clientThread.sendMessage("1,S;");
                         } else if (sendValue < lastValueWS) {
-                            clientThread.sendMessage("1,s");
-                            clientThread.sendMessage("1,s");
+                            clientThread.sendMessage("1,s;");
+                            clientThread.sendMessage("1,s;");
                         }
                     }
 
@@ -407,15 +407,15 @@ public class VideoActivity extends Activity {
                     sendValue = Math.floor(sendValue);
 
                     if (sendValue < topIntervalX) {
-                        clientThread.sendMessage("1,x");
+                        clientThread.sendMessage("1,x;");
                     } else {
                         if (sendValue > lastValueWS) {
-                            clientThread.sendMessage("1,W");
+                            clientThread.sendMessage("1,W;");
                             clientThread.sendMessage("1,W");
 
                         } else if (sendValue < lastValueWS) {
-                            clientThread.sendMessage("1,w");
-                            clientThread.sendMessage("1,w");
+                            clientThread.sendMessage("1,w;");
+                            clientThread.sendMessage("1,w;");
                         }
                     }
                     lastValueWS = sendValue;
