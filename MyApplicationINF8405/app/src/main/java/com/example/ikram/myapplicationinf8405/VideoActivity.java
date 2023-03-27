@@ -411,7 +411,7 @@ public class VideoActivity extends Activity {
                     } else {
                         if (sendValue > lastValueWS) {
                             clientThread.sendMessage("1,W;");
-                            clientThread.sendMessage("1,W");
+                            clientThread.sendMessage("1,W;");
 
                         } else if (sendValue < lastValueWS) {
                             clientThread.sendMessage("1,w;");
