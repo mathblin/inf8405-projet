@@ -17,9 +17,11 @@ init_socket(HOST, PORT, DEBUGGER_MODE)
 while 1:
     command = get_comman_from_socket()
     if command == 'exceded timout':
+        # write_command_to_arduino(command) # TODO: decommanter
         manage_socket_exception(command)
     elif command == '':
+        # write_command_to_arduino(command) # TODO: decommanter
         manage_socket_exception(command)
-    write_command_to_arduino(command)
+    # write_command_to_arduino(command) # TODO: decommanter
     print('command:', command)
     sleep(0.010) # To make the server a little more light weight. Power management
