@@ -17,7 +17,7 @@ void loop(void) {
   int mode = 1000;
 
   while (!Serial.available())
-    ;
+    ; // TODO: is this really necessary?
 
   if (Serial.available()) {
     msg = Serial.readString();
