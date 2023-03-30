@@ -1,6 +1,9 @@
 #ifndef JOYSTICK_H
 #define JOYSTICK_H
 #include <Arduino.h>
+#include "../servomotor/servomotor.h"
+
+Servomotor cane;
 
 int getCadrans(int angle);
 void advance_joystick(String* msg, float* angle_radi, float* sin_res, float* cos_res, float* strength, int* cad);

@@ -3,6 +3,7 @@
 #include "joystick.h"
 
 void setup(void) {
+  cane.init(8, 0, 45);
   int i;
   for (i = 4; i <= 7; i++)
     pinMode(i, OUTPUT);

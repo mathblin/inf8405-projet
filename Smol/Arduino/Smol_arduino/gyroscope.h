@@ -1,6 +1,9 @@
 #ifndef GYSROSCOPE_H
 #define GYSROSCOPE_H
 #include <Arduino.h>
+#include "../servomotor/servomotor.h"
+
+Servomotor cane;
 
 enum State {
   STOP,
