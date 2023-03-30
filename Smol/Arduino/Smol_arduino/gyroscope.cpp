@@ -220,13 +220,13 @@ void mode_gyroscope(String* msg, bool* debug) {
           back_off(vitesseLow, vitesse);
           break;
         default:
-          cane.stop();
+          //cane.stop();
           stop();
           currentState = STOP;
           break;
       }
 
-      cane.start(2000);
+      //cane.start(2000);
       switch (command) {
         case 'a':
           currentState = ROT_LEFT_360;
@@ -260,7 +260,7 @@ void mode_gyroscope(String* msg, bool* debug) {
           break;
       }
     } else {
-        cane.stop();
+        //cane.stop();
         stop();
         currentState = STOP;
     }
