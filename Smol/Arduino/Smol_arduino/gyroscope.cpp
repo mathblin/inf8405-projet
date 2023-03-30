@@ -23,7 +23,7 @@ void mode_gyroscope(String* msg, bool* debug) {
 
   {
 
-    if (command != -1 && command != 'x') {
+    if (command != -1) {
       switch (command) {
         case 'W':  //Move Forward
           if (currentState == FORWARD) {
@@ -219,14 +219,14 @@ void mode_gyroscope(String* msg, bool* debug) {
           }
           back_off(vitesseLow, vitesse);
           break;
-        default:
-          cane.stop();
+
+        case 'x':
           stop();
-          currentState = STOP;
+          break;
+        default:
+          stop();
           break;
       }
-
-      cane.start(2000);
       switch (command) {
         case 'a':
           currentState = ROT_LEFT_360;
@@ -235,34 +235,47 @@ void mode_gyroscope(String* msg, bool* debug) {
           currentState = ROT_RIGHT_360;
           break;
         case 'w':
+          currentState = FORWARD;
+          break;
         case 'W':
           currentState = FORWARD;
           break;
         case 's':
+          currentState = BACKWARD;
+          break;
         case 'S':
           currentState = BACKWARD;
           break;
+        case 'x':
+          currentState = STOP;
+          break;
         case 'q':
+          currentState = ROT_LEFT_FRONT;
+          break;
         case 'Q':
           currentState = ROT_LEFT_FRONT;
           break;
         case 'e':
+          currentState = ROT_RIGHT_FRONT;
+          break;
         case 'E':
           currentState = ROT_RIGHT_FRONT;
           break;
         case 'z':
+          currentState = ROT_LEFT_BACK;
+          break;
         case 'Z':
           currentState = ROT_LEFT_BACK;
           break;
         case 'c':
+          currentState = ROT_RIGHT_BACK;
+          break;
         case 'C':
           currentState = ROT_RIGHT_BACK;
           break;
       }
     } else {
-        cane.stop();
-        stop();
-        currentState = STOP;
+      stop();
     }
   }
 }

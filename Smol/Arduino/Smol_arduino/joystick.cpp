@@ -37,20 +37,18 @@ int getCadrans(int angle) {
 
 void advance_joystick(String* msg, float* angle_radi, float* sin_res, float* cos_res, float* strength, int* cad) {
   *strength = getValue(*msg, ',', STRENGTH_POSITION).toInt();
-
-  if (*strength == 0) {
-      left_strength = right_strength = 0;
-      cane.stop();
-      stop();
-      return;
-  }
-
   // Calcul d'angles: https://arduinogetstarted.com/reference/arduino-sin ... adapter pour cos
   String angle = getValue(*msg, ',', ANGLE_POSITION);
   *angle_radi = angle.toInt() * M_PI / 180;
   *sin_res = sin(*angle_radi);
   *cos_res = cos(*angle_radi);
   *cad = getCadrans(angle.toInt());
+
+  if (*strength == 0) {
+    left_strength = right_strength = 0;
+    stop();
+    return;
+  }
 
   float speed_scaler = (*strength / strength_scaler);
 
@@ -73,17 +71,24 @@ void advance_joystick(String* msg, float* angle_radi, float* sin_res, float* cos
       break;
   }
 
-  cane.start(2000);
   switch (*cad) {
     case FIRST:
-    case SECOND:
-    case FRONT:
       advance(right_strength, left_strength);
       break;
     case FOURTH:
+      back_off(right_strength, left_strength);
+      break;
+    case SECOND:
+      advance(right_strength, left_strength);
+      break;
     case THIRD:
+      back_off(right_strength, left_strength);
+      break;
     case BACK:
       back_off(right_strength, left_strength);
+      break;
+    case FRONT:
+      advance(right_strength, left_strength);
       break;
     case LEFT:
       turn_R_360(right_strength, left_strength);  // TODO: Verify why in Gyroscope it goes left
