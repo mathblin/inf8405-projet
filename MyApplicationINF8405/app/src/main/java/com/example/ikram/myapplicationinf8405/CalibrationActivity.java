@@ -71,11 +71,6 @@ public class CalibrationActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked2) {
                Intent auto = new Intent(CalibrationActivity.this, VideoActivity.class);
 
-
-
-
-
-
                 if (isChecked2) {
                     switchMode.setText("Mode GYROSCOPE");
 
