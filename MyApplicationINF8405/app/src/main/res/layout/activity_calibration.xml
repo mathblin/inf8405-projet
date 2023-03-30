@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context="com.example.ikram.myapplicationinf8405.CalibrationActivity">
 
+
     <TextView
         android:id="@+id/minValueText"
         android:layout_width="wrap_content"
@@ -89,6 +90,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.894" />
 
+
     <Button
         android:id="@+id/buttonReset"
         android:layout_width="wrap_content"
@@ -121,5 +123,32 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.329" />
+
+    <!--    <Switch-->
+    <!--        android:id="@+id/switch2"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginStart="160dp"-->
+    <!--        android:layout_marginLeft="160dp"-->
+    <!--        android:checked="true"-->
+    <!--        android:text="Mode automatique activé"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent"-->
+    <!--        app:layout_constraintVertical_bias="0.799"-->
+    <!--        />-->
+    <Switch
+        android:id="@+id/switch2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="160dp"
+        android:layout_marginLeft="160dp"
+        android:text="Mode GYROSCOPE"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.799"
+        android:checked="true"/>
+
 
 </android.support.constraint.ConstraintLayout>

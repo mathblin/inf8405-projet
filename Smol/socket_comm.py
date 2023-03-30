@@ -3,6 +3,8 @@ import socket
 DEBUGGER_MODE = None
 server, conn, addr = (None, None, None)
 HOST, PORT = (None, None)
+SOCKET_TIMEOUT = 15.0
+from serial_comm import write_command_to_arduino_with_response
 
 def init_socket(inHOST, inPORT, DEBUG_MODE=None):
     """Initializing the socket with Android App"""
@@ -47,7 +49,7 @@ def init_socket(inHOST, inPORT, DEBUG_MODE=None):
     print ('Connect with ' + addr[0] + ':' + str(addr[1]))
 
     # sys.exit(help(conn.timeout))
-    conn.settimeout(5.0)
+    conn.settimeout(SOCKET_TIMEOUT)
 
 def close_socket():
     """Closing the socket with Android App"""
@@ -57,6 +59,7 @@ def close_socket():
 def manage_socket_exception(command):
     """Managing exception from sockets"""
 
+    write_command_to_arduino_with_response(command)
     close_socket()
     if command == 'exceded timout\n':
         print(command)
@@ -70,14 +73,30 @@ def manage_socket_exception(command):
     else:
         init_socket(HOST, PORT) # QoS
 
+def parse_command(recvCommand):
+    newCommand = ''
+
+    # if DEBUGGER_MODE: print('recvCommand: ', recvCommand)
+
+    for rcvcom in reversed(recvCommand.split(';')):
+        if rcvcom == '':
+            pass
+        else:
+            newCommand = rcvcom
+            if newCommand != '':
+                break
+    
+    return newCommand
 
 def get_comman_from_socket():
     """Fonction to get commands from the Android application"""
 
     try:
-        recvCommand = conn.recv(64)
+        recvCommand = conn.recv(1064)
+
+        recvCommand = recvCommand.decode('utf-8').lower()
         
-        return recvCommand.decode('utf-8').lower()
+        return parse_command(recvCommand)
 
     except:
         return 'exceded timout'
