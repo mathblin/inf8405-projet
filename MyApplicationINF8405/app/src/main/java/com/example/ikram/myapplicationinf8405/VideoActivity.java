@@ -317,7 +317,15 @@ public class VideoActivity extends Activity {
             linear_acceleration[1] = event.values[1] ;
             linear_acceleration[2] = event.values[2] ;
 
+
+            System.out.println("posXYZ : =========================");
+            System.out.println("posXYZ 1: "+ posXYZ[0]);
+            System.out.println("posXYZ 2: "+ posXYZ[1]);
+            System.out.println("posXYZ 3: "+ posXYZ[2]);
+
             double m = Math.max(linear_acceleration[0], posXYZ[0]);
+            System.out.println("max m : "+ m);
+
             double stopValue;
 
             if (m == linear_acceleration[0]){
