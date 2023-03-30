@@ -40,7 +40,7 @@ void advance_joystick(String* msg, float* angle_radi, float* sin_res, float* cos
 
   if (*strength == 0) {
       left_strength = right_strength = 0;
-      cane.stop();
+      cane.stop(0);
       stop();
       return;
   }

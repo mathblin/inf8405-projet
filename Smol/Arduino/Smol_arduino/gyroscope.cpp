@@ -220,7 +220,7 @@ void mode_gyroscope(String* msg, bool* debug) {
           back_off(vitesseLow, vitesse);
           break;
         default:
-          cane.stop();
+          cane.stop(0);
           stop();
           currentState = STOP;
           break;
@@ -260,7 +260,7 @@ void mode_gyroscope(String* msg, bool* debug) {
           break;
       }
     } else {
-        cane.stop();
+        cane.stop(0);
         stop();
         currentState = STOP;
     }
