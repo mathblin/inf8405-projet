@@ -40,7 +40,7 @@ void advance_joystick(String* msg, float* angle_radi, float* sin_res, float* cos
 
   if (*strength == 0) {
       left_strength = right_strength = 0;
-      //cane.stop(0);
+      cane.stop(0);
       stop();
       return;
   }
@@ -73,7 +73,7 @@ void advance_joystick(String* msg, float* angle_radi, float* sin_res, float* cos
       break;
   }
 
-  //cane.start(2000);
+  cane.start(2000);
   switch (*cad) {
     case FIRST:
     case SECOND:

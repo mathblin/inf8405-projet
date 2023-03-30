@@ -25,7 +25,7 @@ void loop(void) {
     mode = getValue(msg, ',', MODE_POSITION).toInt();
     debug = getValue(msg, ',', DEBUG_POSITION).toInt();
 
-    cane.start(2000);
+    //cane.start(2000);
     switch (mode) {
       case MODE_JOYSTICK:
         mode_joystick(&msg, &debug);
