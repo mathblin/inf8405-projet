@@ -5,7 +5,7 @@ Servomotor::Servomotor() {}
 void Servomotor::init(int pin, long from_in, long to_in) {
   my_servo.attach(pin);
   move_start_time = millis();
-  from = from_in;r
+  from = from_in;
   to = to_in;
 }
 
