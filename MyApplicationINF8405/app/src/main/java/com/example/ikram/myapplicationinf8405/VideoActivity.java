@@ -53,7 +53,7 @@ public class VideoActivity extends Activity {
 
     public static final int SERVERPORT = 5050;
    // public static final String SERVER_IP = "132.207.186.11"; //10.200.26.68
-    public static final String SERVER_IP = "10.0.0.62"; //10.200.26.68
+    public static final String SERVER_IP = "132.207.186.54"; //10.200.26.68
     //public static final String SERVER_IP = "10.200.61.168"; //10.200.26.68
   // public static final String SERVER_IP = "10.200.0.163"; //10.200.26.68 192.168.56.1
   //  public static final String SERVER_IP = "192.168.56.1"; //10.200.26.68
