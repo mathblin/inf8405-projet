@@ -15,6 +15,9 @@ void mode_gyroscope(String* msg, bool* debug) {
   char command = getValue(*msg, ',', LETTER_POSITION)[0];
 
   if (*debug && Serial.availableForWrite() > 30) Serial.print(" command: " + String(command));
+  else if (Serial.availableForWrite() > 30) { // Tells the server that Arduino is ready to receive a command
+    Serial.print("ok");
+  }  
 
   vitesse = vitesseMax;
 

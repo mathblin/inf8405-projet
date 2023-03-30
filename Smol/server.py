@@ -14,14 +14,17 @@ PORT = args.port[0] if args.port else DEFAULT_PORT
 
 init_socket(HOST, PORT, DEBUGGER_MODE)
 
+SAFE_EXIT_COMMAND = '1,x'
+
 while 1:
     command = get_comman_from_socket()
     if command == 'exceded timout':
-        # write_command_to_arduino(command) # TODO: decommanter
+        command = SAFE_EXIT_COMMAND
         manage_socket_exception(command)
     elif command == '':
-        # write_command_to_arduino(command) # TODO: decommanter
+        command = SAFE_EXIT_COMMAND
         manage_socket_exception(command)
-    # write_command_to_arduino(command) # TODO: decommanter
-    print('command:', command)
-    sleep(0.010) # To make the server a little more light weight. Power management
+    else:
+        write_command_to_arduino_with_response(command)
+        print('command:', command)
+    sleep(0.1) # To make the server a little more light weight. Power management
