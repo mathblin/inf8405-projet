@@ -1,6 +1,9 @@
 #include "common.h"
 #include "gyroscope.h"
 #include "joystick.h"
+#include "servomotor.h"
+
+Servomotor cane;
 
 void setup(void) {
   cane.init(8, 0, 45);
@@ -25,13 +28,24 @@ void loop(void) {
     mode = getValue(msg, ',', MODE_POSITION).toInt();
     debug = getValue(msg, ',', DEBUG_POSITION).toInt();
 
-    //cane.start(2000);
     switch (mode) {
       case MODE_JOYSTICK:
+        int strength = getValue(msg, ',', STRENGTH_POSITION).toInt();
+        if (strength == 0) {
+            cane.stop(0);
+        } else {
+            cane.start(2000);
+        }
         mode_joystick(&msg, &debug);
         break;
 
       case MODE_GYROSCOPE:
+        char command = getValue(msg, ',', LETTER_POSITION)[0];
+        if (command == -1 || command == 'x') {
+            cane.stop(0);
+        } else {
+            cane.start(2000);
+        }
         mode_gyroscope(&msg, &debug);
         break;
     }
