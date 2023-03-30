@@ -9,7 +9,7 @@ init_serial(DEBUGGER_MODE)
 # Arduino communication test if True
 if DEBUG_SERIAL_COMM: test_serial_comm()
 
-HOST = args.ip[0] if args.ip else DEFAULT_HOST
+HOST = args.ip[0] if args.ip else DEFAULT_HOST # defaults parameters in server_flags.py
 PORT = args.port[0] if args.port else DEFAULT_PORT
 
 init_socket(HOST, PORT, DEBUGGER_MODE)
