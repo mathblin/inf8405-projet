@@ -43,17 +43,17 @@ public class VideoActivity extends Activity {
 
     // VideoView && URL
     private VideoView mv;
-    //String URL = "http://132.207.186.54:5000";
+    String URL = "http://132.207.186.54:5000";
    // String URL = "http://192.168.55.3:5000";
      // String URL = "http://10.0.0.238:5000";
 
-    String URL = "https://www.youtube.com/watch?v=4Zv0GZUQjZc&ab_channel=Freenove";
+   // String URL = "https://www.youtube.com/watch?v=4Zv0GZUQjZc&ab_channel=Freenove";
     String mode = "0,";
     // Server port and thread
 
     public static final int SERVERPORT = 5050;
    // public static final String SERVER_IP = "132.207.186.11"; //10.200.26.68
-    public static final String SERVER_IP = "132.207.186.54"; //10.200.26.68
+    public static final String SERVER_IP = "10.0.0.62"; //10.200.26.68
     //public static final String SERVER_IP = "10.200.61.168"; //10.200.26.68
   // public static final String SERVER_IP = "10.200.0.163"; //10.200.26.68 192.168.56.1
   //  public static final String SERVER_IP = "192.168.56.1"; //10.200.26.68
@@ -330,6 +330,8 @@ public class VideoActivity extends Activity {
             if(Math.abs(linear_acceleration[1]) <= 2.0 && stopValue < topIntervalX && stopValue < bottomIntervalX)
             {
                 clientThread.sendMessage("1,x;");
+                Log.d("letter", "x mini 333");
+
             }
 
             if (Math.abs(linear_acceleration[1]) > 2.0) // Pritorite pour tourner
@@ -346,6 +348,7 @@ public class VideoActivity extends Activity {
                         sendValue = 8.0;
                         if (sendValue != lastValueEQ) {
                             clientThread.sendMessage("1,d;");
+                            Log.d("letter", "d mini 351");
                         }
                     } else {
                         if (sendValue > lastValueEQ) {
@@ -355,6 +358,7 @@ public class VideoActivity extends Activity {
                         } else if (sendValue < lastValueEQ) {
                             clientThread.sendMessage("1,e;");
                             clientThread.sendMessage("1,e;");
+                            Log.d("letter", "e mini 361");
                         }
                     }
                     lastValueEQ = sendValue;
@@ -367,15 +371,18 @@ public class VideoActivity extends Activity {
                         sendValue = 8.0;
                         if (sendValue != lastValueEQ) {
                             clientThread.sendMessage("1,a;");
+                            Log.d("letter", "a mini 374");
                         }
                     } else {
                         if (sendValue > lastValueEQ) {
                             clientThread.sendMessage("1,Q;");
                             clientThread.sendMessage("1,Q;");
+                            Log.d("letter", "Q maj 380");
 
                         } else if (sendValue < lastValueEQ) {
                             clientThread.sendMessage("1,q;");
                             clientThread.sendMessage("1,q;");
+                            Log.d("letter", "q mini 385");
                         }
                     }
                     lastValueEQ = sendValue;
@@ -390,13 +397,17 @@ public class VideoActivity extends Activity {
 
                     if (sendValue < bottomIntervalX) {
                         clientThread.sendMessage("1,x;");
+                        Log.d("letter", "x mini 400");
                     } else {
                         if (sendValue > lastValueWS) {
                             clientThread.sendMessage("1,S;");
                             clientThread.sendMessage("1,S;");
+                            Log.d("letter", "s mini 405");
                         } else if (sendValue < lastValueWS) {
                             clientThread.sendMessage("1,s;");
                             clientThread.sendMessage("1,s;");
+                            Log.d("letter", "s mini 409");
+
                         }
                     }
 
@@ -408,14 +419,20 @@ public class VideoActivity extends Activity {
 
                     if (sendValue < topIntervalX) {
                         clientThread.sendMessage("1,x;");
+                        Log.d("letter", "x mini 421");
+
                     } else {
                         if (sendValue > lastValueWS) {
                             clientThread.sendMessage("1,W;");
                             clientThread.sendMessage("1,W;");
+                            Log.d("letter", "W maj 428");
+
 
                         } else if (sendValue < lastValueWS) {
                             clientThread.sendMessage("1,w;");
                             clientThread.sendMessage("1,w;");
+                            Log.d("letter", "w mini 434");
+
                         }
                     }
                     lastValueWS = sendValue;
