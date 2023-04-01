@@ -18,3 +18,4 @@ The IP address must be set in the application. It must match the one in the serv
 DEFAULT_HOST
 ```
 It should be, if not moved since, in the ``server_flags.py`` file. The default one we used is the one that `Smol` had at Polytechnique of Montreal university. It is likely it will have changed when you read this. You'll have to communicate with the tech department if you are a student.
+
