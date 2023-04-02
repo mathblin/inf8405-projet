@@ -1,21 +1,20 @@
 # Server for Robot project
 
-## What is it for
-The server's purpose is to receive commands from the mobile application via sockets and to transmit them to the Arduino via serial communication. The Arduino will then execute the commands like moving forward, backward, in $360^\circ$, etc.
+## Quelle est sont utilité?
+L'objectif du serveur est de recevoir les commandes envoyées depuis l'application mobile via sockets et les transmettre au Arduino via communication sérielle. L'Arduino exécutera ensuite ces commands. Il peut s'agir de commandes qui le font avancer, reculer, faire une rotation de $360^\circ$, etc.
 
-## Main entryfile
-The main file to run is `server.py`. If you have want to know the possible flags, you can run `python server.py -h` on Windows or `python3 server.py -h` on linux. You can also use `--help` which does the same.
+## Le fichier d'entrée du serveur
+Le fichier d'entrée qu'on doit exécuter est `server.py`. Si vous désirez connaître les drapeaux/arguments (flags) possibles à passer au serveur, vous pouvez exécuter `python server.py -h` sur Windows ou `python3 server.py -h` sur linux. Vous pouvez également utiliser `--help`, ce qui revient au même.
 
-## Flags
-The main purpose of the flags is to either change the server IP to match the computer (laptop, tower, Raspberry PI), debug with prints, test serial communication, etc. If you still have doubt on how the flags work, follow the `Main entryfile` section.
+## Drapeaux/arguments
+Les objectifs principaux des drapeaux sont changer l'adresse IP du serveur pour qu'elle corresponde à celle de l'ordinateur (portable, tour, Raspberry PI), déboguer avec des affichages de console, tester la communication sérielle, etc. Si vous avez toujours des doutes sur comment fonctionnent les drapeaux/arguments, suivez la section `Main entryfile`.
 
-## Many modes
-It is possible to test the serial communication by adding `-serial` flag when calling the server. This way, you can test new commands to the Arduino. Of course, if you do that, you'll have to adjust the Arduino code accodingly. Without the `-serial` flag, the mode is with socket. In this mode, you'll need the app to be on a phone or tablet to receive commands in the server.
+## Plusieurs modes
+Il est possible de tester la communication sérielle en ajoutant le drapeau `-serial` lorsqu'on appelle le serveur. De cette manière, vous pouvez tester de nouvelles commandes Arduino. Conséquemment, vous devrez ajuster le code d'Arduino. Sans le drapeau `-serial`, le mode est avec socket. Dans ce mode, vous aurez besoin de l'application mobile installée sur un téléphone ou une tablette afin que le serveur reçoive des commandes.
 
-## IP address
-The IP address must be set in the application. It must match the one in the server. For the server part, you'll have to either change the default IP address in the code or use the `-ip` flag followed by the address. For example, like this `python server.py -ip 127.0.0.1`. Search the following variable in the code:
+## L'addresse IP
+L'addresse IP doit être configurée dans l'application mobile. Elle doit corresponde avec celle du serveur. Pour la partie serveur, you devrez soit changer l'adresse IP par défaut dans le code, soit utiliser le drapeau `-ip` suivi de l'adresse. Par exemple, en faisant ceci: `python server.py -ip 127.0.0.1`. Vous pouvez chercher la variable suivante dans le code:
 ```python 
 DEFAULT_HOST
 ```
-It should be, if not moved since, in the ``server_flags.py`` file. The default one we used is the one that `Smol` had at Polytechnique of Montreal university. It is likely it will have changed when you read this. You'll have to communicate with the tech department if you are a student.
-
+Si elle n'a pas été déplacée depuis, elle devrait se trouver dans le fichier `server_flags.py`. L'adresse par défaut que nous avons utilisée est celle que `Smol` avait à l'université Polytechnique Montréal. Il est fortement possible qu'elle est changée lorsque vous lirez ceci. Vous aurez à communiquer avec le département informatique si vous y êtes étudiant(e)s.
