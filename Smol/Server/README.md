@@ -3,7 +3,7 @@
 ## Quelle est son utilité?
 L'objectif du serveur est de recevoir les commandes envoyées depuis l'application mobile via sockets et les transmettre au Arduino via communication sérielle. L'Arduino exécutera ensuite ces commands. Il peut s'agir de commandes qui le font avancer, reculer, faire une rotation de $360^\circ$, etc.
 
-## Le fichier d'entrée du serveur
+## Le fichier d'entrée du serveur 
 Le fichier d'entrée qu'on doit exécuter est `server.py`. Si vous désirez connaître les drapeaux/arguments (flags) possibles à passer au serveur, vous pouvez exécuter `python server.py -h` sur Windows ou `python3 server.py -h` sur linux. Vous pouvez également utiliser `--help`, ce qui revient au même.
 
 ## Drapeaux/arguments
