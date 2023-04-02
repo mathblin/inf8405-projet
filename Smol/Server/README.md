@@ -1,6 +1,6 @@
 # Server for Robot project
 
-## Quelle est sont utilité?
+## Quelle est son utilité?
 L'objectif du serveur est de recevoir les commandes envoyées depuis l'application mobile via sockets et les transmettre au Arduino via communication sérielle. L'Arduino exécutera ensuite ces commands. Il peut s'agir de commandes qui le font avancer, reculer, faire une rotation de $360^\circ$, etc.
 
 ## Le fichier d'entrée du serveur
