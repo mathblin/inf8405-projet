@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000"
     android:visibility="visible"
+    android:orientation="vertical"
     tools:context="com.example.ikram.myapplicationinf8405.VideoActivity">
 
     <Switch
@@ -16,6 +17,8 @@
         android:layout_marginLeft="160dp"
         android:checked="true"
         android:text="Mode GYROSCOPE"
+        android:layout_gravity="end"
+        android:padding="5dp"
 
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -25,22 +28,18 @@
 
     <WebView
         android:id="@+id/webView"
-        android:layout_width="1310px"
-        android:layout_height="990px"
-        android:layout_marginLeft="360px"
-        android:layout_marginTop="200px" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center" />
 
     <com.erz.joysticklibrary.JoyStick
         android:id="@+id/joy11"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_gravity="bottom"
-        android:layout_marginStart="13dp"
-        android:layout_marginLeft="13dp"
-        android:layout_marginTop="63dp"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_gravity="bottom|left"
+        android:layout_marginStart="3dp"
+        android:layout_marginLeft="3dp"
+        android:layout_marginTop="547dp"
         android:visibility="visible" />
 
-</RelativeLayout>
+</FrameLayout>

@@ -34,12 +34,12 @@ public class MainActivity extends AppCompatActivity {
 
 
         setContentView(R.layout.activity_main);
-        WebView webView = (WebView) findViewById(R.id.view);
-        webView.setWebViewClient(new WebViewClient());
-        WebSettings settings = webView.getSettings();
-        settings.setJavaScriptEnabled(true);
-        webView.setRight(50);
-        webView.loadUrl(youtubeUrl);
+        //WebView webView = (WebView) findViewById(R.id.view);
+        //webView.setWebViewClient(new WebViewClient());
+        //WebSettings settings = webView.getSettings();
+        //settings.setJavaScriptEnabled(true);
+        //webView.setRight(50);
+        //webView.loadUrl(youtubeUrl);
         // webView.loadUrl(URL);
 
 

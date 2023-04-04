@@ -135,8 +135,6 @@ public class VideoActivity extends Activity {
         thread = new Thread(clientThread);
 
 
-
-
         if (android.os.Build.VERSION.SDK_INT > 9)
         {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -146,6 +144,8 @@ public class VideoActivity extends Activity {
 
         JoyStick joyStick = (JoyStick) findViewById(R.id.joy11);
         Switch switchMode = findViewById(R.id.switchmode);
+        switchMode.bringToFront();
+
         if (isChecked){
 
             joyStick.setVisibility(View.VISIBLE);

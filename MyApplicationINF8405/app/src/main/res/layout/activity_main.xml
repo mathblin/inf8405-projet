@@ -8,7 +8,7 @@
     tools:ignore="MergeRootFrame"
     android:layout_marginTop="20dp"
     android:layout_marginBottom="20dp"
-
+    android:background="#000000"
     >
 
 
@@ -67,9 +67,10 @@
 
         <!--            android:text="Buttontest" />-->
 
+
         <LinearLayout
-            android:layout_width="930dp"
-            android:layout_height="383dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
 
             android:layout_alignParentBottom="true"
             android:layout_marginStart="-4dp"
@@ -91,14 +92,7 @@
                     android:layout_alignParentRight="true"
                     android:text="@string/welcome" />
 
-                <WebView
-                    android:id="@+id/view"
-                    class="com.example.ikram.myapplicationinf8405.VideoView"
-                    android:layout_width="405dp"
-                    android:layout_height="228dp" />
-
         </LinearLayout>
-
 
         <Button
             android:id="@+id/buttonCalibrate"
@@ -107,9 +101,10 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="50dp"
-            android:background="@drawable/button_background"
+            android:background="@drawable/my_button"
             android:onClick="Connexion"
-            android:text="@string/calibrate" />
+            android:text="@string/calibrate"
+            android:textColor="@color/colorPrimaryDark"/>
 
         <TextView
             android:id="@+id/textView2"
@@ -128,9 +123,9 @@
             android:layout_above="@+id/buttonCalibrate"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginStart="184dp"
-            android:layout_marginLeft="184dp"
-            android:layout_marginBottom="-41dp"
+            android:layout_marginStart="393dp"
+            android:layout_marginLeft="393dp"
+            android:layout_marginBottom="-30dp"
             android:background="@drawable/border"
             android:ems="10"
             android:inputType="" />
