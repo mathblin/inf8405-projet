@@ -165,7 +165,7 @@ def test_serial_comm():
         command = input("Your Arduino command (h for help, q to quit): ")
 
         if command == "h":
-            message = """Command: (Mode,args...) *without spaces nor parentesis*
+            message = """Command: (Mode,args...) *Include comas, but without spaces nor parentesis*
             Joystick: ({0},angle,power)
             Gyroscope: ({1},letter)
             """.format(CONTROL_MODE.MODE_JOYSTICK.value, CONTROL_MODE.MODE_GYROSCOPE.value)
