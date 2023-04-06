@@ -11,14 +11,14 @@
 
     <Switch
         android:id="@+id/switchmode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="230dp"
+        android:layout_height="40dp"
+        android:layout_gravity="end"
         android:layout_marginStart="160dp"
         android:layout_marginLeft="160dp"
         android:checked="true"
-        android:text="Mode GYROSCOPE"
-        android:layout_gravity="end"
         android:padding="5dp"
+        android:text="Mode GYROSCOPE"
 
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -30,12 +30,23 @@
         android:id="@+id/webView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center" />
+        android:layout_gravity="center" >
+    </WebView>
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="282dp"
+        android:layout_height="105dp"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="5dp"
+        android:layout_x="626dp"
+        android:layout_y="549dp"
+        android:src="@drawable/w_smol" />
 
     <com.erz.joysticklibrary.JoyStick
         android:id="@+id/joy11"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
+        android:layout_width="330dp"
+        android:layout_height="330dp"
         android:layout_gravity="bottom|left"
         android:layout_marginStart="3dp"
         android:layout_marginLeft="3dp"

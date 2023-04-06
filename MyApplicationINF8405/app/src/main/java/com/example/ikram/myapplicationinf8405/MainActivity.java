@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -32,27 +33,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         setContentView(R.layout.activity_main);
-        //WebView webView = (WebView) findViewById(R.id.view);
-        //webView.setWebViewClient(new WebViewClient());
-        //WebSettings settings = webView.getSettings();
-        //settings.setJavaScriptEnabled(true);
-        //webView.setRight(50);
-        //webView.loadUrl(youtubeUrl);
-        // webView.loadUrl(URL);
 
-
-        TextView textView = findViewById(R.id.textView);
-        textView.setText(R.string.welcome);
-        textView.setTypeface(null, Typeface.BOLD);
-        textView.setTextColor(Color.BLUE);
-        textView.setTextSize(20);
-
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
         TextView textViewTeam = findViewById(R.id.textView2);
         textViewTeam.setText(R.string.team);
         textViewTeam.setTypeface(null, Typeface.BOLD);
-        textViewTeam.setTextColor(Color.RED);
+        textViewTeam.setTextColor(Color.WHITE);
         textViewTeam.setTextSize(20);
 
 

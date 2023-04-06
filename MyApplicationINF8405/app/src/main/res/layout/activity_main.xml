@@ -5,94 +5,14 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:ignore="MergeRootFrame"
-    android:layout_marginTop="20dp"
-    android:layout_marginBottom="20dp"
     android:background="#000000"
-    >
-
-
-
-        <!--        <TextView-->
-        <!--            android:id="@+id/textView1"-->
-        <!--            android:layout_width="359dp"-->
-        <!--            android:layout_height="234dp"-->
-        <!--            android:layout_above="@+id/adresseIPText"-->
-        <!--            android:layout_centerHorizontal="true"-->
-        <!--            android:layout_marginBottom="46dp"-->
-        <!--            android:background="@drawable/border"-->
-        <!--            android:text="@string/adresse_ip_ou_le_nom_de_domaine_de_la_cam_ra_ip" />-->
-
+    tools:ignore="MergeRootFrame">
 
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="match_parent"
-            android:layout_height="137dp"
-            android:src="@drawable/smol" />
-
-        <!--        <EditText-->
-        <!--            android:id="@+id/adresseIPText"-->
-        <!--            android:layout_width="145dp"-->
-        <!--            android:layout_height="9dp"-->
-        <!--            android:layout_alignParentStart="true"-->
-        <!--            android:layout_alignParentLeft="true"-->
-        <!--            android:layout_alignParentTop="true"-->
-        <!--            android:layout_alignParentEnd="true"-->
-        <!--            android:layout_alignParentRight="true"-->
-        <!--            android:layout_centerHorizontal="true"-->
-        <!--            android:layout_marginStart="408dp"-->
-        <!--            android:layout_marginLeft="408dp"-->
-        <!--            android:layout_marginTop="526dp"-->
-        <!--            android:layout_marginEnd="378dp"-->
-        <!--            android:layout_marginRight="378dp"-->
-        <!--            android:layout_marginBottom="-86dp"-->
-        <!--            android:background="@drawable/border"-->
-        <!--            android:ems="10"-->
-        <!--            android:inputType="" />-->
-
-        <!--        <Button-->
-        <!--            android:id="@+id/longPressButton"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_alignParentTop="true"-->
-        <!--            android:layout_alignParentEnd="true"-->
-        <!--            android:layout_alignParentRight="true"-->
-        <!--            android:layout_alignParentBottom="true"-->
-        <!--            android:layout_centerHorizontal="true"-->
-        <!--            android:layout_marginTop="651dp"-->
-        <!--            android:layout_marginEnd="146dp"-->
-        <!--            android:layout_marginRight="146dp"-->
-        <!--            android:layout_marginBottom="32dp"-->
-
-
-        <!--            android:text="Buttontest" />-->
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
             android:layout_height="match_parent"
-
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="-4dp"
-            android:layout_marginTop="140dp"
-            android:layout_marginBottom="165dp"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="347dp"
-                    android:layout_height="227dp"
-                    android:layout_above="@+id/buttonCalibrate"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:text="@string/welcome" />
-
-        </LinearLayout>
+            android:src="@drawable/c_smol" />
 
         <Button
             android:id="@+id/buttonCalibrate"
@@ -104,7 +24,7 @@
             android:background="@drawable/my_button"
             android:onClick="Connexion"
             android:text="@string/calibrate"
-            android:textColor="@color/colorPrimaryDark"/>
+            android:textColor="@color/colorPrimaryDark" />
 
         <TextView
             android:id="@+id/textView2"
@@ -114,7 +34,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="19dp"
-            android:text="@string/team"  />
+            android:text="@string/team" />
 
         <EditText
             android:id="@+id/adresseIPText"
