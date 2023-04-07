@@ -135,8 +135,6 @@ public class VideoActivity extends Activity {
         thread = new Thread(clientThread);
 
 
-
-
         if (android.os.Build.VERSION.SDK_INT > 9)
         {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -146,6 +144,8 @@ public class VideoActivity extends Activity {
 
         JoyStick joyStick = (JoyStick) findViewById(R.id.joy11);
         Switch switchMode = findViewById(R.id.switchmode);
+        switchMode.bringToFront();
+
         if (isChecked){
 
             joyStick.setVisibility(View.VISIBLE);
@@ -317,7 +317,15 @@ public class VideoActivity extends Activity {
             linear_acceleration[1] = event.values[1] ;
             linear_acceleration[2] = event.values[2] ;
 
+
+            System.out.println("posXYZ : =========================");
+            System.out.println("posXYZ 1: "+ posXYZ[0]);
+            System.out.println("posXYZ 2: "+ posXYZ[1]);
+            System.out.println("posXYZ 3: "+ posXYZ[2]);
+
             double m = Math.max(linear_acceleration[0], posXYZ[0]);
+            System.out.println("max m : "+ m);
+
             double stopValue;
 
             if (m == linear_acceleration[0]){
