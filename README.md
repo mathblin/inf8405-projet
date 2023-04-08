@@ -1,7 +1,7 @@
 * [Git de Bilal](https://github.com/bilal684/INF8405)
 * [Trello/DashBoard](https://trello.com/b/Kum6uc9j/projet-robot)
 
-# Robot SMOL
+# <img src="https://user-images.githubusercontent.com/47989135/230724680-1ecd1555-b7a8-4671-ae84-7dba0c66cc42.png" width="40"> Robot SMOL
 
 ## Composantes
 * Raspberry Pi : [v.4 model B](https://datasheets.raspberrypi.com/rpi4/raspberry-pi-4-datasheet.pdf)
