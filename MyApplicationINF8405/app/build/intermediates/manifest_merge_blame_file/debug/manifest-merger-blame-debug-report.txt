@@ -1,0 +1,111 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.ikram.myapplicationinf8405"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="16"
+8-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml
+9        android:targetSdkVersion="26" />
+9-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml
+10
+11    <uses-permission android:name="android.permission.INTERNET" />
+11-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:6:5-67
+11-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:6:22-64
+12    <uses-permission android:name="android.permission.WAKE_LOCK" />
+12-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:7:5-68
+12-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:7:22-65
+13
+14    <application
+14-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:9:5-57:19
+15        android:allowBackup="true"
+15-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:10:9-35
+16        android:debuggable="true"
+17        android:icon="@mipmap/ic_launcher"
+17-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:12:9-43
+18        android:label="RobotController"
+18-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:13:9-40
+19        android:roundIcon="@mipmap/ic_launcher_round"
+19-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:14:9-54
+20        android:supportsRtl="true"
+20-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:15:9-35
+21        android:testOnly="true"
+22        android:theme="@style/AppTheme" >
+22-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:16:9-40
+23        <activity
+23-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:18:9-29:20
+24            android:name="com.example.ikram.myapplicationinf8405.MainActivity"
+24-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:19:13-41
+25            android:exported="true"
+25-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:23:13-36
+26            android:screenOrientation="landscape" >
+26-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:20:13-50
+27            <intent-filter>
+27-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:24:13-28:29
+28                <action android:name="android.intent.action.MAIN" />
+28-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:25:17-69
+28-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:25:25-66
+29
+30                <category android:name="android.intent.category.LAUNCHER" />
+30-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:27:17-77
+30-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:27:27-74
+31            </intent-filter>
+32        </activity>
+33        <activity
+33-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:30:9-38:20
+34            android:name="com.example.ikram.myapplicationinf8405.CalibrationActivity"
+34-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:30:19-54
+35            android:exported="false"
+35-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:33:13-37
+36            android:parentActivityName="com.example.ikram.myapplicationinf8405.MainActivity"
+36-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:32:13-55
+37            android:screenOrientation="landscape" >
+37-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:31:19-56
+38            <meta-data
+38-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:34:13-36:49
+39                android:name="android.support.PARENT_ACTIVITY"
+39-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:35:17-63
+40                android:value=".MainActivity" />
+40-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:36:17-46
+41        </activity>
+42        <activity
+42-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:41:9-45:20
+43            android:name="com.example.ikram.myapplicationinf8405.VideoActivity"
+43-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:42:13-42
+44            android:keepScreenOn="true"
+44-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:44:13-40
+45            android:screenOrientation="landscape" >
+45-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:43:13-50
+46        </activity>
+47        <activity
+47-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:47:9-52:20
+48            android:name="com.example.ikram.myapplicationinf8405.VideoActivityMan"
+48-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:48:13-45
+49            android:exported="true"
+49-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:51:13-36
+50            android:keepScreenOn="true"
+50-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:50:13-40
+51            android:screenOrientation="landscape" >
+51-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:49:13-50
+52        </activity>
+53        <activity android:name="com.example.ikram.myapplicationinf8405.VideoStreamActivity" >
+53-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:54:9-55:20
+53-->C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\AndroidManifest.xml:54:19-54
+54        </activity>
+55
+56        <meta-data
+56-->[com.android.support:appcompat-v7:26.1.0] C:\Users\ouass\.gradle\caches\transforms-3\04aa1f4b3d4a5ffa4c7b7935c439e361\transformed\appcompat-v7-26.1.0\AndroidManifest.xml:26:9-28:38
+57            android:name="android.support.VERSION"
+57-->[com.android.support:appcompat-v7:26.1.0] C:\Users\ouass\.gradle\caches\transforms-3\04aa1f4b3d4a5ffa4c7b7935c439e361\transformed\appcompat-v7-26.1.0\AndroidManifest.xml:27:13-51
+58            android:value="26.1.0" />
+58-->[com.android.support:appcompat-v7:26.1.0] C:\Users\ouass\.gradle\caches\transforms-3\04aa1f4b3d4a5ffa4c7b7935c439e361\transformed\appcompat-v7-26.1.0\AndroidManifest.xml:28:13-35
+59        <meta-data
+59-->[android.arch.lifecycle:runtime:1.0.0] C:\Users\ouass\.gradle\caches\transforms-3\81085a0cfa436d426558c7cf36eafe56\transformed\runtime-1.0.0\AndroidManifest.xml:25:9-27:47
+60            android:name="android.arch.lifecycle.VERSION"
+60-->[android.arch.lifecycle:runtime:1.0.0] C:\Users\ouass\.gradle\caches\transforms-3\81085a0cfa436d426558c7cf36eafe56\transformed\runtime-1.0.0\AndroidManifest.xml:26:13-58
+61            android:value="27.0.0-SNAPSHOT" />
+61-->[android.arch.lifecycle:runtime:1.0.0] C:\Users\ouass\.gradle\caches\transforms-3\81085a0cfa436d426558c7cf36eafe56\transformed\runtime-1.0.0\AndroidManifest.xml:27:13-44
+62    </application>
+63
+64</manifest>
