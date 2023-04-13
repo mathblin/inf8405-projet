@@ -21,16 +21,16 @@ enum {
 };
 
 int getCadrans(int angle) {
-    // TODO: ajuster pour le tourner 360 degrees
-    // TODO: ajuster les angles de 90 et 270
-    if (angle < 90 && angle > 10) return FIRST;                                       // 0
-    if (angle > 90 && angle < 170) return SECOND;                                     // 1
-    if (angle > 190 && angle < 270) return THIRD;                                     // 2
-    if (angle > 270 && angle < 350) return FOURTH;                                    // 3
-    if (angle == 90) return FRONT;                                                    // 4
-    if ((angle >= 0 && angle <= 10) || (angle <= 360 && angle >= 350)) return RIGHT;  // 5
-    if (angle >= 170 && angle <= 190) return LEFT;                                    // 6
-    if (angle == 270) return BACK;                                                    // 7
+  // TODO: ajuster pour le tourner 360 degrees
+  // TODO: ajuster les angles de 90 et 270
+  if (angle < 90 && angle > 15) return FIRST;                                       // 0
+  if (angle > 90 && angle < 165) return SECOND;                                     // 1
+  if (angle > 195 && angle < 270) return THIRD;                                     // 2
+  if (angle > 270 && angle < 345) return FOURTH;                                    // 3
+  if (angle == 90) return FRONT;                                                    // 4
+  if ((angle >= 0 && angle <= 15) || (angle <= 360 && angle >= 345)) return RIGHT;  // 5
+  if (angle >= 165 && angle <= 195) return LEFT;                                    // 6
+  if (angle == 270) return BACK;                                                    // 7
 
     return 100;  // Erreur
 }

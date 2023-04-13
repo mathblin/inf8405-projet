@@ -45,8 +45,6 @@ public class CalibrationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-
-
         //System.out.println("ligne000");
         Bundle extras = getIntent().getExtras();
         // System.out.println(extras.getString("ip"));
@@ -70,11 +68,6 @@ public class CalibrationActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked2) {
                Intent auto = new Intent(CalibrationActivity.this, VideoActivity.class);
-
-
-
-
-
 
                 if (isChecked2) {
                     switchMode.setText("Mode GYROSCOPE");
@@ -206,6 +199,19 @@ public class CalibrationActivity extends AppCompatActivity {
         sensorManager.unregisterListener(accelerometerListener);
     }
 
+    private double roundValues(double sendValue){
+        // Round to 3 decimal places
+        sendValue = sendValue * 1000;
+        sendValue = Math.round(sendValue);
+        sendValue = sendValue / 1000;
+
+        return sendValue;
+    }
+
+    private double addToAverage(int n, double old_average, double new_value ){
+        return ( n * old_average + new_value ) / (n + 1);
+    }
+
     //Accelerometer listener, set the values
     public SensorEventListener accelerometerListener = new SensorEventListener() {
         public void onAccuracyChanged(Sensor sensor, int acc) { }
@@ -213,15 +219,26 @@ public class CalibrationActivity extends AppCompatActivity {
         public void onSensorChanged(SensorEvent event) {
 
             // Get the acceleration from sensors. Raw data
-            linear_acceleration[0] = event.values[0] ;
-            linear_acceleration[1] = event.values[1] ;
-            linear_acceleration[2] = event.values[2] ;
+
+            // Added floor
+            linear_acceleration[0] = roundValues(event.values[0]) ;
+            linear_acceleration[1] = roundValues(event.values[1]) ;
+            linear_acceleration[2] = roundValues(event.values[2]) ;
+
+
+            //System.out.println("linear orientations ==========================");
+            //System.out.println("linear orientation X: "+ linear_acceleration[0]);
+            //System.out.println("linear orientation Y: "+ linear_acceleration[1]);
+            //System.out.println("linear orientation Z: "+ linear_acceleration[2]);
 
             // If first time sensor change, keep initial device position
             if (firstTime == false){
-                posXYZ[0] = linear_acceleration[0];  // initial X
-                posXYZ[1] = linear_acceleration[1];  // initial Y
-                posXYZ[2] = linear_acceleration[2];  // initial Z
+                // while start is not pressed get average values
+                for (int i = 0; i < 20; i++){
+                    posXYZ[0] = addToAverage(i,posXYZ[0],linear_acceleration[0]); // initial X
+                    posXYZ[1] = addToAverage(i,posXYZ[1],linear_acceleration[1]);  // initial Y
+                    posXYZ[2] = addToAverage(i,posXYZ[2],linear_acceleration[2]);  // initial Z
+                }
                 firstTime = true;
             }
 
@@ -239,11 +256,6 @@ public class CalibrationActivity extends AppCompatActivity {
                 else{
                     sendValue = m - linear_acceleration[i];
                 }
-
-                // Round to 3 decimal places
-//                sendValue = sendValue * 1000;
-//                sendValue = Math.round(sendValue);
-//                sendValue = sendValue / 1000;
 
                 // display the acceleration in negative value or in positive value depending of the position
                 if(linear_acceleration[i] < posXYZ[i]){
@@ -268,8 +280,6 @@ public class CalibrationActivity extends AppCompatActivity {
                     buttonMax.setEnabled(true);
                 }
                 textPosition.setText(String.valueOf(relative_linear_acceleration[0]));
-                //  System.out.println(textPosition.getText().toString());
-                // samir System.out.println("textPosition.getText().toString()");
             }
         }
     };
