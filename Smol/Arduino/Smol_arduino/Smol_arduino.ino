@@ -12,7 +12,7 @@ int servo(struct pt* pt) {
   PT_BEGIN(pt);
 
   while (true) {
-    if (isStopped()) {
+    if (get_stop_servo()) {
       cane.stop(45);
     } else {
       cane.start(1000);
