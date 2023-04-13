@@ -39,6 +39,8 @@ int move(struct pt* pt) {
     mode = getValue(msg, ',', MODE_POSITION).toInt();
     debug = getValue(msg, ',', DEBUG_POSITION).toInt();
 
+    manage_stop_servo(&msg, &debug);
+
     switch (mode) {
       case MODE_JOYSTICK:
         mode_joystick(&msg, &debug);

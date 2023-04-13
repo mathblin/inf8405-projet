@@ -1,5 +1,4 @@
 #include "common.h"
-// #include  <String.h>
 
 // getValue function taken from this link:
 // https://stackoverflow.com/questions/9072320/split-string-into-string-array
@@ -56,4 +55,34 @@ void turn_R_360(char a, char b)  //Turn Right
   digitalWrite(M1, HIGH);
   analogWrite(E2, b);
   digitalWrite(M2, LOW);
+}
+
+// Servo
+bool stop_servo = false;
+void manage_stop_servo(String* msg, bool* debug) {
+  int mode = getValue(*msg, ',', MODE_POSITION).toInt();
+
+  switch (mode) {
+    case MODE_JOYSTICK:
+      int angle = getValue(*msg, ',', ANGLE_POSITION).toInt();
+      if (angle == 0) stop_servo = STOP_SERVO;
+      else stop_servo = MOVE_SERVO;
+      break;
+
+    case MODE_GYROSCOPE:
+      char command = getValue(*msg, ',', LETTER_POSITION)[0];
+      if (command == 'x') stop_servo = STOP_SERVO;
+      else stop_servo = MOVE_SERVO;
+      break;
+  }
+  if (*debug && Serial.availableForWrite() > 30) {
+    Serial.print("ok");
+  } else if (Serial.availableForWrite() > 30) {  // Tells the server that Arduino is ready to receive a command
+    Serial.print("ok");
+  }
+}
+
+bool get_stop_servo()
+{
+  return stop_servo;
 }
