@@ -11,14 +11,14 @@ pt ptMove;
 int servo(struct pt* pt) {
   PT_BEGIN(pt);
 
-  //if (started) {
   while (true) {
-    cane.start(1000);
+    if (isStopped()) {
+      cane.stop(45);
+    } else {
+      cane.start(1000);
+    }
     PT_SLEEP(pt, 1);
   }
-  //} else {
-  //  cane.stop(45);
-  //}
 
   PT_END(pt);
 }
