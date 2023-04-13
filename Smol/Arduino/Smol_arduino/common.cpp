@@ -64,31 +64,32 @@ void turn_R_360(char a, char b)  //Turn Right
 }
 
 // Servo
-bool stop_servo = false;
+bool stop_servo = STOP_SERVO;
 void manage_stop_servo(String* msg, bool* debug) {
   int mode = getValue(*msg, ',', MODE_POSITION).toInt();
 
+  int angle = -1;
+  char command = ' ';
   switch (mode) {
     case MODE_JOYSTICK:
-      int angle = getValue(*msg, ',', ANGLE_POSITION).toInt();
+      angle = getValue(*msg, ',', ANGLE_POSITION).toInt();
       if (angle == 0) stop_servo = STOP_SERVO;
       else stop_servo = MOVE_SERVO;
       break;
-
     case MODE_GYROSCOPE:
-      char command = getValue(*msg, ',', LETTER_POSITION)[0];
+      command = getValue(*msg, ',', LETTER_POSITION)[0];
       if (command == 'x') stop_servo = STOP_SERVO;
       else stop_servo = MOVE_SERVO;
       break;
   }
+
   if (*debug && Serial.availableForWrite() > 30) {
-    Serial.print("ok");
+    Serial.print("stop_servo : " + String(stop_servo) + " mode : " + String(mode) + " msg : " + *msg + " cmd : " + String(command));
   } else if (Serial.availableForWrite() > 30) {  // Tells the server that Arduino is ready to receive a command
     Serial.print("ok");
   }
 }
 
-bool get_stop_servo()
-{
+bool isStopped() {
   return stop_servo;
 }

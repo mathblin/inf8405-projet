@@ -24,8 +24,8 @@ void turn_L_360(char a, char b);  //Turn Left
 void turn_R_360(char a, char b);  //Turn Right
 
 // Servo
-enum servo_state {STOP_SERVO = 0, MOVE_SERVO = 1};
+enum servo_state {MOVE_SERVO = 0, STOP_SERVO = 1};
 void manage_stop_servo(String* msg, bool* debug);
-bool get_stop_servo();
+bool isStopped();
 
 #endif  // COMMON_H

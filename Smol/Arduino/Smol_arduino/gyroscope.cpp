@@ -15,9 +15,9 @@ void mode_gyroscope(String* msg, bool* debug) {
   char command = getValue(*msg, ',', LETTER_POSITION)[0];
 
   if (*debug && Serial.availableForWrite() > 30) Serial.print(" command: " + String(command));
-  else if (Serial.availableForWrite() > 30) {  // Tells the server that Arduino is ready to receive a command
+  else if (Serial.availableForWrite() > 30) { // Tells the server that Arduino is ready to receive a command
     Serial.print("ok");
-  }
+  }  
 
   vitesse = vitesseMax;
 
@@ -275,68 +275,7 @@ void mode_gyroscope(String* msg, bool* debug) {
           break;
       }
     } else {
-      vitesse = vitesseRotationMin + vitesseIncrementRotation;
-      vitesseLow = vitesseRotationMin;
+      stop();
     }
-    back_off(vitesseLow, vitesse);
-    break;
-
-    case 'x':
-      stop();
-      break;
-    default:
-      stop();
-      break;
   }
-  switch (command) {
-    case 'a':
-      currentState = ROT_LEFT_360;
-      break;
-    case 'd':
-      currentState = ROT_RIGHT_360;
-      break;
-    case 'w':
-      currentState = FORWARD;
-      break;
-    case 'W':
-      currentState = FORWARD;
-      break;
-    case 's':
-      currentState = BACKWARD;
-      break;
-    case 'S':
-      currentState = BACKWARD;
-      break;
-    case 'x':
-      currentState = STOP;
-      break;
-    case 'q':
-      currentState = ROT_LEFT_FRONT;
-      break;
-    case 'Q':
-      currentState = ROT_LEFT_FRONT;
-      break;
-    case 'e':
-      currentState = ROT_RIGHT_FRONT;
-      break;
-    case 'E':
-      currentState = ROT_RIGHT_FRONT;
-      break;
-    case 'z':
-      currentState = ROT_LEFT_BACK;
-      break;
-    case 'Z':
-      currentState = ROT_LEFT_BACK;
-      break;
-    case 'c':
-      currentState = ROT_RIGHT_BACK;
-      break;
-    case 'C':
-      currentState = ROT_RIGHT_BACK;
-      break;
-  }
-}
-else {
-  stop();
-}
 }
