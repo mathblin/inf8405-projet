@@ -12,7 +12,7 @@ int servo(struct pt* pt) {
   PT_BEGIN(pt);
 
   while (true) {
-    if (isStopped()) {
+    if (get_stop_servo()) {
       cane.stop(45);
     } else {
       cane.start(1000);
@@ -38,6 +38,8 @@ int move(struct pt* pt) {
     msg = Serial.readString();
     mode = getValue(msg, ',', MODE_POSITION).toInt();
     debug = getValue(msg, ',', DEBUG_POSITION).toInt();
+
+    manage_stop_servo(&msg, &debug);
 
     switch (mode) {
       case MODE_JOYSTICK:
