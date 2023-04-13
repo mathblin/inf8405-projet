@@ -22,5 +22,6 @@ void advance(char a, char b);     //Move forward
 void back_off(char a, char b);    //Move backward
 void turn_L_360(char a, char b);  //Turn Left
 void turn_R_360(char a, char b);  //Turn Right
+bool isStopped();
 
 #endif  // COMMON_H

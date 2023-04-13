@@ -23,14 +23,17 @@ int E1 = 5;  //M1 Speed Control
 int E2 = 6;  //M2 Speed Control
 int M1 = 4;  //M1 Direction Control
 int M2 = 7;  //M1 Direction Control
+bool stopped = true;
 
 void stop(void)  //Stop
 {
+  stopped = true;
   digitalWrite(E1, LOW);
   digitalWrite(E2, LOW);
 }
 void advance(char a, char b)  //Move forward
 {
+  stopped = false;
   analogWrite(E1, a);  //PWM Speed Control
   digitalWrite(M1, HIGH);
   analogWrite(E2, b);
@@ -38,6 +41,7 @@ void advance(char a, char b)  //Move forward
 }
 void back_off(char a, char b)  //Move backward
 {
+  stopped = false;
   analogWrite(E1, a);
   digitalWrite(M1, LOW);
   analogWrite(E2, b);
@@ -45,6 +49,7 @@ void back_off(char a, char b)  //Move backward
 }
 void turn_L_360(char a, char b)  //Turn Left
 {
+  stopped = false;
   analogWrite(E1, a);
   digitalWrite(M1, LOW);
   analogWrite(E2, b);
@@ -52,8 +57,14 @@ void turn_L_360(char a, char b)  //Turn Left
 }
 void turn_R_360(char a, char b)  //Turn Right
 {
+  stopped = false;
   analogWrite(E1, a);
   digitalWrite(M1, HIGH);
   analogWrite(E2, b);
   digitalWrite(M2, LOW);
+}
+
+bool isStopped()
+{
+  return stopped;
 }
