@@ -1,0 +1,14 @@
+com.example.ikram.myapplicationinf8405.app-appcompat-v7-26.1.0-0 C:\Users\ouass\.gradle\caches\transforms-3\04aa1f4b3d4a5ffa4c7b7935c439e361\transformed\appcompat-v7-26.1.0\res
+com.example.ikram.myapplicationinf8405.app-joystickview-1.0.2-1 C:\Users\ouass\.gradle\caches\transforms-3\05267c9de2490ac1bb9cb3d86cceb6a1\transformed\joystickview-1.0.2\res
+com.example.ikram.myapplicationinf8405.app-support-compat-26.1.0-2 C:\Users\ouass\.gradle\caches\transforms-3\27931479e7fb2df8aba5d0e37900a42c\transformed\support-compat-26.1.0\res
+com.example.ikram.myapplicationinf8405.app-JoyStick-1.1.0-3 C:\Users\ouass\.gradle\caches\transforms-3\6ecfb3101cf09971b2341506bc799fb9\transformed\JoyStick-1.1.0\res
+com.example.ikram.myapplicationinf8405.app-support-media-compat-26.1.0-4 C:\Users\ouass\.gradle\caches\transforms-3\9d84e7894c91a1c08120e9569aeac500\transformed\support-media-compat-26.1.0\res
+com.example.ikram.myapplicationinf8405.app-constraint-layout-1.0.2-5 C:\Users\ouass\.gradle\caches\transforms-3\e48f28f4878eed3da361022b5a6769ad\transformed\constraint-layout-1.0.2\res
+com.example.ikram.myapplicationinf8405.app-pngs-6 C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\build\generated\res\pngs\debug
+com.example.ikram.myapplicationinf8405.app-resValues-7 C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\build\generated\res\resValues\debug
+com.example.ikram.myapplicationinf8405.app-rs-8 C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\build\generated\res\rs\debug
+com.example.ikram.myapplicationinf8405.app-mergeDebugResources-9 C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\build\intermediates\incremental\debug\mergeDebugResources\merged.dir
+com.example.ikram.myapplicationinf8405.app-mergeDebugResources-10 C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\build\intermediates\incremental\debug\mergeDebugResources\stripped.dir
+com.example.ikram.myapplicationinf8405.app-merged_res-11 C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\build\intermediates\merged_res\debug
+com.example.ikram.myapplicationinf8405.app-debug-12 C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\debug\res
+com.example.ikram.myapplicationinf8405.app-main-13 C:\Users\ouass\Desktop\Projet-Robot\inf8405-projet\MyApplicationINF8405\app\src\main\res
