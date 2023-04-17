@@ -31,6 +31,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.erz.joysticklibrary.JoyStick;
 import com.jackandphantom.joystickview.JoyStickView;
@@ -164,7 +165,16 @@ public class VideoActivity extends Activity {
         Switch switchMode = findViewById(R.id.switchmode);
         switchMode.bringToFront();
 
+        // Hello Button logic
         Button hello_button = findViewById(R.id.hello_button);
+        hello_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Handle button click here
+                Toast.makeText(getApplicationContext(), "Button clicked!", Toast.LENGTH_SHORT).show();
+            }
+        });
+        // End of Hello button logic
 
         if (isChecked){
 
