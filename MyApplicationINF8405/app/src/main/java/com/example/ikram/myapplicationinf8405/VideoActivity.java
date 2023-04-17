@@ -147,9 +147,9 @@ public class VideoActivity extends Activity {
         }
         thread.start();
 
-        JoyStick joyStick = (JoyStick) findViewById(R.id.joy11);
+        JoyStick joyStick = (JoyStick) findViewById(R.id.joy111);
         joyStick.setButtonColor(Color.rgb(134, 122, 68));
-        joyStick.bringToFront();
+
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -157,10 +157,15 @@ public class VideoActivity extends Activity {
         int screenWidth = displayMetrics.widthPixels;
         int screenHeight = displayMetrics.heightPixels;
 
-        int joyStickSize = (int) (Math.min(screenWidth, screenHeight) * 0.5);
+        int joyStickSize = (int) (Math.min(screenWidth, screenHeight) * 0.4);
 
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(joyStickSize, joyStickSize);
+        layoutParams.gravity = Gravity.BOTTOM | Gravity.LEFT;
         joyStick.setLayoutParams(layoutParams);
+        joyStick.setPadColor(android.R.color.darker_gray);
+        joyStick.setAlpha(0.5F);
+
+        joyStick.bringToFront();
 
         Switch switchMode = findViewById(R.id.switchmode);
         switchMode.bringToFront();
