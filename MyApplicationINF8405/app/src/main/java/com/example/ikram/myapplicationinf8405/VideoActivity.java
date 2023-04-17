@@ -9,6 +9,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
 import org.apache.http.HttpResponse;
@@ -28,6 +29,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.Switch;
 
 import com.erz.joysticklibrary.JoyStick;
@@ -148,11 +150,21 @@ public class VideoActivity extends Activity {
         joyStick.setButtonColor(Color.rgb(134, 122, 68));
         joyStick.bringToFront();
 
-        Button hello_button = findViewById(R.id.hello_button);
-        joyStick.bringToFront();
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+
+        int screenWidth = displayMetrics.widthPixels;
+        int screenHeight = displayMetrics.heightPixels;
+
+        int joyStickSize = (int) (Math.min(screenWidth, screenHeight) * 0.5);
+
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(joyStickSize, joyStickSize);
+        joyStick.setLayoutParams(layoutParams);
 
         Switch switchMode = findViewById(R.id.switchmode);
         switchMode.bringToFront();
+
+        Button hello_button = findViewById(R.id.hello_button);
 
         if (isChecked){
 
