@@ -31,6 +31,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center" >
+
+        <Button
+            android:id="@+id/hello_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_x="1126dp"
+            android:layout_y="623dp"
+            android:text="Say Hello!" />
     </WebView>
 
     <ImageView

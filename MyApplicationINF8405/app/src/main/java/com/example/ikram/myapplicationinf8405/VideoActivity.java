@@ -2,6 +2,7 @@ package com.example.ikram.myapplicationinf8405;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -25,6 +26,7 @@ import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 
@@ -143,6 +145,12 @@ public class VideoActivity extends Activity {
         thread.start();
 
         JoyStick joyStick = (JoyStick) findViewById(R.id.joy11);
+        joyStick.setButtonColor(Color.rgb(134, 122, 68));
+        joyStick.bringToFront();
+
+        Button hello_button = findViewById(R.id.hello_button);
+        joyStick.bringToFront();
+
         Switch switchMode = findViewById(R.id.switchmode);
         switchMode.bringToFront();
 
