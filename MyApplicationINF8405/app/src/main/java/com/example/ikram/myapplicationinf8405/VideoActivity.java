@@ -167,6 +167,7 @@ public class VideoActivity extends Activity {
 
         // Hello Button logic
         Button hello_button = findViewById(R.id.hello_button);
+        hello_button.bringToFront();
         hello_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
