@@ -2,12 +2,14 @@ package com.example.ikram.myapplicationinf8405;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
 import org.apache.http.HttpResponse;
@@ -25,8 +27,11 @@ import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.erz.joysticklibrary.JoyStick;
 import com.jackandphantom.joystickview.JoyStickView;
@@ -38,14 +43,16 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+
 public class VideoActivity extends Activity {
+    double JOYSTICK_SCALE = 0.4;
     private static final String TAG = "VideoActivity";
 
     // VideoView && URL
     private VideoView mv;
     String URL = "http://132.207.186.54:5000";
-   // String URL = "http://192.168.55.3:5000";
-     // String URL = "http://10.0.0.238:5000";
+    // String URL = "http://192.168.55.3:5000";
+    // String URL = "http://10.0.0.238:5000";
 
    // String URL = "https://www.youtube.com/watch?v=4Zv0GZUQjZc&ab_channel=Freenove";
     String mode = "0,";
@@ -142,9 +149,47 @@ public class VideoActivity extends Activity {
         }
         thread.start();
 
-        JoyStick joyStick = (JoyStick) findViewById(R.id.joy11);
+
+        // Display Size:
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+
+        int screenWidth = displayMetrics.widthPixels;
+        int screenHeight = displayMetrics.heightPixels;
+
+        // Joystick Logic
+        JoyStick joyStick = (JoyStick) findViewById(R.id.joy111);
+        joyStick.setButtonColor(Color.rgb(134, 122, 68));
+
+        // TODO : Ajouter une maniere dans l'app de changer le scale du joystick.
+        int joyStickSize = (int) (Math.min(screenWidth, screenHeight) * JOYSTICK_SCALE);
+
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(joyStickSize, joyStickSize);
+        layoutParams.gravity = Gravity.BOTTOM | Gravity.LEFT;
+        joyStick.setLayoutParams(layoutParams);
+        joyStick.setPadColor(android.R.color.darker_gray);
+        joyStick.setAlpha(0.5F);
+
+        joyStick.bringToFront();
+        // End Joystick Logic
+
+        // SwitchMode logic
         Switch switchMode = findViewById(R.id.switchmode);
         switchMode.bringToFront();
+        // End SwitchMode logic
+
+        // Hello Button logic
+        Button hello_button = findViewById(R.id.hello_button);
+        hello_button.bringToFront();
+        hello_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Handle button click here
+                Toast.makeText(getApplicationContext(), "Button clicked!", Toast.LENGTH_SHORT).show();
+                clientThread.sendMessage("2,1;");
+            }
+        });
+        // End of Hello button logic
 
         if (isChecked){
 
@@ -153,8 +198,6 @@ public class VideoActivity extends Activity {
             switchMode.setChecked(isChecked);
 
         }else {
-
-
             joyStick.setVisibility(View.INVISIBLE);
             switchMode.setText("Mode GYROSCOPE start");
             switchMode.setChecked(isChecked);
@@ -309,7 +352,8 @@ public class VideoActivity extends Activity {
 
 
 
-
+        // TODO : Filtrer les angles du gyrospcope.
+        // Reduire la quantite de donnee envoyer au serveur
         public void onSensorChanged(SensorEvent event) {
             if (!swichMode){
             // Get the acceleration from sensors. Raw data

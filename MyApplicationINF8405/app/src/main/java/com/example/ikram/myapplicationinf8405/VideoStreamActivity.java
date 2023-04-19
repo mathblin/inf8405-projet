@@ -19,8 +19,6 @@ import java.util.Properties;
 
 public class VideoStreamActivity extends DataInputStream {
 
-
-
     private final byte[] SOI_MARKER = { (byte) 0xFF, (byte) 0xD8 };
     private final byte[] EOF_MARKER = { (byte) 0xFF, (byte) 0xD9 };
     private final String CONTENT_LENGTH = "Content-Length";

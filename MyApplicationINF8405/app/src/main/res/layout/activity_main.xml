@@ -12,7 +12,8 @@
             android:id="@+id/imageView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/c_smol" />
+            android:src="@drawable/c_smol"
+            android:padding="1dp"/>
 
         <Button
             android:id="@+id/buttonCalibrate"
@@ -43,8 +44,6 @@
             android:layout_above="@+id/buttonCalibrate"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginStart="393dp"
-            android:layout_marginLeft="393dp"
             android:layout_marginBottom="-30dp"
             android:background="@drawable/border"
             android:ems="10"
