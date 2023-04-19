@@ -186,6 +186,7 @@ public class VideoActivity extends Activity {
             public void onClick(View v) {
                 // Handle button click here
                 Toast.makeText(getApplicationContext(), "Button clicked!", Toast.LENGTH_SHORT).show();
+                clientThread.sendMessage("2,1;");
             }
         });
         // End of Hello button logic
