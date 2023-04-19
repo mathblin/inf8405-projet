@@ -1,4 +1,5 @@
 #include "servomotor.h"
+#include "common.h"
 
 Servomotor::Servomotor() {}
 
@@ -26,6 +27,16 @@ void Servomotor::start(long moving_time) {
 
 void Servomotor::stop(long angle) {
     my_servo.write(angle);
+}
+
+void Servomotor::you_can_change_this_function_name_lau(String* msg, bool* debug) {
+  int mode = getValue(*msg, ',', MODE_POSITION).toInt();
+
+  if (*debug && Serial.availableForWrite() > 30) {
+    Serial.print(" mode : " + String(mode) + " msg : " + *msg);
+  } else if (Serial.availableForWrite() > 30) {  // Tells the server that Arduino is ready to receive a command
+    Serial.print("ok");
+  }
 }
 
 // https://arduinogetstarted.com/faq/how-to-control-speed-of-servo-motor#:~:text=By%20using%20map()%20and,90%C2%B0%20in%203%20seconds.

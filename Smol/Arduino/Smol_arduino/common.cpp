@@ -82,12 +82,6 @@ void manage_stop_servo(String* msg, bool* debug) {
       else stop_servo = MOVE_SERVO;
       break;
   }
-
-  if (*debug && Serial.availableForWrite() > 30) {
-    Serial.print("stop_servo : " + String(stop_servo) + " mode : " + String(mode) + " msg : " + *msg + " cmd : " + String(command));
-  } else if (Serial.availableForWrite() > 30) {  // Tells the server that Arduino is ready to receive a command
-    Serial.print("ok");
-  }
 }
 
 bool isStopped() {

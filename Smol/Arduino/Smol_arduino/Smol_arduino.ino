@@ -48,6 +48,9 @@ int move(struct pt* pt) {
       case MODE_GYROSCOPE:
         mode_gyroscope(&msg, &debug);
         break;
+      case MODE_SECOND_SERVO:
+        cane.you_can_change_this_function_name_lau(&msg, &debug);
+        break;
     }
   }
 

@@ -14,7 +14,8 @@ enum Flags {
 
 enum CONTROL_MODE {
   MODE_JOYSTICK = 0,
-  MODE_GYROSCOPE = 1
+  MODE_GYROSCOPE = 1,
+  MODE_SECOND_SERVO = 2
 };
 
 void stop(void);                  //Stop
