@@ -16,3 +16,9 @@
 
 ## Pour connecter un PC au robot
 [VNC Viewer](https://www.realvnc.com/fr/connect/download/viewer/)
+
+## License
+Ce projet est sous [licence MIT](LICENCE.md)
+
+## Logo de Smol <img src="https://user-images.githubusercontent.com/47989135/230724680-1ecd1555-b7a8-4671-ae84-7dba0c66cc42.png" width="40">
+L'utilisation du logo est réservé à l'équipe de projet d'Hiver 2023. L'application peut être utilisée selon la [licence MIT](LICENCE.md), mais le logo ne l'est pas. Conséquemment, vous devrez enlever les images du logo dans l'application mobile et partout ou vous le verrez.
