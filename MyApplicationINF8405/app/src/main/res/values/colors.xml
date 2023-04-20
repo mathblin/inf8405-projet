@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    // https://stackoverflow.com/questions/22192291/how-to-change-the-status-bar-color-in-android
+    <color name="colorPrimary">#FAF0A0</color>
+    <color name="colorPrimaryDark">#B58746</color>
     <color name="colorAccent">#FF4081</color>
 
     <color name="green">#00FF00</color>
     <color name="defaultColor">#FF0000</color>
+    <color name="colorIntermediate">#D6B971</color>
 
 </resources>

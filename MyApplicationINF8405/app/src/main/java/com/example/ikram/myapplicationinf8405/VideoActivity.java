@@ -1,12 +1,17 @@
 package com.example.ikram.myapplicationinf8405;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -31,6 +36,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.erz.joysticklibrary.JoyStick;
@@ -42,7 +48,6 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
-
 
 public class VideoActivity extends Activity {
     double JOYSTICK_SCALE = 0.4;
@@ -59,12 +64,11 @@ public class VideoActivity extends Activity {
     // Server port and thread
 
     public static final int SERVERPORT = 5050;
-   // public static final String SERVER_IP = "132.207.186.11"; //10.200.26.68
+    // public static final String SERVER_IP = "132.207.186.11"; //10.200.26.68
     public static final String SERVER_IP = "10.0.0.62"; //10.200.26.68
-    //public static final String SERVER_IP = "10.200.61.168"; //10.200.26.68
-  // public static final String SERVER_IP = "10.200.0.163"; //10.200.26.68 192.168.56.1
-  //  public static final String SERVER_IP = "192.168.56.1"; //10.200.26.68
-
+    // public static final String SERVER_IP = "10.200.61.168"; //10.200.26.68
+    // public static final String SERVER_IP = "10.200.0.163"; //10.200.26.68 192.168.56.1
+    // public static final String SERVER_IP = "192.168.56.1"; //10.200.26.68
 
     ClientThread clientThread;
     Thread thread;
@@ -76,8 +80,6 @@ public class VideoActivity extends Activity {
     double[] linear_acceleration = {0, 0, 0};
     double[] posXYZ = {0, 0, 0};
     boolean isChecked;
-
-
 
     // Max acceleration and Min acceleration
     double maxAcceleration;
@@ -106,7 +108,6 @@ public class VideoActivity extends Activity {
         // Afficher le tag dans la console
         Log.d("JoyStick2", tag);
 
-
         super.onCreate(savedInstanceState);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -117,10 +118,37 @@ public class VideoActivity extends Activity {
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         webView.setRight(50);
-          webView.loadUrl(URL);
-      //  webView.loadUrl("http://"+extras.getString("ip")+":5000");
+        webView.loadUrl(URL);
+        // webView.loadUrl("http://"+extras.getString("ip")+":5000");
 
+        // TextView for connection
+        TextView connection_lost = findViewById(R.id.connection_lost);
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
+        // Create a BroadcastReceiver to listen for network connectivity changes
+        BroadcastReceiver networkReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                // Get the network info
+                NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+
+                // Check if the network is connected
+                if (networkInfo != null && networkInfo.isConnected()) {
+                    // Network is connected
+                    connection_lost.setVisibility(View.INVISIBLE);
+                    System.out.println("networkInfo = " + networkInfo);
+                } else {
+                    // Network is disconnected
+                    connection_lost.bringToFront();
+                    connection_lost.setVisibility(View.VISIBLE);
+                    System.out.println("networkInfo = " + networkInfo);
+                }
+            }
+        };
+
+        // Register the BroadcastReceiver to listen for network connectivity changes
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkReceiver, filter);
 
         //Set up sensors and accelerometer
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -132,7 +160,7 @@ public class VideoActivity extends Activity {
         } else {
             URL = "http://webcam.aui.ma/axis-cgi/mjpg/video.cgi?resolution=CIF&amp";
         }
-*/
+        */
 
         topIntervalX = maxAcceleration/stopInterval;
         bottomIntervalX = minAcceleration/stopInterval;
@@ -141,14 +169,12 @@ public class VideoActivity extends Activity {
         clientThread = new ClientThread();
         thread = new Thread(clientThread);
 
-
         if (android.os.Build.VERSION.SDK_INT > 9)
         {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
         thread.start();
-
 
         // Display Size:
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -159,7 +185,7 @@ public class VideoActivity extends Activity {
 
         // Joystick Logic
         JoyStick joyStick = (JoyStick) findViewById(R.id.joy111);
-        joyStick.setButtonColor(Color.rgb(134, 122, 68));
+        joyStick.setButtonColor(Color.rgb(214, 185, 113));
 
         // TODO : Ajouter une maniere dans l'app de changer le scale du joystick.
         int joyStickSize = (int) (Math.min(screenWidth, screenHeight) * JOYSTICK_SCALE);
@@ -192,21 +218,16 @@ public class VideoActivity extends Activity {
         // End of Hello button logic
 
         if (isChecked){
-
             joyStick.setVisibility(View.VISIBLE);
             switchMode.setText("Mode JOYSTICK start");
             switchMode.setChecked(isChecked);
-
         }else {
             joyStick.setVisibility(View.INVISIBLE);
             switchMode.setText("Mode GYROSCOPE start");
             switchMode.setChecked(isChecked);
         }
 
-
         joyStick.setListener(new JoyStick.JoyStickListener() {
-
-
             @Override
             public void onMove(JoyStick joyStick, double angle, double power, int direction) {
                 // Faire quelque chose avec les données d'angle, de puissance et de direction
@@ -214,29 +235,23 @@ public class VideoActivity extends Activity {
 
                 // Afficher le tag dans la console
                 Log.d("JoyStick", tag);
-
                 String angleText = "Angle: " + angle;
-
             }
-
             @Override
             public void onTap() {
             }
-
             @Override
             public void onDoubleTap() {
             }
-
             public void onLongPress() {
             }
         });
-
 
         switchMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked2) {
 
-//                String test2 = "check ischeked avant " + isChecked;
+                // String test2 = "check ischeked avant " + isChecked;
 
                 Log.d("mode2",  "ischecked :"+isChecked );
                 Log.d("mode2",  "ischecked2 : " + isChecked2);
@@ -245,18 +260,12 @@ public class VideoActivity extends Activity {
                         switchMode.setText("Mode JOYSTICK3 ");
                         joyStick.setVisibility(View.VISIBLE);
                         swichMode = true;
-
-
                     } else {
-
                         switchMode.setText("Mode gyro ");
                         joyStick.setVisibility(View.INVISIBLE);
                         swichMode = false;
-
                 }
-
             }
-
         });
 
         joyStick.setListener(new JoyStick.JoyStickListener() {
@@ -292,9 +301,6 @@ public class VideoActivity extends Activity {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-
-
-
             }
             @Override
             public void onTap() {
@@ -308,7 +314,6 @@ public class VideoActivity extends Activity {
                 // Gérer le double tap sur le joystick
             }
         });
-
 
         // Execute URL for video
         //new DoRead().execute(URL);
@@ -345,22 +350,16 @@ public class VideoActivity extends Activity {
     //Accelerometer listener, set the values
     public SensorEventListener accelerometerListener = new SensorEventListener() {
 
-
-
-
         public void onAccuracyChanged(Sensor sensor, int acc) { }
-
-
 
         // TODO : Filtrer les angles du gyrospcope.
         // Reduire la quantite de donnee envoyer au serveur
         public void onSensorChanged(SensorEvent event) {
-            if (!swichMode){
+            if (swichMode){ return; }
             // Get the acceleration from sensors. Raw data
             linear_acceleration[0] = event.values[0] ;
             linear_acceleration[1] = event.values[1] ;
             linear_acceleration[2] = event.values[2] ;
-
 
             System.out.println("posXYZ : =========================");
             System.out.println("posXYZ 1: "+ posXYZ[0]);
@@ -383,14 +382,11 @@ public class VideoActivity extends Activity {
             {
                 clientThread.sendMessage("1,x;");
                 Log.d("letter", "x mini 333");
-
             }
 
             if (Math.abs(linear_acceleration[1]) > 2.0) // Pritorite pour tourner
             {
-
                 // QEAD
-
                 if (linear_acceleration[1] > posXYZ[1]) // droite
                 {
                     double sendValue = linear_acceleration[1] - posXYZ[1];
@@ -490,8 +486,6 @@ public class VideoActivity extends Activity {
                     lastValueWS = sendValue;
                 }
             }
-        }
-
         }
     };
 

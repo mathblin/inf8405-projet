@@ -11,7 +11,7 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
     <corners android:radius="20dp" />
-    <solid android:color="@color/green" />
+    <solid android:color="@color/colorPrimary" />
     <padding
         android:left="16dp"
         android:top="8dp"
@@ -23,7 +23,7 @@
 
     <stroke
         android:width="3dp"
-        android:color="#0048FF" />
+        android:color="@color/colorPrimaryDark" />
 
     <rotate
         android:fromDegrees="45"
