@@ -18,25 +18,43 @@ void Servomotor::start(long moving_time) {
         my_servo.write(angle);
     }
     else {
-        move_start_time = millis();
-        long temp = from;
-        from = to;
-        to = temp;
+      move_start_time = millis();
+      long temp = from;
+      from = to;
+      to = temp;
+
+      // for now this is only valid for servo of hat
+      cnt++;
+      if (actived && cnt == 3) { 
+        actived = false;
+        long max = max(from, to);
+        from = min(from, to);
+        to = max;
+        cnt = 0;
+      }
     }
 }
 
-void Servomotor::stop(long angle) {
-    my_servo.write(angle);
+void Servomotor::stop() {
+    my_servo.write(to);
 }
 
-void Servomotor::you_can_change_this_function_name_lau(String* msg, bool* debug) {
+void Servomotor::activate(String* msg, bool* debug) {
   int mode = getValue(*msg, ',', MODE_POSITION).toInt();
+
+  if (mode == MODE_SECOND_SERVO) {
+    actived = true;
+  }
 
   if (*debug && Serial.availableForWrite() > 30) {
     Serial.print(" mode : " + String(mode) + " msg : " + *msg);
   } else if (Serial.availableForWrite() > 30) {  // Tells the server that Arduino is ready to receive a command
     Serial.print("ok");
   }
+}
+
+bool Servomotor::isActive() {
+  return actived;
 }
 
 // https://arduinogetstarted.com/faq/how-to-control-speed-of-servo-motor#:~:text=By%20using%20map()%20and,90%C2%B0%20in%203%20seconds.
