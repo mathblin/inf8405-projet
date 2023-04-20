@@ -10,6 +10,7 @@ public:
   void init(int pin, long from, long to);
   void start(long moving_time); // time in millis to do one rotation
   void stop(long angle);        // angle where to stop
+  void you_can_change_this_function_name_lau(String* msg, bool* debug);
 private:
   Servo my_servo; 
   unsigned long move_start_time;

@@ -14,8 +14,10 @@ ARDUINO_SERIAL_READ_TIMEOUT = 0.5
 class CONTROL_MODE(Enum):
   MODE_JOYSTICK = 0
   MODE_GYROSCOPE = 1
+  MODE_SECOND_SERVO = 2
 
 GYROSCOPE_COMMANDS = 'WwSsadqQeEzZcCx'
+SERVO_SECOND_ARM_COMMAND = '2,1'
 
 # class GYROSCOPE_COMMANDS(Enum):
 #     LOWER_W = 'w'
@@ -79,10 +81,11 @@ def is_command_defined(command):
     
     gyro = str(CONTROL_MODE.MODE_GYROSCOPE.value)
     joy = str(CONTROL_MODE.MODE_JOYSTICK.value)
-    first_section_defined = commands[0] == gyro or commands[0] == joy
+    servo = str(CONTROL_MODE.MODE_SECOND_SERVO.value)
+    first_section_defined = commands[0] == gyro or commands[0] == joy or commands[0] == servo
     
     if not first_section_defined:
-        message = "invalid command, mode is not Joystick or Gyroscope: " + str(commands)
+        message = "invalid command, mode is not Joystick, Gyroscope or servo: " + str(commands)
         return False, message
     
     if commands[0] == gyro:
@@ -103,6 +106,13 @@ def is_command_defined(command):
             message = "invalid command, mode is Joystick, but not in format (mode,angle,power): " + str(commands)
             return False, message
     
+    elif commands[0] == servo:
+        second_section_defined = len(commands) == 2 \
+            and command == SERVO_SECOND_ARM_COMMAND
+        if not second_section_defined:
+            message = "invalid command, mode is Servo (second arm), but not in format (mode,activation): " + str(commands)
+            return False, message
+
     return True, ''
 
 def can_send_command_to_arduino(command):
@@ -168,7 +178,8 @@ def test_serial_comm():
             message = """Command: (Mode,args...) *Include comas, but without spaces nor parentesis*
             Joystick: ({0},angle,power)
             Gyroscope: ({1},letter)
-            """.format(CONTROL_MODE.MODE_JOYSTICK.value, CONTROL_MODE.MODE_GYROSCOPE.value)
+            Servo (for the second arm): ({2},activation)
+            """.format(CONTROL_MODE.MODE_JOYSTICK.value, CONTROL_MODE.MODE_GYROSCOPE.value, CONTROL_MODE.MODE_SECOND_SERVO.value)
             print(message)
 
         elif command == "q":
