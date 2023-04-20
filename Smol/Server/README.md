@@ -18,3 +18,6 @@ L'addresse IP doit être configurée dans l'application mobile. Elle doit corres
 DEFAULT_HOST
 ```
 Si elle n'a pas été déplacée depuis, elle devrait se trouver dans le fichier `server_flags.py`. L'adresse par défaut que nous avons utilisée est celle que `Smol` avait à l'université Polytechnique Montréal. Il est fortement possible qu'elle est changée lorsque vous lirez ceci. Vous aurez à communiquer avec le département informatique si vous y êtes étudiant(e)s.
+
+## Caméra
+Le script `camera.py` est repris du code déjà fourni par le git de Bilal.
