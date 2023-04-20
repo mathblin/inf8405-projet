@@ -4,7 +4,7 @@ DEBUGGER_MODE = None
 server, conn, addr = (None, None, None)
 HOST, PORT = (None, None)
 SOCKET_TIMEOUT = 15.0
-from serial_comm import write_command_to_arduino_with_response
+from serial_comm import write_command_to_arduino_with_response, SERVO_SECOND_ARM_COMMAND
 
 def init_socket(inHOST, inPORT, DEBUG_MODE=None):
     """Initializing the socket with Android App"""
@@ -48,7 +48,6 @@ def init_socket(inHOST, inPORT, DEBUG_MODE=None):
     conn, addr = server.accept()
     print ('Connect with ' + addr[0] + ':' + str(addr[1]))
 
-    # sys.exit(help(conn.timeout))
     conn.settimeout(SOCKET_TIMEOUT)
 
 def close_socket():
@@ -76,7 +75,9 @@ def manage_socket_exception(command):
 def parse_command(recvCommand):
     newCommand = ''
 
-    # if DEBUGGER_MODE: print('recvCommand: ', recvCommand)
+    all_commands_received = recvCommand.split(';')
+    if SERVO_SECOND_ARM_COMMAND in all_commands_received:
+        return SERVO_SECOND_ARM_COMMAND
 
     for rcvcom in reversed(recvCommand.split(';')):
         if rcvcom == '':
