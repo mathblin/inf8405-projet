@@ -5,6 +5,8 @@ L'objectif de l'Arduino est de recevoir les commandes envoyées depuis le [serve
 
 Le code utilisé dans ce projet se trouve dans le sous-dossier [Smol_arduino](./Smol_arduino/). 
 
+Sous [servomotor](./servomotor/) vous trouverez du code permettant d'utiliser et/ou de tester les servomoteurs (avec ou sans les bras) indépendament de l'application complète.
+
 ## Algorithmes de contrôle des roues
 Il y a deux algorithmes que nous avons utilisés pour contrôler les moteurs des roues. Il y a un algorithme utilisant un gyroscope et un autre utilisant un joystick. Dans le $1^{er}$ cas, il s'agit des senseurs d'un appareil mobile. Dans le $2^2$ cas, il s'agit d'un joystick logiciel qui utilise l'écran tactile.
 
