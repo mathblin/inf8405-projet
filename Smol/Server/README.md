@@ -20,4 +20,4 @@ DEFAULT_HOST
 Si elle n'a pas été déplacée depuis, elle devrait se trouver dans le fichier `server_flags.py`. L'adresse par défaut que nous avons utilisée est celle que `Smol` avait à l'université Polytechnique Montréal. Il est fortement possible qu'elle ait changée lorsque vous lirez ceci. Vous aurez à communiquer avec le département informatique si vous y êtes étudiant(e)s.
 
 ## Caméra
-Le script `camera.py` est repris du code déjà fourni par le git de Bilal. Il permet d'activer la caméra du Raspberry Pi. Ensuite, vous pourrez vous connecter par l'application mobile. Nous avons utilisé le port `8000`. 
+Le script [camera.py](camera.py) est repris du code déjà fourni par le git de Bilal. Il permet d'activer la caméra du Raspberry Pi. Ensuite, vous pourrez vous connecter par l'application mobile. Nous avons utilisé le port `8000`. Bien sûr, il faut l'exécuter pour que l'application mobile puisse se connecter à la caméra.
