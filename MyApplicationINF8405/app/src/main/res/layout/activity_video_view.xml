@@ -56,8 +56,8 @@
 
     <TextView
         android:id="@+id/connection_lost"
-        android:layout_width="450dp"
-        android:layout_height="60dp"
+        android:layout_width="500dp"
+        android:layout_height="150dp"
         android:layout_gravity="center|center"
         android:background="@color/colorIntermediate"
         android:alpha="0.6"

@@ -16,10 +16,10 @@
 
     <string name="calibrate">Start</string>
     <string name="welcome">Welcome to Smol\n smol\n text</string>
-    <string name="team"> INF8405 : Laurianne, Mathieu, Ouassim, Samir</string>
+    <string name="team"> INF8405 : Samir, Mathieu, Ouassim, Laurianne</string>
 
     <string name="position">Position</string>
 
-    <string name="connection">*** La connection a été perdue... ***</string>
+    <string name="connection">*** La connection a été perdue... ***\n\nFermez l'application, reconnectez-vous, puis\nrelancez l'application.</string>
 
 </resources>
