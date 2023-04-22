@@ -5,10 +5,13 @@ L'objectif de l'Arduino est de recevoir les commandes envoyées depuis le [serve
 
 Le code utilisé dans ce projet se trouve dans le sous-dossier [Smol_arduino](./Smol_arduino/). 
 
-## Mode Gyroscope
+## Algorithmes de contrôle des roues
+Il y a deux algorithmes que nous avons utilisés pour contrôler les moteurs des roues. Il y a un algorithme utilisant un gyroscope et un autre utilisant un joystick. Dans le $1^{er}$ cas, il s'agit des senseurs d'un appareil mobile. Dans le $2^2$ cas, il s'agit d'un joystick logiciel qui utilise l'écran tactile.
+
+### Mode Gyroscope
 Le mode gyroscope a été repris tel quel du [Git de Bilal](https://github.com/bilal684/INF8405). Nous l'avons tout simplement déplacé dans un fichier c++ avec des adaptations mineures. Vous pouvez considérer qu'il est tel qu'il nous a été fourni.
 
-## Mode Joystick
+### Mode Joystick
 Le mode joystick a été ajouté afin de rendre le contrôle du robot plus intéressant et fiable. 
 
 ![L'algorithme du joystick](./images/Algorithmes_du_joystick.png)
