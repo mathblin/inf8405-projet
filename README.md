@@ -23,6 +23,9 @@ Ce projet est sous [licence MIT](LICENCE.md)
 ## Logo de Smol <img src="https://user-images.githubusercontent.com/47989135/230724680-1ecd1555-b7a8-4671-ae84-7dba0c66cc42.png" width="40">
 L'utilisation du logo et ses droits sont réservés à l'équipe de projet d'Hiver 2023. L'application peut être utilisée selon la [licence MIT](LICENCE.md), mais le logo ne l'est pas. Conséquemment, vous devrez enlever les images du logo dans l'application mobile et partout ou vous le verrez.
 
+## Inspiration du nom du robot
+Nous sommes 4 coéquipiers. Nos prénoms sont: Samir, Mathieu, Ouassim, Laurianne. Nous avons utilisé les initiales de nos prénoms dans l'ordre indiqué. Bien sûr, le robot ne nous appartient pas. Le nom est qu'une manière sympathique de nommer le projet sur lequel nous avons travaillé pendant l'hiver 2023. 
+
 ## Téléchargement du dépôt Git sur un Raspberry Pi
 Nous ne couvrons qu'un cas spécial ici, soit le téléchargement du dépôt git sur un Raspberry Pi. Nous supposons que vous savez déjà vous servir d'un dépôt git. Dans le cadre du projet, nous n'étions pas en mesure de télécharger le dépôt avec un identifiant git normal. Nous avons donc créé un courrier électronique pour le robot, puis un compte GitHub pour le courrier électronique. Le courriel de Smol ne vous est pas fourni. Vous aurrez à en créer un vous-même. 
 
