@@ -21,4 +21,15 @@
 Ce projet est sous [licence MIT](LICENCE.md)
 
 ## Logo de Smol <img src="https://user-images.githubusercontent.com/47989135/230724680-1ecd1555-b7a8-4671-ae84-7dba0c66cc42.png" width="40">
-L'utilisation du logo est réservé à l'équipe de projet d'Hiver 2023. L'application peut être utilisée selon la [licence MIT](LICENCE.md), mais le logo ne l'est pas. Conséquemment, vous devrez enlever les images du logo dans l'application mobile et partout ou vous le verrez.
+L'utilisation du logo et ses droits sont réservés à l'équipe de projet d'Hiver 2023. L'application peut être utilisée selon la [licence MIT](LICENCE.md), mais le logo ne l'est pas. Conséquemment, vous devrez enlever les images du logo dans l'application mobile et partout ou vous le verrez.
+
+## Inspiration du nom du robot
+Nous sommes 4 coéquipiers. Nos prénoms sont: Samir, Mathieu, Ouassim, Laurianne. Nous avons utilisé les initiales de nos prénoms dans l'ordre indiqué. Bien sûr, le robot ne nous appartient pas. Le nom est qu'une manière sympathique de nommer le projet sur lequel nous avons travaillé pendant l'hiver 2023. 
+
+## Dossiers
+Plusieurs dossiers sont à votre disposition. Vous pouvez installer [l'application mobile](./MyApplicationINF8405/) sur votre téléphone ou tablette. Ce dossier nous a été fourni et nous l'avons modifié. Le serveur et le code d'Arduino sont disponibles dans le dossier [Smol](./Smol/). Les dossiers [pi](./pi/) et [RaspberryPi](./RaspberryPi/) nous ont servi d'inspiration pour notre projet. Ces deux derniers nous ont également été partagés dans le cadre du projet robot étudiant et proviennent du Git de Bilal mentionné plus haut.
+
+## Téléchargement du dépôt Git sur un Raspberry Pi
+Nous ne couvrons qu'un cas spécial ici, soit le téléchargement du dépôt git sur un Raspberry Pi. Nous supposons que vous savez déjà vous servir d'un dépôt git. Dans le cadre du projet, nous n'étions pas en mesure de télécharger le dépôt avec un identifiant git normal. Nous avons donc créé un courrier électronique pour le robot, puis un compte GitHub pour le courrier électronique. Le courriel de Smol ne vous est pas fourni. Vous aurez à en créer un vous-même. Nous vous recommandons de procéder ainsi.
+
+Afin de pouvoir télécharger le dépôt de GitHub, nous avons ensuite créé un [GitHub token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token). Lorsque vous tenterez de vous connecter, il est possible que vous receviez un message qui vous indique que les mots de passe ne sont plus utilisés. Néanmoins, vous pourrez entrer votre courriel comme identifiant ainsi que votre [GitHub token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) comme mot de passe.
