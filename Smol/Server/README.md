@@ -1,7 +1,7 @@
 # Serveur pour le projet robot
 
 ## Quelle est son utilité?
-L'objectif du serveur est de recevoir les commandes envoyées depuis l'application mobile via des sockets et les transmettre au Arduino via une communication sérielle. L'Arduino exécutera ensuite ces commandes. Il peut s'agir de commandes qui le font avancer, reculer, faire une rotation de $360^\circ$, etc.
+L'objectif du serveur est de recevoir les commandes envoyées depuis l'application mobile via des sockets et les transmettre au Arduino via une communication sérielle. L'[Arduino](../Arduino/) exécutera ensuite ces commandes. Il peut s'agir de commandes qui le font avancer, reculer, faire une rotation de $360^\circ$, etc.
 
 ## Le fichier d'entrée du serveur 
 Le fichier d'entrée que vous devez exécuter est `server.py`. Si vous désirez connaître les drapeaux/arguments (flags) possibles à passer au serveur, vous pouvez exécuter `python server.py -h` sur Windows ou `python3 server.py -h` sur linux. Vous pouvez également utiliser `--help`, ce qui revient au même.
