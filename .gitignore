@@ -34,3 +34,4 @@
 *.vs/
 
 *__pycache__/
+venv
