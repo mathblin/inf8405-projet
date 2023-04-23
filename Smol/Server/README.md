@@ -3,6 +3,9 @@
 ## Quelle est son utilité?
 L'objectif du serveur est de recevoir les commandes envoyées depuis l'application mobile via des sockets et les transmettre au Arduino via une communication sérielle. L'[Arduino](../Arduino/) exécutera ensuite ces commandes. Il peut s'agir de commandes qui le font avancer, reculer, faire une rotation de $360^\circ$, etc.
 
+## Librairies utilisées
+Un fichier de requis pour le serveur est fourni avec le dépôt. Toutes les librairies utilisées y sont présentes. Pour le moment, seul `pyserial` n'est pas une librairie intégrée dans Python. Nous l'utilisons pour le serveur. Vous pouvez l'installer avec le fichier de requis nommé `requirements.txt`. Il est dans le dossier `Server`. Vous pouvez utiliser la commande `pip install -r requirements.txt`. La librairie `socket` est également utilisée. Néanmoins, elle semble être intégrée dans Python, du moins pour certaines versions de Python. Selon la documentation de la librairie [socket](https://docs.python.org/3/library/socket.html), vous devez avoir au moins la version 2.7 pour Python 2 ou 3.5 pour Python 3. Attention, il s'agit de `socket` sans `s`, donc pas `sockets`. `socket` est une interface réseau de bas niveau.
+
 ## Le fichier d'entrée du serveur 
 Le fichier d'entrée que vous devez exécuter est `server.py`. Si vous désirez connaître les drapeaux/arguments (flags) possibles à passer au serveur, vous pouvez exécuter `python server.py -h` sur Windows ou `python3 server.py -h` sur linux. Vous pouvez également utiliser `--help`, ce qui revient au même.
 
