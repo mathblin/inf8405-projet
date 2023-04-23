@@ -20,6 +20,6 @@
 
     <string name="position">Position</string>
 
-    <string name="connection">*** La connection a été perdue... ***\n\nFermez l'application, reconnectez-vous, puis\nrelancez l'application.</string>
+    <string name="connection">*** La connection a été perdue... ***\n\nFermez l\'application, reconnectez-vous, puis\nrelancez l\'application.</string>
 
 </resources>
