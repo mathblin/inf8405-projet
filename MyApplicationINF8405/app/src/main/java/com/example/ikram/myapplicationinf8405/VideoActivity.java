@@ -90,6 +90,7 @@ public class VideoActivity extends Activity {
     boolean swichMode;
 
     RobotController robotController;
+    private BroadcastReceiver networkReceiver;
 
     String video_ip;
     String video_url;
@@ -141,7 +142,7 @@ public class VideoActivity extends Activity {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
         // Create a BroadcastReceiver to listen for network connectivity changes
-        BroadcastReceiver networkReceiver = new BroadcastReceiver() {
+        networkReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 // Get the network info
@@ -347,6 +348,7 @@ public class VideoActivity extends Activity {
         super.onStop();
         clientThread.sendMessage("1,x;");
         sensorManager.unregisterListener(accelerometerListener);
+        unregisterReceiver(networkReceiver);
     }
 
     // On destroy, disconnect thread
