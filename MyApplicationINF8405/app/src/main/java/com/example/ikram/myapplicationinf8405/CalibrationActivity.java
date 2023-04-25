@@ -55,10 +55,7 @@ public class CalibrationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        //System.out.println("ligne000");
         Bundle extras = getIntent().getExtras();
-        // System.out.println(extras.getString("ip"));
-        //  System.out.println("ligne111");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calibration);
 
@@ -181,9 +178,7 @@ public class CalibrationActivity extends AppCompatActivity {
         buttonStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("testtt");
                 Bundle extras = getIntent().getExtras();
-                //System.out.println(extras.getString("ip"));
                 max_acceleration = max_acceleration * -1; // To remove the negative
 
                 TagValuePair selectedTagValuePair = (TagValuePair) ip_spinner.getSelectedItem();
