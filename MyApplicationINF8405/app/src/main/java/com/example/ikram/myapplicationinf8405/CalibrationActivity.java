@@ -211,13 +211,6 @@ public class CalibrationActivity extends AppCompatActivity {
                 Intent man = new Intent(CalibrationActivity.this, VideoActivityMan.class);
 
                 String adresseIP = ip_value;
-                /*if (extras != null && !extras.getString("ip").equals("")) {
-                    adresseIP = extras.getString("ip");
-
-
-                } else {
-                    adresseIP = "http://webcam.aui.ma/axis-cgi/mjpg/video.cgi?resolution=CIF&amp";
-                }*/
 
                 auto.putExtra("tag",tag);
                 auto.putExtra("ip", adresseIP);
@@ -232,38 +225,8 @@ public class CalibrationActivity extends AppCompatActivity {
                 man.putExtra("posXYZ", posXYZ);
                 auto.putExtra("isCheckedCaliber", isChecked);
                 startActivity(auto);
-
-                //startActivity(i);
-//                if (isChecked){
-//                    startActivity(man);
-//                    System.out.println("isCheckedtrue" + isChecked);
-//                    System.out.println(isChecked);
-//
-//                } else {
-//                    System.out.println("isCheckedfalse" + isChecked );
-//
-//
-//
-//                    startActivity(auto);
-//
-//
-//                }
             }
         });
-
-        /*buttonReset = findViewById(R.id.buttonReset);
-        buttonReset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                min_acceleration = 0.000;
-                max_acceleration = 0.000;
-                firstTime = false;
-                textMax.setText("0.000");
-                textMin.setText("0.000");
-                buttonStart.setEnabled(false);
-            }
-        });*/
-
     }
 
     //On resume, register accelerometer listener
