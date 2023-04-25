@@ -4,85 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.ikram.myapplicationinf8405.CalibrationActivity"
-    android:background="#000000">
+    android:background="#000000"
+    tools:context="com.example.ikram.myapplicationinf8405.CalibrationActivity">
 
-
-    <TextView
-        android:id="@+id/minValueText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/min_value"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.144"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.195"
-        android:textColor="#FFFFFF"/>
-
-    <TextView
-        android:id="@+id/maxValueText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/max_value"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.853"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.195"
-        android:textColor="#FFFFFF"/>
-
-    <TextView
-        android:id="@+id/minValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/_0_000"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.175"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.329"
-        android:textColor="#FFFFFF"/>
-
-    <TextView
-        android:id="@+id/maxValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/_0_000"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.821"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.329"
-        android:textColor="#FFFFFF"/>
-
-    <Button
-        android:id="@+id/buttonMin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/fix_min"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.104"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.533" />
-
-    <Button
-        android:id="@+id/buttonMax"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/fix_max"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.885"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.533" />
 
     <Button
         android:id="@+id/buttonStart"
@@ -107,30 +31,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.732" />
 
-    <TextView
-        android:id="@+id/positionTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/position"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.195"
-        android:textColor="#FFFFFF"/>
-
-    <TextView
-        android:id="@+id/positionValue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/_0_000"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.329"
-        android:textColor="#FFFFFF"/>
-
     <!--    <Switch-->
     <!--        android:id="@+id/switch2"-->
     <!--        android:layout_width="wrap_content"-->
@@ -144,18 +44,89 @@
     <!--        app:layout_constraintTop_toTopOf="parent"-->
     <!--        app:layout_constraintVertical_bias="0.799"-->
     <!--        />-->
+
     <Switch
         android:id="@+id/switch2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="278dp"
+        android:layout_height="141dp"
         android:layout_marginStart="160dp"
         android:layout_marginLeft="160dp"
+        android:checked="true"
         android:text="Mode GYROSCOPE"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.799"
-        android:checked="true"/>
+        android:visibility="gone"/>
 
+    <RelativeLayout
+        android:layout_width="500dp"
+        android:layout_height="100dp"
+        app:layout_constraintBottom_toTopOf="@+id/switch2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5">
+
+        <Spinner
+            android:id="@+id/ip_selection"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/my_button"
+            android:contentDescription="@string/Ip_selector"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5"
+            tools:ignore="MissingConstraints"
+            tools:visibility="visible"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_below="@id/ip_selection"
+            android:orientation="horizontal"
+            android:weightSum="5">
+
+            <EditText
+                android:id="@+id/editTextTag"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/my_button"
+                android:hint="Tag"
+                android:gravity="center_horizontal|center_vertical" />
+
+            <EditText
+                android:id="@+id/editTextValue"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:background="@drawable/my_button"
+                android:hint="Adresse IP"
+                android:gravity="center_horizontal|center_vertical" />
+
+            <Button
+                android:id="@+id/buttonAdd"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/my_button"
+                android:text="Ajouter" />
+
+            <Button
+                android:id="@+id/buttonRemove"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/my_button"
+                android:text="Supprimer" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>

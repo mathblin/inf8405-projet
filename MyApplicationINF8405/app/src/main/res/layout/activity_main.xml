@@ -36,7 +36,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="19dp"
             android:text="@string/team" />
-
+        <!--
         <EditText
             android:id="@+id/adresseIPText"
             android:layout_width="97dp"
@@ -48,5 +48,5 @@
             android:background="@drawable/border"
             android:ems="10"
             android:inputType="" />
-
+        -->
 </RelativeLayout>

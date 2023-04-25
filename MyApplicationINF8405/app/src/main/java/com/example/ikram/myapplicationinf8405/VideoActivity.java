@@ -55,21 +55,26 @@ public class VideoActivity extends Activity {
 
     // VideoView && URL
     private VideoView mv;
-    String URL = "http://132.207.186.54:5000";
+    //String URL = "http://132.207.186.54:5000";
     // String URL = "http://192.168.55.3:5000";
     // String URL = "http://10.0.0.238:5000";
-
+    String URL = "http://192.168.2.243:8000";
    // String URL = "https://www.youtube.com/watch?v=4Zv0GZUQjZc&ab_channel=Freenove";
     String mode = "0,";
     // Server port and thread
 
-    public static final int SERVERPORT = 5050;
+    //public static final int SERVERPORT = 5050;
     // public static final String SERVER_IP = "132.207.186.11"; //10.200.26.68
-    public static final String SERVER_IP = "10.0.0.62"; //10.200.26.68
+    //public static final String SERVER_IP = "10.0.0.62"; //10.200.26.68
+    public static final String SERVER_IP_POLY = "10.0.0.62"; //10.200.26.68
     // public static final String SERVER_IP = "10.200.61.168"; //10.200.26.68
     // public static final String SERVER_IP = "10.200.0.163"; //10.200.26.68 192.168.56.1
     // public static final String SERVER_IP = "192.168.56.1"; //10.200.26.68
 
+    // Nouveau Tests pour un IP et port
+    public static final int VIDEOPORT = 8000;
+    public static final int SERVERPORT = 5050;
+    //
     ClientThread clientThread;
     Thread thread;
     //Declare
@@ -95,6 +100,11 @@ public class VideoActivity extends Activity {
     double lastValueWS = 0.0;
     double lastValueEQ = 0.0;
     boolean swichMode;
+
+    String video_ip;
+    String video_url;
+
+    String SERVER_IP;
     public void onCreate(Bundle savedInstanceState) {
         Bundle extras = getIntent().getExtras();
         if(extras != null){
@@ -102,11 +112,20 @@ public class VideoActivity extends Activity {
             minAcceleration = extras.getDouble("minAcceleration");
             posXYZ = extras.getDoubleArray("posXYZ");
             isChecked =  extras.getBoolean("isCheckedCaliber", false);
+            video_ip = extras.getString("ip");
         }
         swichMode = isChecked;
         String tag = "Angle: " + isChecked +  " esp"+  posXYZ ;
         // Afficher le tag dans la console
         Log.d("JoyStick2", tag);
+        video_url = "http://"+video_ip+":"+VIDEOPORT;
+
+        // Handles different ips
+        if(extras.getString("tag")=="Poly")
+            SERVER_IP= SERVER_IP_POLY;
+        else // Autre IP que Poly
+            SERVER_IP = extras.getString("ip");
+        // End
 
         super.onCreate(savedInstanceState);
 
@@ -118,8 +137,14 @@ public class VideoActivity extends Activity {
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         webView.setRight(50);
-        webView.loadUrl(URL);
+        webView.loadUrl(video_url);
+        //webView.loadUrl(URL);
         // webView.loadUrl("http://"+extras.getString("ip")+":5000");
+
+        // PUT the app on fullscreen.
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
 
         // TextView for connection
         TextView connection_lost = findViewById(R.id.connection_lost);
@@ -327,7 +352,7 @@ public class VideoActivity extends Activity {
 
     public void onPause() {
         super.onPause();
-        mv.stopPlayback();
+        //mv.stopPlayback();
         finish();
     }
 
@@ -342,6 +367,7 @@ public class VideoActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         if (null != clientThread) {
+            // TODO : Send Stop command to robot.
             clientThread.sendMessage("Disconnect");
             clientThread = null;
         }
@@ -353,6 +379,7 @@ public class VideoActivity extends Activity {
         public void onAccuracyChanged(Sensor sensor, int acc) { }
 
         // TODO : Filtrer les angles du gyrospcope.
+        // TODO : Réduire la latence des inputs.
         // Reduire la quantite de donnee envoyer au serveur
         public void onSensorChanged(SensorEvent event) {
             if (swichMode){ return; }

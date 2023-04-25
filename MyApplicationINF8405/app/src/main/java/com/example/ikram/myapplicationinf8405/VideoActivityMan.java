@@ -20,7 +20,6 @@ import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Button;
 import android.widget.TextView;
 
 
@@ -55,7 +54,7 @@ public class VideoActivityMan extends Activity {
 
     public static final int SERVERPORT = 5050;
 
-    public static final String SERVER_IP = "10.0.0.62"; //10.200.26.68
+    public static final String SERVER_IP_POLY = "10.0.0.62"; //10.200.26.68
 
     VideoActivityMan.ClientThread clientThread;
     Thread thread;
@@ -83,6 +82,7 @@ public class VideoActivityMan extends Activity {
     double lastValueEQ = 0.0;
     private static final int LONG_PRESS_TIME = 500;
 
+    String SERVER_IP;
 
     private View.OnLongClickListener mLongClickListener = new View.OnLongClickListener() {
         @Override
@@ -133,6 +133,7 @@ public class VideoActivityMan extends Activity {
         webView.setWebViewClient(new WebViewClient());
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
+        SERVER_IP = extras.getString("ip");
 
 
         webView.setRight(50);
@@ -179,8 +180,10 @@ public class VideoActivityMan extends Activity {
             public void run() {
                 try {
                     // créer un socket pour se connecter au serveur
-                    socket = new Socket(SERVER_IP, 5050);
-
+                    if(extras.getString("tag")=="Poly")
+                        socket = new Socket(SERVER_IP_POLY, 5050);
+                    else // Autre IP que Poly
+                        socket = new Socket(SERVER_IP, 5050);
                     // initialiser les flux d'entrée et de sortie
                     reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     writer = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -213,13 +216,6 @@ public class VideoActivityMan extends Activity {
                 }
             }
         }).start();
-
-
-
-
-
-
-
 
         JoyStick joyStick = (JoyStick) findViewById(R.id.joy1);
 
@@ -548,7 +544,7 @@ public class VideoActivityMan extends Activity {
         public void run() {
 
             try {
-                InetAddress serverAddr = InetAddress.getByName(SERVER_IP);
+                InetAddress serverAddr = InetAddress.getByName(SERVER_IP_POLY);
                 socket = new Socket(serverAddr, SERVERPORT);
 
             } catch (UnknownHostException e1) {
