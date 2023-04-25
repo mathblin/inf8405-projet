@@ -237,27 +237,6 @@ public class VideoActivity extends Activity {
             switchMode.setText("Mode GYROSCOPE start");
             switchMode.setChecked(isChecked);
         }
-
-        joyStick.setListener(new JoyStick.JoyStickListener() {
-            @Override
-            public void onMove(JoyStick joyStick, double angle, double power, int direction) {
-                // Faire quelque chose avec les données d'angle, de puissance et de direction
-                String tag = "Angle: " + power;
-
-                // Afficher le tag dans la console
-                Log.d("JoyStick", tag);
-                String angleText = "Angle: " + angle;
-            }
-            @Override
-            public void onTap() {
-            }
-            @Override
-            public void onDoubleTap() {
-            }
-            public void onLongPress() {
-            }
-        });
-
         switchMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked2) {
@@ -440,6 +419,7 @@ public class VideoActivity extends Activity {
                 socket = new Socket(serverAddr, SERVERPORT);
 
             } catch (UnknownHostException e1) {
+                e1.printStackTrace();
                 e1.printStackTrace();
             } catch (IOException e1) {
                 e1.printStackTrace();
