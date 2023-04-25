@@ -206,11 +206,6 @@ public class VideoActivityMan extends Activity {
                             }
                         }
                     });
-
-
-
-
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
