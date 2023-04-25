@@ -32,15 +32,21 @@ public class MainActivity extends AppCompatActivity {
         textViewTeam.setTextColor(Color.WHITE);
         textViewTeam.setTextSize(20);
 
-        adresseIPText = this.findViewById(R.id.adresseIPText);
-        adresseIP = adresseIPText.getText().toString();
+        // PUT the app on fullscreen.
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
+
+        // TODO : Move this to the Calibrate function
+        //adresseIPText = this.findViewById(R.id.adresseIPText);
+        //adresseIP = adresseIPText.getText().toString();
 
         calibrateButton = findViewById(R.id.buttonCalibrate);
         calibrateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent robotActivity = new Intent(MainActivity.this, CalibrationActivity.class);
-                robotActivity.putExtra("ip", adresseIP);
+                //robotActivity.putExtra("ip", adresseIP);
                 startActivity(robotActivity);
             }
         });

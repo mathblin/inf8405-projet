@@ -50,26 +50,19 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class VideoActivity extends Activity {
-    double JOYSTICK_SCALE = 0.4;
+    double JOYSTICK_SCALE = 0.5;
     private static final String TAG = "VideoActivity";
 
     // VideoView && URL
     private VideoView mv;
-    String URL = "http://132.207.186.54:5000";
-    // String URL = "http://192.168.55.3:5000";
-    // String URL = "http://10.0.0.238:5000";
-
-   // String URL = "https://www.youtube.com/watch?v=4Zv0GZUQjZc&ab_channel=Freenove";
     String mode = "0,";
     // Server port and thread
+    public static final String SERVER_IP_POLY = "10.0.0.62";
 
+    // Nouveau Tests pour un IP et port
+    public static final int VIDEOPORT = 8000;
     public static final int SERVERPORT = 5050;
-    // public static final String SERVER_IP = "132.207.186.11"; //10.200.26.68
-    public static final String SERVER_IP = "10.0.0.62"; //10.200.26.68
-    // public static final String SERVER_IP = "10.200.61.168"; //10.200.26.68
-    // public static final String SERVER_IP = "10.200.0.163"; //10.200.26.68 192.168.56.1
-    // public static final String SERVER_IP = "192.168.56.1"; //10.200.26.68
-
+    //
     ClientThread clientThread;
     Thread thread;
     //Declare
@@ -95,6 +88,14 @@ public class VideoActivity extends Activity {
     double lastValueWS = 0.0;
     double lastValueEQ = 0.0;
     boolean swichMode;
+
+    RobotController robotController;
+    private BroadcastReceiver networkReceiver;
+
+    String video_ip;
+    String video_url;
+
+    String SERVER_IP;
     public void onCreate(Bundle savedInstanceState) {
         Bundle extras = getIntent().getExtras();
         if(extras != null){
@@ -102,31 +103,46 @@ public class VideoActivity extends Activity {
             minAcceleration = extras.getDouble("minAcceleration");
             posXYZ = extras.getDoubleArray("posXYZ");
             isChecked =  extras.getBoolean("isCheckedCaliber", false);
+            video_ip = extras.getString("ip");
         }
         swichMode = isChecked;
         String tag = "Angle: " + isChecked +  " esp"+  posXYZ ;
         // Afficher le tag dans la console
         Log.d("JoyStick2", tag);
+        video_url = "http://"+video_ip+":"+VIDEOPORT;
+
+        // Handles different ips
+        if(extras.getString("tag")=="Poly")
+            SERVER_IP= SERVER_IP_POLY;
+        else // Autre IP que Poly
+            SERVER_IP = extras.getString("ip");
+        // End
 
         super.onCreate(savedInstanceState);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        //mv = new VideoView(this);
         setContentView(R.layout.activity_video_view);
         WebView webView = (WebView) findViewById(R.id.webView);
         webView.setWebViewClient(new WebViewClient());
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         webView.setRight(50);
-        webView.loadUrl(URL);
-        // webView.loadUrl("http://"+extras.getString("ip")+":5000");
+        webView.loadUrl(video_url);
+
+        // PUT the app on fullscreen.
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
+
+
+
 
         // TextView for connection
         TextView connection_lost = findViewById(R.id.connection_lost);
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
         // Create a BroadcastReceiver to listen for network connectivity changes
-        BroadcastReceiver networkReceiver = new BroadcastReceiver() {
+        networkReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 // Get the network info
@@ -154,20 +170,15 @@ public class VideoActivity extends Activity {
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensorAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        //get extras passed from previous activity
-        /*if (extras != null && !extras.getString("ip").equals("")) {
-            URL = extras.getString("ip");
-        } else {
-            URL = "http://webcam.aui.ma/axis-cgi/mjpg/video.cgi?resolution=CIF&amp";
-        }
-        */
-
         topIntervalX = maxAcceleration/stopInterval;
         bottomIntervalX = minAcceleration/stopInterval;
 
         // Initialize and start thread
         clientThread = new ClientThread();
         thread = new Thread(clientThread);
+
+        // Initialize the Robot Controller
+        robotController = new RobotController(clientThread);
 
         if (android.os.Build.VERSION.SDK_INT > 9)
         {
@@ -211,7 +222,7 @@ public class VideoActivity extends Activity {
             @Override
             public void onClick(View v) {
                 // Handle button click here
-                Toast.makeText(getApplicationContext(), "Button clicked!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Bonjour!", Toast.LENGTH_SHORT).show();
                 clientThread.sendMessage("2,1;");
             }
         });
@@ -327,14 +338,17 @@ public class VideoActivity extends Activity {
 
     public void onPause() {
         super.onPause();
-        mv.stopPlayback();
+        //mv.stopPlayback();
+        clientThread.sendMessage("1,x;");
         finish();
     }
 
     //On stop, unregister accelerometer listener
     public void onStop() {
         super.onStop();
+        clientThread.sendMessage("1,x;");
         sensorManager.unregisterListener(accelerometerListener);
+        unregisterReceiver(networkReceiver);
     }
 
     // On destroy, disconnect thread
@@ -342,9 +356,17 @@ public class VideoActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         if (null != clientThread) {
-            clientThread.sendMessage("Disconnect");
-            clientThread = null;
+            // TODO : Send Stop command to robot.
+            clientThread.sendMessage("1,x;");
+            clientThread.sendMessage("disconnect");
+            //clientThread = null;
         }
+    }
+
+    int counter =0;
+
+    private double addToAverage(int n, double old_average, double new_value ){
+        return ( n * old_average + new_value ) / (n + 1);
     }
 
     //Accelerometer listener, set the values
@@ -353,139 +375,23 @@ public class VideoActivity extends Activity {
         public void onAccuracyChanged(Sensor sensor, int acc) { }
 
         // TODO : Filtrer les angles du gyrospcope.
+        // TODO : Réduire la latence des inputs.
         // Reduire la quantite de donnee envoyer au serveur
         public void onSensorChanged(SensorEvent event) {
             if (swichMode){ return; }
-            // Get the acceleration from sensors. Raw data
-            linear_acceleration[0] = event.values[0] ;
-            linear_acceleration[1] = event.values[1] ;
-            linear_acceleration[2] = event.values[2] ;
 
-            System.out.println("posXYZ : =========================");
-            System.out.println("posXYZ 1: "+ posXYZ[0]);
-            System.out.println("posXYZ 2: "+ posXYZ[1]);
-            System.out.println("posXYZ 3: "+ posXYZ[2]);
-
-            double m = Math.max(linear_acceleration[0], posXYZ[0]);
-            System.out.println("max m : "+ m);
-
-            double stopValue;
-
-            if (m == linear_acceleration[0]){
-                stopValue = m - posXYZ[0];
+            if(counter < 10){
+                linear_acceleration[0] = addToAverage(counter, linear_acceleration[0], event.values[0] );
+                linear_acceleration[1] = addToAverage(counter, linear_acceleration[1], event.values[1] );
+                linear_acceleration[2] = addToAverage(counter, linear_acceleration[2], event.values[2] );
+                counter++;
+                return;
             }
-            else{
-                stopValue = m - linear_acceleration[0];
-            }
+            counter = 0;
 
-            if(Math.abs(linear_acceleration[1]) <= 2.0 && stopValue < topIntervalX && stopValue < bottomIntervalX)
-            {
-                clientThread.sendMessage("1,x;");
-                Log.d("letter", "x mini 333");
-            }
-
-            if (Math.abs(linear_acceleration[1]) > 2.0) // Pritorite pour tourner
-            {
-                // QEAD
-                if (linear_acceleration[1] > posXYZ[1]) // droite
-                {
-                    double sendValue = linear_acceleration[1] - posXYZ[1];
-                    sendValue = Math.floor(sendValue);
-
-                    if (sendValue >= 8.0) {
-                        sendValue = 8.0;
-                        if (sendValue != lastValueEQ) {
-                            clientThread.sendMessage("1,d;");
-                            Log.d("letter", "d mini 351");
-                        }
-                    } else {
-                        if (sendValue > lastValueEQ) {
-                            clientThread.sendMessage("1,E;");
-                            clientThread.sendMessage("1,E;");
-
-                        } else if (sendValue < lastValueEQ) {
-                            clientThread.sendMessage("1,e;");
-                            clientThread.sendMessage("1,e;");
-                            Log.d("letter", "e mini 361");
-                        }
-                    }
-                    lastValueEQ = sendValue;
-                } else // gauche
-                {
-                    double sendValue = posXYZ[1] - linear_acceleration[1];
-                    sendValue = Math.floor(sendValue);
-
-                    if (sendValue >= 8.0) {
-                        sendValue = 8.0;
-                        if (sendValue != lastValueEQ) {
-                            clientThread.sendMessage("1,a;");
-                            Log.d("letter", "a mini 374");
-                        }
-                    } else {
-                        if (sendValue > lastValueEQ) {
-                            clientThread.sendMessage("1,Q;");
-                            clientThread.sendMessage("1,Q;");
-                            Log.d("letter", "Q maj 380");
-
-                        } else if (sendValue < lastValueEQ) {
-                            clientThread.sendMessage("1,q;");
-                            clientThread.sendMessage("1,q;");
-                            Log.d("letter", "q mini 385");
-                        }
-                    }
-                    lastValueEQ = sendValue;
-                }
-            } else // priorite avancer
-            {
-                // WS
-                if (linear_acceleration[0] > posXYZ[0]) // reculer
-                {
-                    double sendValue = linear_acceleration[0] - posXYZ[0];
-                    sendValue = Math.floor(sendValue);
-
-                    if (sendValue < bottomIntervalX) {
-                        clientThread.sendMessage("1,x;");
-                        Log.d("letter", "x mini 400");
-                    } else {
-                        if (sendValue > lastValueWS) {
-                            clientThread.sendMessage("1,S;");
-                            clientThread.sendMessage("1,S;");
-                            Log.d("letter", "s mini 405");
-                        } else if (sendValue < lastValueWS) {
-                            clientThread.sendMessage("1,s;");
-                            clientThread.sendMessage("1,s;");
-                            Log.d("letter", "s mini 409");
-
-                        }
-                    }
-
-                    lastValueWS = sendValue;
-                } else // avancer
-                {
-                    double sendValue = posXYZ[0] - linear_acceleration[0];
-                    sendValue = Math.floor(sendValue);
-
-                    if (sendValue < topIntervalX) {
-                        clientThread.sendMessage("1,x;");
-                        Log.d("letter", "x mini 421");
-
-                    } else {
-                        if (sendValue > lastValueWS) {
-                            clientThread.sendMessage("1,W;");
-                            clientThread.sendMessage("1,W;");
-                            Log.d("letter", "W maj 428");
-
-
-                        } else if (sendValue < lastValueWS) {
-                            clientThread.sendMessage("1,w;");
-                            clientThread.sendMessage("1,w;");
-                            Log.d("letter", "w mini 434");
-
-                        }
-                    }
-                    lastValueWS = sendValue;
-                }
-            }
+            bottomIntervalX = posXYZ[0]+1.0;
+            topIntervalX = posXYZ[0]-1.0;
+            robotController.handleRobotMovement(linear_acceleration, posXYZ, topIntervalX, bottomIntervalX);
         }
     };
 

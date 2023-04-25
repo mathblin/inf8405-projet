@@ -9,7 +9,7 @@
     <string name="fix_max">Fix Max.</string>
     <string name="_0_000">0.000</string>
     <string name="start">Start</string>
-    <string name="reset">Reset</string>
+    <string name="reset">Calibrate</string>
 
     <string name="accelerateur">Accelerateur</string>
     <string name="frein">Frein</string>
@@ -21,5 +21,6 @@
     <string name="position">Position</string>
 
     <string name="connection">*** La connection a été perdue... ***\n\nFermez l\'application, reconnectez-vous, puis\nrelancez l\'application.</string>
+    <string name="Ip_selector">Listes des adresses IP</string>
 
 </resources>

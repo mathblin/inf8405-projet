@@ -2,6 +2,7 @@ package com.example.ikram.myapplicationinf8405;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -10,11 +11,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.webkit.WebView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class CalibrationActivity extends AppCompatActivity {
 
@@ -30,39 +39,116 @@ public class CalibrationActivity extends AppCompatActivity {
     double[] relative_linear_acceleration = {0, 0, 0};
 
     // Buttons
-    Button buttonMin;
-    Button buttonMax;
+    //Button buttonMin;
+    //Button buttonMax;
     Button buttonStart;
-    Button buttonReset;
+    Button buttonCalibrate;
 
     // The min and max acceleration for the x axis.
     double max_acceleration = 0.000;
     double min_acceleration = 0.000;
 
+    boolean calibrate_was_pressed = false;
     // TextViews
     TextView textMin, textMax, textPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        //System.out.println("ligne000");
         Bundle extras = getIntent().getExtras();
-        // System.out.println(extras.getString("ip"));
-        //  System.out.println("ligne111");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calibration);
 
+        // PUT the app on fullscreen.
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
+
         // Buttons
-        buttonMin = this.findViewById(R.id.buttonMin);
-        buttonMax = this.findViewById(R.id.buttonMax);
         buttonStart = this.findViewById(R.id.buttonStart);
-        buttonReset = this.findViewById(R.id.buttonReset);
-        buttonStart.setEnabled(true);
+        buttonCalibrate = this.findViewById(R.id.buttonCalibrate);
+        buttonStart.setEnabled(false);
 
         //Set up sensors and accelerometer
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensorAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
+        // IP selection (Spinner)
+        List<TagValuePair> spinnerItems = new ArrayList<>();
+        // Loading default values and stored values.
+        spinnerItems.add(new TagValuePair("Poly", "132.207.186.54"));
+        spinnerItems.add(new TagValuePair("O.O", "192.168.2.243"));
+        spinnerItems.add(new TagValuePair("SMOL", "192.168.4.3"));
+        Spinner ip_spinner = findViewById(R.id.ip_selection);
+
+        ArrayAdapter<TagValuePair> spinnerAdapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, spinnerItems);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        ip_spinner.setAdapter(spinnerAdapter);
+        ip_spinner.bringToFront();
+
+        // TODO : Add a way to add new values to the spinner and save them in memory for next start up.
+        // Started Add Ip Button:
+        Button button_addIP = findViewById(R.id.buttonAdd);
+        button_addIP.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditText tagEditText = findViewById(R.id.editTextTag);
+                EditText valueEditText = findViewById(R.id.editTextValue);
+                String tag = tagEditText.getText().toString();
+                if(Objects.equals(tag, "Poly")) {
+                    Toast.makeText(getApplicationContext(), "Poly ne peut être modifié", Toast.LENGTH_SHORT).show();
+                    return;
+                }// Can't add the Poly tag. It's protected.
+                String value = valueEditText.getText().toString();
+                // Check if the tag already exists in the spinnerItems list
+                for (TagValuePair item : spinnerItems) {
+                    if (item.getTag().equals(tag)) {
+                        // If the tag exists, return without adding a new item
+                        Toast.makeText(getApplicationContext(), tag+" déja dans la liste", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+                TagValuePair tagValuePair = new TagValuePair(tag, value);
+                spinnerItems.add(tagValuePair);
+                ArrayAdapter<TagValuePair> adapter = new ArrayAdapter<>(CalibrationActivity.this, android.R.layout.simple_spinner_item, spinnerItems);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                Spinner spinner = findViewById(R.id.ip_selection);
+                spinner.setAdapter(adapter);
+                Toast.makeText(getApplicationContext(), tag+" a été ajouté à la liste.", Toast.LENGTH_SHORT).show();
+                adapter.notifyDataSetChanged();
+            }
+        });
+        //End add ip button logic.
+
+        // Start of remove button logic.
+        Button ButtonRemoveIP= findViewById(R.id.buttonRemove);
+        ButtonRemoveIP.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EditText tag_to_remove = findViewById(R.id.editTextTag);
+                if(Objects.equals(tag_to_remove.getText().toString(), "Poly")){
+                    Toast.makeText(getApplicationContext(), "Poly ne peut être supprimer", Toast.LENGTH_SHORT).show();
+                    return; // Poly tag can't be removed. It's protected.
+                }
+                Spinner spinner = findViewById(R.id.ip_selection);
+                ArrayAdapter<TagValuePair> adapter = (ArrayAdapter<TagValuePair>) spinner.getAdapter();
+                for (int i = 0; i < adapter.getCount(); i++) {
+                    TagValuePair item = adapter.getItem(i);
+                    if (item.getTag().equals(tag_to_remove.getText().toString())) {
+                        adapter.remove(adapter.getItem(i));
+                        Toast.makeText(getApplicationContext(), tag_to_remove.getText().toString()
+                                +" a été enlevé de la liste.", Toast.LENGTH_SHORT).show();
+                        adapter.notifyDataSetChanged();
+                        break;
+                    }
+                }
+            }
+        });
+        // End of Remove button logic
+
+        // Switch to select the joystick or the gyro.
         Switch switchMode = findViewById(R.id.switch2);
         switchMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -86,105 +172,48 @@ public class CalibrationActivity extends AppCompatActivity {
             }
         });
 
-        // Set TextView
-        textMin = findViewById(R.id.minValue);
-        textMax = findViewById(R.id.maxValue);
-        textPosition = findViewById(R.id.positionValue);
-        /// System.out.println("textPositionn1:" + textPosition.getText().toString( ));
-        //  System.out.println("textPositionn2:" + textMax.getText().toString( ));
-        //  System.out.println("textPositionn3:" + textMin.getText().toString( ));
 
-        // Set event listeners for buttons
-        buttonMin = findViewById(R.id.buttonMin);
-        buttonMin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                textMin.setText(String.valueOf(relative_linear_acceleration[0]));
-                min_acceleration = relative_linear_acceleration[0];
-
-                if (!textMin.getText().toString().equals("0.0") && !textMax.getText().toString().equals("0.000")) {
-                    buttonStart.setEnabled(true);
-                }
-            }
-        });
-
-        buttonMax = findViewById(R.id.buttonMax);
-        buttonMax.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                textMax.setText(String.valueOf(relative_linear_acceleration[0]));
-                max_acceleration = relative_linear_acceleration[0];
-
-                if (!textMin.getText().toString().equals("0.000") && !textMax.getText().toString().equals("0.0")) {
-                    buttonStart.setEnabled(true);
-                }
-            }
-        });
 
         buttonStart = findViewById(R.id.buttonStart);
         buttonStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("testtt");
                 Bundle extras = getIntent().getExtras();
-                System.out.println(extras.getString("ip"));
                 max_acceleration = max_acceleration * -1; // To remove the negative
+
+                TagValuePair selectedTagValuePair = (TagValuePair) ip_spinner.getSelectedItem();
+                // get the tag and its ip value
+                String tag = selectedTagValuePair.getTag();
+                String ip_value = selectedTagValuePair.getValue();
+
 
                 Intent auto = new Intent(CalibrationActivity.this, VideoActivity.class);
                 Intent man = new Intent(CalibrationActivity.this, VideoActivityMan.class);
 
-                String adresseIP;
-                if (extras != null && !extras.getString("ip").equals("")) {
-                    adresseIP = extras.getString("ip");
+                String adresseIP = ip_value;
 
-
-                } else {
-                    adresseIP = "http://webcam.aui.ma/axis-cgi/mjpg/video.cgi?resolution=CIF&amp";
-                }
-
+                auto.putExtra("tag",tag);
                 auto.putExtra("ip", adresseIP);
                 auto.putExtra("maxAcceleration", max_acceleration);
                 auto.putExtra("minAcceleration", min_acceleration);
                 auto.putExtra("posXYZ", posXYZ);
 
-
+                man.putExtra("tag",tag);
                 man.putExtra("ip", adresseIP);
                 man.putExtra("maxAcceleration", max_acceleration);
                 man.putExtra("minAcceleration", min_acceleration);
                 man.putExtra("posXYZ", posXYZ);
                 auto.putExtra("isCheckedCaliber", isChecked);
                 startActivity(auto);
-                //startActivity(i);
-//                if (isChecked){
-//                    startActivity(man);
-//                    System.out.println("isCheckedtrue" + isChecked);
-//                    System.out.println(isChecked);
-//
-//                } else {
-//                    System.out.println("isCheckedfalse" + isChecked );
-//
-//
-//
-//                    startActivity(auto);
-//
-//
-//                }
             }
         });
 
-        buttonReset = findViewById(R.id.buttonReset);
-        buttonReset.setOnClickListener(new View.OnClickListener() {
+        buttonCalibrate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                min_acceleration = 0.000;
-                max_acceleration = 0.000;
-                firstTime = false;
-                textMax.setText("0.000");
-                textMin.setText("0.000");
-                buttonStart.setEnabled(false);
+                calibrate_was_pressed = true;
             }
         });
-
     }
 
     //On resume, register accelerometer listener
@@ -199,18 +228,10 @@ public class CalibrationActivity extends AppCompatActivity {
         sensorManager.unregisterListener(accelerometerListener);
     }
 
-    private double roundValues(double sendValue){
-        // Round to 3 decimal places
-        sendValue = sendValue * 1000;
-        sendValue = Math.round(sendValue);
-        sendValue = sendValue / 1000;
-
-        return sendValue;
-    }
-
     private double addToAverage(int n, double old_average, double new_value ){
         return ( n * old_average + new_value ) / (n + 1);
     }
+
 
     //Accelerometer listener, set the values
     public SensorEventListener accelerometerListener = new SensorEventListener() {
@@ -220,26 +241,20 @@ public class CalibrationActivity extends AppCompatActivity {
 
             // Get the acceleration from sensors. Raw data
 
-            // Added floor
-            linear_acceleration[0] = roundValues(event.values[0]) ;
-            linear_acceleration[1] = roundValues(event.values[1]) ;
-            linear_acceleration[2] = roundValues(event.values[2]) ;
+            // Take a sample of a 100 data points for calibration
+            if (calibrate_was_pressed){
+                // Disable start button during calibration
+                buttonStart.setEnabled(false);
 
-
-            //System.out.println("linear orientations ==========================");
-            //System.out.println("linear orientation X: "+ linear_acceleration[0]);
-            //System.out.println("linear orientation Y: "+ linear_acceleration[1]);
-            //System.out.println("linear orientation Z: "+ linear_acceleration[2]);
-
-            // If first time sensor change, keep initial device position
-            if (firstTime == false){
                 // while start is not pressed get average values
-                for (int i = 0; i < 20; i++){
-                    posXYZ[0] = addToAverage(i,posXYZ[0],linear_acceleration[0]); // initial X
-                    posXYZ[1] = addToAverage(i,posXYZ[1],linear_acceleration[1]);  // initial Y
-                    posXYZ[2] = addToAverage(i,posXYZ[2],linear_acceleration[2]);  // initial Z
+                for (int i = 0; i < 1000; i++) {
+                    posXYZ[0] = addToAverage(i, posXYZ[0], event.values[0]); // initial X
+                    posXYZ[1] = addToAverage(i, posXYZ[1], event.values[1]);  // initial Y
+                    posXYZ[2] = addToAverage(i, posXYZ[2], event.values[2]);  // initial Z
                 }
-                firstTime = true;
+                Toast.makeText(getApplicationContext(), "Calibration terminée!", Toast.LENGTH_SHORT).show();
+                buttonStart.setEnabled(true);
+                calibrate_was_pressed = false;
             }
 
             //Loop acceleration in XYZ
@@ -247,29 +262,28 @@ public class CalibrationActivity extends AppCompatActivity {
 
                 // Find the max value between the new position and the initial device position
                 // Calculate the difference between them
-                double m = Math.max(linear_acceleration[i], posXYZ[i]);
+                double m = Math.max(event.values[i], posXYZ[i]);
                 double sendValue;
 
-                if (m == linear_acceleration[i]){
+                if (m == event.values[i]){
                     sendValue = m - posXYZ[i];
                 }
                 else{
-                    sendValue = m - linear_acceleration[i];
+                    sendValue = m - event.values[i];
                 }
 
                 // display the acceleration in negative value or in positive value depending of the position
-                if(linear_acceleration[i] < posXYZ[i]){
+                if(event.values[i] < posXYZ[i]){
                     //Log.d("direction", "pos " + i + " : " + (int)(sendValue * -1) + " m/s^2");
                     sendValue = sendValue * -1;
-                    relative_linear_acceleration[i] = sendValue;
                 }
                 else{
                     //Log.d("direction", "pos " + i + " : " + (int)sendValue + " m/s^2");
                     sendValue = sendValue * 1;
-                    relative_linear_acceleration[i] = sendValue;
                 }
+                relative_linear_acceleration[i] = sendValue;
 
-                if(relative_linear_acceleration[0] > 0)
+                /*if(relative_linear_acceleration[0] > 0)
                 {
                     buttonMin.setEnabled(true);
                     buttonMax.setEnabled(false);
@@ -278,8 +292,8 @@ public class CalibrationActivity extends AppCompatActivity {
                 {
                     buttonMin.setEnabled(false);
                     buttonMax.setEnabled(true);
-                }
-                textPosition.setText(String.valueOf(relative_linear_acceleration[0]));
+                }*/
+                //textPosition.setText(String.valueOf(relative_linear_acceleration[0]));
             }
         }
     };
