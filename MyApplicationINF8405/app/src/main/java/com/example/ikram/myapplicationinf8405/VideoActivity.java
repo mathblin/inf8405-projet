@@ -14,18 +14,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.DisplayMetrics;
 import android.util.Log;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-
-import java.io.IOException;
-import java.net.URI;
-import java.util.ArrayList;
-import android.os.StrictMode;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -40,14 +31,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.erz.joysticklibrary.JoyStick;
-import com.jackandphantom.joystickview.JoyStickView;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.BufferedWriter;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.URI;
 import java.net.UnknownHostException;
+import java.util.Arrays;
+import java.util.Objects;
 
 public class VideoActivity extends Activity {
     double JOYSTICK_SCALE = 0.5;
@@ -106,13 +105,13 @@ public class VideoActivity extends Activity {
             video_ip = extras.getString("ip");
         }
         swichMode = isChecked;
-        String tag = "Angle: " + isChecked +  " esp"+  posXYZ ;
+        String tag = "Angle: " + isChecked +  " esp"+ Arrays.toString(posXYZ);
         // Afficher le tag dans la console
         Log.d("JoyStick2", tag);
         video_url = "http://"+video_ip+":"+VIDEOPORT;
 
         // Handles different ips
-        if(extras.getString("tag")=="Poly")
+        if(Objects.equals(extras.getString("tag"), "Poly"))
             SERVER_IP= SERVER_IP_POLY;
         else // Autre IP que Poly
             SERVER_IP = extras.getString("ip");
@@ -122,7 +121,7 @@ public class VideoActivity extends Activity {
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_video_view);
-        WebView webView = (WebView) findViewById(R.id.webView);
+        WebView webView = findViewById(R.id.webView);
         webView.setWebViewClient(new WebViewClient());
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
@@ -342,8 +341,6 @@ public class VideoActivity extends Activity {
         }
     }
 
-    int counter =0;
-
     private double addToAverage(int n, double old_average, double new_value ){
         return ( n * old_average + new_value ) / (n + 1);
     }
@@ -353,24 +350,22 @@ public class VideoActivity extends Activity {
 
         public void onAccuracyChanged(Sensor sensor, int acc) { }
 
+        private static final double ALPHA = 0.1; // Low-pass filter coefficient
+        private double[] filteredValues = {0, 0, 0};
         // TODO : Filtrer les angles du gyrospcope.
         // TODO : Réduire la latence des inputs.
         // Reduire la quantite de donnee envoyer au serveur
         public void onSensorChanged(SensorEvent event) {
             if (swichMode){ return; }
 
-            if(counter < 10){
-                linear_acceleration[0] = addToAverage(counter, linear_acceleration[0], event.values[0] );
-                linear_acceleration[1] = addToAverage(counter, linear_acceleration[1], event.values[1] );
-                linear_acceleration[2] = addToAverage(counter, linear_acceleration[2], event.values[2] );
-                counter++;
-                return;
-            }
-            counter = 0;
+            filteredValues[0] = filteredValues[0] + ALPHA * (event.values[0] - filteredValues[0]);
+            filteredValues[1] = filteredValues[1] + ALPHA * (event.values[1] - filteredValues[1]);
+            filteredValues[2] = filteredValues[2] + ALPHA * (event.values[2] - filteredValues[2]);
 
+            Log.d("Filtered Values:", filteredValues[0] +" , "+filteredValues[1] +" , "+filteredValues[2] );
             bottomIntervalX = posXYZ[0]+1.0;
             topIntervalX = posXYZ[0]-1.0;
-            robotController.handleRobotMovement(linear_acceleration, posXYZ, topIntervalX, bottomIntervalX);
+            robotController.handleRobotMovement(filteredValues, posXYZ, topIntervalX, bottomIntervalX);
         }
     };
 

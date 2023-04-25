@@ -4,12 +4,12 @@ import android.util.Log;
 
 public class RobotController {
     private static final double TURNING_THRESHOLD = 1.0;
-    private static final int MAX_SPEED = 255;
+    private static final int MAX_SPEED = 100;
     private double MAX_SEND_VALUE = 8.0;
     private double lastValueEQ = 0;
     private double lastValueWS = 0;
     private VideoActivity.ClientThread clientThread;
-    private boolean use_joystick_command = false;
+    private boolean use_joystick_command = true;
     public RobotController(VideoActivity.ClientThread clientThread) {
         this.clientThread = clientThread;
     }
@@ -43,83 +43,70 @@ public class RobotController {
 
     }
 
-    public double calculateAngle(double[] linear_acceleration, double[] posXYZ) {
-        // Calculate the dot product of the two vectors
-        double dotProduct = linear_acceleration[0] * posXYZ[0] + linear_acceleration[1] * posXYZ[1] + linear_acceleration[2] * posXYZ[2];
+    public double[] calculate2DVectorBetween(double[] linear_acceleration, double[] posXYZ) {
+        // Project linear_acceleration and posXYZ onto the XY plane
+        double[] linear_acceleration_2D = {linear_acceleration[0], linear_acceleration[1]};
+        double[] posXYZ_2D = {posXYZ[0], posXYZ[1]};
 
-        // Calculate the magnitudes of both vectors
-        double linearAccelerationMagnitude = Math.sqrt(linear_acceleration[0] * linear_acceleration[0] + linear_acceleration[1] * linear_acceleration[1] + linear_acceleration[2] * linear_acceleration[2]);
-        double posXYZMagnitude = Math.sqrt(posXYZ[0] * posXYZ[0] + posXYZ[1] * posXYZ[1] + posXYZ[2] * posXYZ[2]);
+        // Calculate the difference vector between the projected 2D vectors
+        double[] differenceVector2D = new double[2];
+        differenceVector2D[0] = linear_acceleration_2D[0] - posXYZ_2D[0];
+        differenceVector2D[1] = linear_acceleration_2D[1] - posXYZ_2D[1];
 
-        // Calculate the cosine of the angle
-        double cosAngle = dotProduct / (linearAccelerationMagnitude * posXYZMagnitude);
-
-        // Clamp the cosine value between -1 and 1 to avoid errors in the acos function
-        cosAngle = Math.max(-1, Math.min(1, cosAngle));
-
-        // Calculate the angle in radians
-        double angleRadians = Math.acos(cosAngle);
-
-        // Convert the angle to degrees
-        double angleDegrees = Math.toDegrees(angleRadians);
-
-        return angleDegrees;
+        return differenceVector2D;
     }
 
-    // Calculate angle using the accelerometer position.
-    private int getAngle(double[] linear_acceleration, double[] posXYZ){
-        // Calculate x:
-        double x=1;
-
-        // Calculate y:
-        double y=1;
-
-        // Calculate the angle in radians
-        double angleRadians = Math.atan2(y, x);
-        // Convert the angle from radians to degrees
-        double angleDegrees = Math.toDegrees(angleRadians);
-        // Normalize the angle to the range [0, 360)
-        if (angleDegrees < 0) {
-            //angleDegrees += 360;
-        }
-        return (int) Math.floor(angleDegrees);
-    }
     // Calculate the power using the accelerometer position.
     private int getPower(double[] linear_acceleration, double[] posXYZ){
         //TODO: calculate power.
-       // double power_scale = calculateUnitVectorBetween(linear_acceleration,posXYZ);
+        // double power_scale = calculateUnitVectorBetween(linear_acceleration,posXYZ);
         //int power = Math.floor(power_scale*MAX_SPEED);
         return 0;
     }
 
-    public double[] calculateUnitVector(double[] vector) {
-        double magnitude = Math.sqrt(vector[0] * vector[0] + vector[1] * vector[1] + vector[2] * vector[2]);
+    public double[] mapToJoystick(double x, double y, double maxValue) {
+        // Normalize the x and y values to the range of [-1, 1]
+        double normalizedX = x / maxValue;
+        double normalizedY = y / maxValue;
 
-        double[] unitVector = new double[3];
-        unitVector[0] = vector[0] / magnitude;
-        unitVector[1] = vector[1] / magnitude;
-        unitVector[2] = vector[2] / magnitude;
+        // Clamp the values to the range of [-1, 1]
+        normalizedX = Math.max(-1, Math.min(1, normalizedX));
+        normalizedY = Math.max(-1, Math.min(1, normalizedY));
 
-        return unitVector;
+        // Create an array to store the mapped x and y values
+        double[] joystickValues = {normalizedX, normalizedY};
+
+        return joystickValues;
     }
+    public double calculate2DAngle(double x, double y) {
+        // Calculate the angle in radians using the atan2 function
+        double angleRadians = Math.atan2(y, x);
 
-    public double[] calculateUnitVectorBetween(double[] linear_acceleration, double[] posXYZ) {
-        // Calculate the difference vector between linear_acceleration and posXYZ
-        double[] differenceVector = new double[3];
-        differenceVector[0] = linear_acceleration[0] - posXYZ[0];
-        differenceVector[1] = linear_acceleration[1] - posXYZ[1];
-        differenceVector[2] = linear_acceleration[2] - posXYZ[2];
+        // Convert the angle to degrees
+        double angleDegrees = Math.toDegrees(angleRadians);
 
-        // Calculate the unit vector of the difference vector
-        double[] unitVector = calculateUnitVector(differenceVector);
+        // Normalize the angle to the range [0, 360)
+        angleDegrees = (angleDegrees + 360) % 360;
 
-        return unitVector;
+        return angleDegrees;
     }
     private void handleMovements(double[] linear_acceleration, double[] posXYZ) {
 
         int angle = getAngle(linear_acceleration,posXYZ);
-        double angle_d = calculateAngle(linear_acceleration,posXYZ);
-        Log.d("angle accelerometer: ", String.valueOf(Math.floor(angle_d)));
+        double[] vector = calculate2DVectorBetween(linear_acceleration,posXYZ);
+
+        // TODO : get XZ vector and XY vector using linear_acceleration and posXYZ.
+        // TODO : change the vector to use the angles
+        double[] joystick_val = mapToJoystick(vector[0],vector[1],4);
+
+        // TODO : use x : angle XZ , y : angle XY.
+        double angl = calculate2DAngle(joystick_val[0],joystick_val[1]);
+
+        //double angle_d = calculateAngle(linear_acceleration,posXYZ);
+        //Log.d("angle accelerometer: ", String.valueOf(Math.floor(angle)));
+        //Log.d("vector :", vector[0] + "," + vector[1]);
+        //Log.d("Joystick : ", joystick_val[0]+","+joystick_val[1]);
+        //Log.d("Joystick angle : ", angl +" degres");
 
         /*int power = getPower(linear_acceleration,posXYZ);
 
@@ -139,6 +126,20 @@ public class RobotController {
         int angl = (int) Math.floor(angleDegrees);
         String command = "0," + pwr +  ","+ angl +";" ;
         sendMessageAndLog(command,"sent: "+command);*/
+    }
+
+    private int getAngle(double[] linear_acceleration, double[] posXYZ) {
+        double[] vector = calculate2DVectorBetween(linear_acceleration,posXYZ);
+        // Calculate the angle in radians using the atan2 function
+        double angleRadians = Math.atan2(vector[1], vector[0]);
+
+        // Convert the angle to degrees
+        double angleDegrees = Math.toDegrees(angleRadians);
+
+        // Normalize the angle to the range [0, 360)
+        int angleDegree = (int) ((Math.floor(angleDegrees) + 360) % 360);
+
+        return angleDegree;
     }
 
     private void handleTurning(double[] linear_acceleration, double[] posXYZ) {
