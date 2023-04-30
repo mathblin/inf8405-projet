@@ -148,11 +148,6 @@ def write_command_to_arduino(command):
 def blocking_read_from_arduino():
     """Fonction to test serial communication with verbose data from Arduino"""
     message = ''
-    # while (serialInst.inWaiting() == 0):
-    #         pass
-    # packetIn = serialInst.readline()
-    # packetIn = packetIn.decode("UTF-8").strip('\r\n')
-    # message = packetIn
 
     while END_SERIAL_COMM_MARKER not in message:
         while (serialInst.inWaiting() == 0):
@@ -160,7 +155,6 @@ def blocking_read_from_arduino():
         packetIn = serialInst.readline()
         packetIn = packetIn.decode("UTF-8").strip('\r\n')
         message += packetIn
-    
 
     if DEBUGGER_MODE: 
         message = message.strip(END_SERIAL_COMM_MARKER)
