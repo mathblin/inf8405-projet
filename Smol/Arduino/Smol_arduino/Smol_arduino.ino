@@ -82,7 +82,7 @@ void setup(void) {
   int i;
   for (i = 4; i <= 7; i++)
     pinMode(i, OUTPUT);
-  Serial.begin(9600);  //Set Baud Rate
+  Serial.begin(38400);  //Set Baud Rate
 }
 
 void loop(void) {

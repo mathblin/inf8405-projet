@@ -47,9 +47,9 @@ void Servomotor::activate(String* msg, bool* debug) {
   }
 
   if (*debug && Serial.availableForWrite() > 30) {
-    Serial.print(" mode : " + String(mode) + " msg : " + *msg);
+    Serial.print(" mode : " + String(mode) + " msg : " + *msg + "!!!");
   } else if (Serial.availableForWrite() > 30) {  // Tells the server that Arduino is ready to receive a command
-    Serial.print("ok");
+    Serial.print("ok!!!");
   }
 }
 

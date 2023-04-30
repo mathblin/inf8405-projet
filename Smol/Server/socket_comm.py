@@ -4,7 +4,8 @@ DEBUGGER_MODE = None
 server, conn, addr = (None, None, None)
 HOST, PORT = (None, None)
 SOCKET_TIMEOUT = 15.0
-from serial_comm import write_command_to_arduino_with_response, SERVO_SECOND_ARM_COMMAND
+SAFE_EXIT_COMMAND = '1,x'
+from serial_comm import write_command_to_arduino_with_response, SERVO_SECOND_ARM_COMMAND, DISCONNECTED_COMMAND
 
 def init_socket(inHOST, inPORT, DEBUG_MODE=None):
     """Initializing the socket with Android App"""
@@ -54,6 +55,17 @@ def close_socket():
     """Closing the socket with Android App"""
     conn.close()
     server.close()
+
+def check_exceptions(command):
+    """
+    Check for exceptions in command
+    return 2 params
+    exception -> boolean
+    a new command -> String
+    """
+    if command == 'exceded timout' or command == '' or command == DISCONNECTED_COMMAND:
+        return True, SAFE_EXIT_COMMAND
+    return False, ''
 
 def manage_socket_exception(command):
     """Managing exception from sockets"""
