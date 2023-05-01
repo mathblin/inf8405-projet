@@ -366,10 +366,10 @@ public class VideoActivity extends Activity {
             double[] filt = {filteredValues[0] - posXYZ[0], filteredValues[1]-posXYZ[1],filteredValues[2] - posXYZ[2]};
 
 
-            Log.d("PosXYZ:", posXYZ[0] +" , "+posXYZ[1] +" , "+posXYZ[2] );
-            Log.d("Filtered Values-PosXYZ:", filt[0] +" , "+filt[1] +" , "+filt[2] );
-            bottomIntervalX = posXYZ[0]+0.5;
-            topIntervalX = posXYZ[0]-0.5;
+            //Log.d("PosXYZ:", posXYZ[0] +" , "+posXYZ[1] +" , "+posXYZ[2] );
+            //Log.d("Filtered Values-PosXYZ:", filt[0] +" , "+filt[1] +" , "+filt[2] );
+            bottomIntervalX = posXYZ[0]+0.05;
+            topIntervalX = posXYZ[0]-0.05;
             robotController.handleRobotMovement(filteredValues, posXYZ, topIntervalX, bottomIntervalX);
         }
     };

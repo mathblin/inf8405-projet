@@ -237,6 +237,7 @@ public class CalibrationActivity extends AppCompatActivity {
     public SensorEventListener accelerometerListener = new SensorEventListener() {
         public void onAccuracyChanged(Sensor sensor, int acc) { }
 
+        int i = 0;
         public void onSensorChanged(SensorEvent event) {
 
             // Get the acceleration from sensors. Raw data
@@ -246,15 +247,26 @@ public class CalibrationActivity extends AppCompatActivity {
                 // Disable start button during calibration
                 buttonStart.setEnabled(false);
 
+                if(i<1000) {
+                    posXYZ[0] = posXYZ[0] + 0.1 * (event.values[0] - posXYZ[0]);
+                    posXYZ[1] = posXYZ[1] + 0.1 * (event.values[1] - posXYZ[1]);
+                    posXYZ[2] = posXYZ[2] + 0.1 * (event.values[2] - posXYZ[2]);
+                    i++;
+                    calibrate_was_pressed=true;
+                    return;
+                }
+                i=0;
+
                 // while start is not pressed get average values
-                for (int i = 0; i < 1000; i++) {
+                /*for (int i = 0; i < 1000; i++) {
                     posXYZ[0] = addToAverage(i, posXYZ[0], event.values[0]); // initial X
                     posXYZ[1] = addToAverage(i, posXYZ[1], event.values[1]);  // initial Y
                     posXYZ[2] = addToAverage(i, posXYZ[2], event.values[2]);  // initial Z
-                }
+                }*/
                 Toast.makeText(getApplicationContext(), "Calibration terminée!", Toast.LENGTH_SHORT).show();
                 buttonStart.setEnabled(true);
                 calibrate_was_pressed = false;
+                i=0;
             }
 
             //Loop acceleration in XYZ
