@@ -168,6 +168,7 @@ public class VideoActivity extends Activity {
         //Set up sensors and accelerometer
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensorAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorManager.registerListener(accelerometerListener, sensorAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
 
         topIntervalX = maxAcceleration/stopInterval;
         bottomIntervalX = minAcceleration/stopInterval;
@@ -276,9 +277,9 @@ public class VideoActivity extends Activity {
                 int test2 = (int) Math.floor(angleDegrees);
                 String command = mode + test2 +  ","+ test1 +";" ;
                 Log.d("JoyStick", command);
-               // clientThread.sendMessage(command);
+                clientThread.sendMessage(command);
 
-                new Thread(new Runnable() {
+                /*new Thread(new Runnable() {
                     @Override
                     public void run() {
                         clientThread.sendMessage(command);
@@ -289,7 +290,7 @@ public class VideoActivity extends Activity {
                     Thread.sleep(50);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
-                }
+                }*/
             }
             @Override
             public void onTap() {
@@ -311,7 +312,7 @@ public class VideoActivity extends Activity {
     //On resume, register accelerometer listener
     public void onResume() {
         super.onResume();
-        sensorManager.registerListener(accelerometerListener, sensorAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(accelerometerListener, sensorAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
     }
 
     public void onPause() {

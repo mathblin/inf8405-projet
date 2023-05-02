@@ -9,7 +9,12 @@ public class RobotController {
     private double lastValueEQ = 0;
     private double lastValueWS = 0;
     private VideoActivity.ClientThread clientThread;
-    private boolean use_joystick_command = false;
+    private boolean use_joystick_command = true;
+
+
+    double initialPitch;
+    double initialRoll;
+
 
     private boolean once = true;
     public RobotController(VideoActivity.ClientThread clientThread) {
@@ -42,153 +47,6 @@ public class RobotController {
             handleForwardBackwardMovement(linear_acceleration, posXYZ, topIntervalX, bottomIntervalX);
         }
     }
-
-    public double[] calculate3DVectorBetween(double[] linear_acceleration, double[] posXYZ) {
-        // Project linear_acceleration and posXYZ onto the XY plane
-        double[] linear_acceleration_3D = {linear_acceleration[0], linear_acceleration[1], linear_acceleration[2]};
-        double[] posXYZ_3D = {posXYZ[0], posXYZ[1], posXYZ[2]};
-
-        // Calculate the difference vector between the projected 2D vectors
-        double[] differenceVector3D = new double[3];
-        differenceVector3D[0] = linear_acceleration_3D[0] - posXYZ_3D[0];
-        differenceVector3D[1] = linear_acceleration_3D[1] - posXYZ_3D[1];
-        differenceVector3D[2] = linear_acceleration_3D[2] - posXYZ_3D[2];
-
-        return differenceVector3D;
-    }
-
-    // Calculate the power using the accelerometer position.
-    private int getPower(double[] linear_acceleration, double[] posXYZ){
-        //TODO: calculate power.
-        // double power_scale = calculateUnitVectorBetween(linear_acceleration,posXYZ);
-        //int power = Math.floor(power_scale*MAX_SPEED);
-        return 0;
-    }
-    public double[] mapAngleToJoystick(double angleX, double angleY, double maxAngle) {
-        // Normalize the angle values to the range of [-1, 1]
-        double normalizedX = angleX / maxAngle;
-        double normalizedY = angleY / maxAngle;
-
-        // Clamp the values to the range of [-1, 1]
-        normalizedX = Math.max(-1, Math.min(1, normalizedX));
-        normalizedY = Math.max(-1, Math.min(1, normalizedY));
-
-        // Create an array to store the mapped x and y values
-        double[] joystickValues = {normalizedX, normalizedY};
-
-        return joystickValues;
-    }
-    public double calculate2DAngle(double x, double y) {
-        // Calculate the angle in radians using the atan2 function
-        double angleRadians = Math.atan2(y, x);
-
-        // Convert the angle to degrees
-        double angleDegrees = Math.toDegrees(angleRadians);
-
-        // Normalize the angle to the range [0, 360)
-        angleDegrees = (angleDegrees + 360) % 360;
-
-        return angleDegrees;
-    }
-
-    public double[] getRotationAngles(double[] linear_acceleration, double[] posXYZ) {
-        // Calculate the relative acceleration vector
-        double ax = linear_acceleration[0] - posXYZ[0];
-        double ay = linear_acceleration[1] - posXYZ[1];
-        double az = linear_acceleration[2] - posXYZ[2];
-
-        // Normalize the relative acceleration vector
-        double magnitude = Math.sqrt(ax * ax + ay * ay + az * az);
-        ax /= magnitude;
-        ay /= magnitude;
-        az /= magnitude;
-
-        // Calculate pitch (rotation around the x-axis)
-        double pitch = Math.atan2(-ax, Math.sqrt(ay * ay + az * az));
-        pitch = Math.toDegrees(pitch);
-
-        // Calculate roll (rotation around the y-axis)
-        double roll = Math.atan2(ay, Math.sqrt(ax * ax + ( az * az + ay*ay)));
-        roll = Math.toDegrees(roll);
-
-
-        double[] rotationAngles = {pitch, roll};
-        return rotationAngles;
-    }
-    double initialPitch;
-    double initialRoll;
-
-    private void handleMovements(double[] linear_acceleration, double[] posXYZ) {
-
-        if(once) {
-            double[] initialRotationAngles = getRotationAngles(linear_acceleration, posXYZ);
-            initialPitch = initialRotationAngles[0];
-            initialRoll = initialRotationAngles[1];
-            once = false;
-        }
-
-        // TODO: la tablette est a l'envers
-        double[] rotations = getRotationAngles(linear_acceleration,posXYZ);
-        Log.d("rotations: ", "pitch: "+String.valueOf(rotations[0])+" roll: "+String.valueOf(rotations[1]));
-        double diff_pitch = rotations[0]-initialPitch;
-        double diff_roll = rotations[1];
-
-        double[] diff_rot = {diff_pitch, diff_roll};
-
-        Log.d("diff_rot: ", "pitch: "+String.valueOf(diff_rot[0])+" roll: "+String.valueOf(diff_rot[1]));
-        if(Math.abs(diff_rot[0]) < 20 && Math.abs(diff_rot[1]) < 20 ){
-            sendMessageAndLog("0,0,0;","sent 0,0,0;");
-            return;
-        }
-        // angle pitch-roll
-        int angle  = (int) Math.floor(calculate2DAngle(diff_rot[1],diff_rot[0]));
-        Log.d("angle: ", String.valueOf(angle));
-
-        double power = 50;
-        //Log.d("power: ", String.valueOf(power));
-
-        // TODO: Send command (0, angle, power)
-        sendMessageAndLog("0,"+String.valueOf(angle)+","+String.valueOf(power)+";",
-                "sent : "+"0,"+String.valueOf(angle)+","+String.valueOf(power)+";");
-    }
-
-    public double[] normalizeVector(double[] vector) {
-        double magnitude = calculateVectorMagnitude(vector);
-        double[] normalizedVector = new double[vector.length];
-
-        for (int i = 0; i < vector.length; i++) {
-            normalizedVector[i] = vector[i] / magnitude;
-        }
-
-        return normalizedVector;
-    }
-    public double calculateVectorMagnitude(double[] vector) {
-        double sum = 0;
-
-        // Sum the square of each component of the vector
-        for (int i = 0; i < vector.length; i++) {
-            sum += vector[i] * vector[i];
-        }
-
-        // Calculate the square root of the sum to find the magnitude
-        double magnitude = Math.sqrt(sum);
-
-        return magnitude;
-    }
-    private int getAngle(double[] linear_acceleration, double[] posXYZ) {
-        double[] vector = calculate3DVectorBetween(linear_acceleration,posXYZ);
-        // Calculate the angle in radians using the atan2 function
-        double angleRadians = Math.atan2(vector[1], vector[0]);
-
-        // Convert the angle to degrees
-        double angleDegrees = Math.toDegrees(angleRadians);
-
-        // Normalize the angle to the range [0, 360)
-        int angleDegree = (int) ((Math.floor(angleDegrees) + 360) % 360);
-
-        return angleDegree;
-    }
-
     private void handleTurning(double[] linear_acceleration, double[] posXYZ) {
         double sendValue;
         String message;
@@ -250,13 +108,106 @@ public class RobotController {
         lastValueWS = sendValue;
         sendMessageAndLog(message, logMessage);
     }
+    double old_roll = 0.0;
+    double old_pitch= 0.0;
+    private void handleMovements(double[] linear_acceleration, double[] posXYZ) {
+
+        if(once) {
+            double[] initialRotationAngles = getRotationAngles(linear_acceleration, posXYZ);
+            initialPitch = initialRotationAngles[0];
+            initialRoll = initialRotationAngles[1];
+            old_roll = initialRoll;
+            old_pitch = initialPitch;
+            once = false;
+        }
+
+        // TODO: la tablette est a l'envers
+        double[] rotations = getRotationAngles(linear_acceleration,posXYZ);
+        rotations[0] = rotations[0] + 0.1*(old_pitch-rotations[0]);
+        rotations[1] = rotations[1] + 0.1*(old_roll-rotations[1]);
+        old_pitch = rotations[0];
+        old_roll =  rotations[1];
+
+        //Log.d("rotations: ", "pitch: "+String.valueOf(rotations[0])+" roll: "+String.valueOf(rotations[1]));
+        int diff_pitch = (int) Math.floor(rotations[0]-initialPitch);
+        if(rotations[0]<0) diff_pitch = (int) Math.floor(rotations[0]+initialPitch);
+        int diff_roll = (int) Math.floor(rotations[1]);
+
+        double[] diff_rot = {diff_pitch, diff_roll};
+
+        Log.d("diff_rot: ", "pitch: "+String.valueOf(diff_rot[0])+" roll: "+String.valueOf(diff_rot[1]));
+        if(Math.abs(diff_rot[0]) < 20 && Math.abs(diff_rot[1]) < 20 ){
+            sendMessageAndLog("0,0,0;","sent 0,0,0;");
+            return;
+        }
+        // angle pitch-roll
+        int angle  = (int) Math.floor(calculate2DAngle(diff_rot[1],diff_rot[0]));
+        Log.d("angle: ", String.valueOf(angle));
+
+        int power = 50; // move back at a set speed;
+        //Log.d("power: ", String.valueOf(power));
+
+        if(diff_pitch >= 0){
+            power = (int) Math.abs(Math.floor(100 * diff_pitch/30));
+            if(power > 100) power = 100;
+        }
+
+        if((angle > 340 && angle<20) || (angle< 200 && angle>160) ){
+            power = (int) Math.abs(Math.floor(100 * diff_roll/40));
+            if(power > 100) power = 100;
+        }
+
+        // TODO: Send command (0, angle, power)
+        sendMessageAndLog("0,"+String.valueOf(angle)+","+String.valueOf(power)+";",
+                "sent : "+"0,"+String.valueOf(angle)+","+String.valueOf(power)+";");
+    }
+
+    // Private methods:
+    public double calculate2DAngle(double x, double y) {
+        // Calculate the angle in radians using the atan2 function
+        double angleRadians = Math.atan2(y, x);
+
+        // Convert the angle to degrees
+        double angleDegrees = Math.toDegrees(angleRadians);
+
+        // Normalize the angle to the range [0, 360)
+        angleDegrees = (angleDegrees + 360) % 360;
+
+        return angleDegrees;
+    }
+
+    public double[] getRotationAngles(double[] linear_acceleration, double[] posXYZ) {
+        // Calculate the relative acceleration vector
+        double ax = linear_acceleration[0] - posXYZ[0];
+        double ay = linear_acceleration[1] - posXYZ[1];
+        double az = linear_acceleration[2] - posXYZ[2];
+
+        // Normalize the relative acceleration vector
+        double magnitude = Math.sqrt(ax * ax + ay * ay + az * az);
+        ax /= magnitude;
+        ay /= magnitude;
+        az /= magnitude;
+
+        // Calculate pitch (rotation around the x-axis)
+        double pitch = Math.atan2(-ax, Math.sqrt(ay * ay + az * az));
+        pitch = Math.toDegrees(pitch);
+
+        // Calculate roll (rotation around the y-axis)
+        double roll = Math.atan2(ay, Math.sqrt(ax * ax + ( az * az + ay*ay)));
+        roll = Math.toDegrees(roll);
+
+
+        double[] rotationAngles = {pitch, roll};
+        return rotationAngles;
+    }
 
     private double calculateSendValue(double value1, double value2) {
         return Math.floor(value1 - value2);
     }
 
     private void sendMessageAndLog(String message, String logMessage) {
-        clientThread.sendMessage(message);
+        String utf8Message = message.replaceAll("\\s+", "");
+        clientThread.sendMessage(utf8Message);
         Log.d("letter", logMessage);
     }
 }

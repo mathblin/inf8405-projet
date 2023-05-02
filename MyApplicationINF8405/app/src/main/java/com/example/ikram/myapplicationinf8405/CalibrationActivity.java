@@ -228,11 +228,6 @@ public class CalibrationActivity extends AppCompatActivity {
         sensorManager.unregisterListener(accelerometerListener);
     }
 
-    private double addToAverage(int n, double old_average, double new_value ){
-        return ( n * old_average + new_value ) / (n + 1);
-    }
-
-
     //Accelerometer listener, set the values
     public SensorEventListener accelerometerListener = new SensorEventListener() {
         public void onAccuracyChanged(Sensor sensor, int acc) { }
