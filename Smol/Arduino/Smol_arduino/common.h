@@ -19,6 +19,7 @@ enum CONTROL_MODE {
 };
 
 void stop(void);                  //Stop
+// a : left_speed ; b : right_speed
 void advance(char a, char b);     //Move forward
 void back_off(char a, char b);    //Move backward
 void turn_L_360(char a, char b);  //Turn Left
