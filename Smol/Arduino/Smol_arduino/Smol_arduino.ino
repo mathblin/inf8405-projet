@@ -17,7 +17,7 @@ int caneServo(struct pt* pt) {
     if (isStopped()) {
       cane.stop();
     } else {
-      cane.start(1000);
+      cane.start(500);
     }
     PT_SLEEP(pt, 1);
   }
@@ -30,7 +30,7 @@ int hatServo(struct pt* pt) {
 
   while (true) {
     if (hat.isActive()) {
-      hat.start(3000);
+      hat.start(1000);
     }
     PT_SLEEP(pt, 1);
   }
