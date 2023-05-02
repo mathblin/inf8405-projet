@@ -2,6 +2,7 @@ package com.example.ikram.myapplicationinf8405;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -20,6 +21,10 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.webkit.WebView;
 import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,12 +78,8 @@ public class CalibrationActivity extends AppCompatActivity {
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         sensorAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
-        // IP selection (Spinner)
-        List<TagValuePair> spinnerItems = new ArrayList<>();
-        // Loading default values and stored values.
-        spinnerItems.add(new TagValuePair("Poly", "132.207.186.54"));
-        spinnerItems.add(new TagValuePair("O.O", "192.168.2.243"));
-        spinnerItems.add(new TagValuePair("SMOL", "192.168.4.3"));
+        // Load the stored values or create a new list if there are none.
+        List<TagValuePair> spinnerItems = loadSpinnerValues();
         Spinner ip_spinner = findViewById(R.id.ip_selection);
 
         ArrayAdapter<TagValuePair> spinnerAdapter = new ArrayAdapter<>(this,
@@ -228,6 +229,76 @@ public class CalibrationActivity extends AppCompatActivity {
         sensorManager.unregisterListener(accelerometerListener);
     }
 
+    private void saveSpinnerValues(List<TagValuePair> spinnerItems) {
+        SharedPreferences sharedPreferences = getSharedPreferences("spinner_values", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        JSONArray jsonArray = new JSONArray();
+
+        for (TagValuePair item : spinnerItems) {
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("tag", item.getTag());
+                jsonObject.put("value", item.getValue());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            jsonArray.put(jsonObject);
+        }
+
+        editor.putString("spinner_items", jsonArray.toString());
+        editor.apply();
+    }
+
+    private List<TagValuePair> loadSpinnerValues() {
+        SharedPreferences sharedPreferences = getSharedPreferences("spinner_values", Context.MODE_PRIVATE);
+        String jsonString = sharedPreferences.getString("spinner_items", null);
+        List<TagValuePair> spinnerItems = new ArrayList<>();
+
+        if (jsonString != null) {
+            try {
+                JSONArray jsonArray = new JSONArray(jsonString);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    String tag = jsonObject.getString("tag");
+                    String value = jsonObject.getString("value");
+                    spinnerItems.add(new TagValuePair(tag, value));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        List<TagValuePair> defaultSpinnerItems = getDefaultSpinnerValues();
+
+        for (TagValuePair defaultItem : defaultSpinnerItems) {
+            boolean found = false;
+            for (TagValuePair item : spinnerItems) {
+                if (item.getTag().equals(defaultItem.getTag())) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                spinnerItems.add(defaultItem);
+            }
+        }
+
+        return spinnerItems;
+    }
+
+    private List<TagValuePair> getDefaultSpinnerValues() {
+        List<TagValuePair> defaultSpinnerItems = new ArrayList<>();
+        defaultSpinnerItems.add(new TagValuePair("Poly", "132.207.186.54"));
+        defaultSpinnerItems.add(new TagValuePair("O.O", "192.168.2.243"));
+        defaultSpinnerItems.add(new TagValuePair("SMOL", "192.168.4.5"));
+        return defaultSpinnerItems;
+    }
+
+    private double addToAverage(int n, double old_average, double new_value ){
+        return ( n * old_average + new_value ) / (n + 1);
+    }
+
     //Accelerometer listener, set the values
     public SensorEventListener accelerometerListener = new SensorEventListener() {
         public void onAccuracyChanged(Sensor sensor, int acc) { }
@@ -243,6 +314,7 @@ public class CalibrationActivity extends AppCompatActivity {
             if (calibrate_was_pressed){
                 // Disable start button during calibration
                 buttonStart.setEnabled(false);
+
                 // while start is not pressed get average values
                 /*for (int i = 0; i < 1000; i++) {
                     posXYZ[0] = addToAverage(i, posXYZ[0], event.values[0]); // initial X
@@ -256,7 +328,7 @@ public class CalibrationActivity extends AppCompatActivity {
             }
 
             //Loop acceleration in XYZ
-            for (int i = 0; i < linear_acceleration.length; i++){
+            /*for (int i = 0; i < linear_acceleration.length; i++){
 
                 // Find the max value between the new position and the initial device position
                 // Calculate the difference between them
@@ -281,18 +353,7 @@ public class CalibrationActivity extends AppCompatActivity {
                 }
                 relative_linear_acceleration[i] = sendValue;
 
-                /*if(relative_linear_acceleration[0] > 0)
-                {
-                    buttonMin.setEnabled(true);
-                    buttonMax.setEnabled(false);
-                }
-                else
-                {
-                    buttonMin.setEnabled(false);
-                    buttonMax.setEnabled(true);
-                }*/
-                //textPosition.setText(String.valueOf(relative_linear_acceleration[0]));
-            }
+            }*/
         }
     };
 
