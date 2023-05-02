@@ -9,7 +9,7 @@ public class RobotController {
     private double lastValueEQ = 0;
     private double lastValueWS = 0;
     private VideoActivity.ClientThread clientThread;
-    private boolean use_joystick_command = true;
+    private boolean use_joystick_command = false;
 
     private boolean once = true;
     public RobotController(VideoActivity.ClientThread clientThread) {

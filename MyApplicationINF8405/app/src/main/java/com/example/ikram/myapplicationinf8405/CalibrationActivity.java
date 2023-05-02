@@ -241,22 +241,13 @@ public class CalibrationActivity extends AppCompatActivity {
         public void onSensorChanged(SensorEvent event) {
 
             // Get the acceleration from sensors. Raw data
-
+            posXYZ[0] = posXYZ[0] + 0.1 * (event.values[0] - posXYZ[0]);
+            posXYZ[1] = posXYZ[1] + 0.1 * (event.values[1] - posXYZ[1]);
+            posXYZ[2] = posXYZ[2] + 0.1 * (event.values[2] - posXYZ[2]);
             // Take a sample of a 100 data points for calibration
             if (calibrate_was_pressed){
                 // Disable start button during calibration
                 buttonStart.setEnabled(false);
-
-                if(i<1000) {
-                    posXYZ[0] = posXYZ[0] + 0.1 * (event.values[0] - posXYZ[0]);
-                    posXYZ[1] = posXYZ[1] + 0.1 * (event.values[1] - posXYZ[1]);
-                    posXYZ[2] = posXYZ[2] + 0.1 * (event.values[2] - posXYZ[2]);
-                    i++;
-                    calibrate_was_pressed=true;
-                    return;
-                }
-                i=0;
-
                 // while start is not pressed get average values
                 /*for (int i = 0; i < 1000; i++) {
                     posXYZ[0] = addToAverage(i, posXYZ[0], event.values[0]); // initial X
