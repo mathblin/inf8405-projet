@@ -128,15 +128,19 @@ public class RobotController {
         old_pitch = rotations[0];
         old_roll =  rotations[1];
 
-        //Log.d("rotations: ", "pitch: "+String.valueOf(rotations[0])+" roll: "+String.valueOf(rotations[1]));
+        Log.d("rotations: ", "pitch: "+String.valueOf(rotations[0])+" roll: "+String.valueOf(rotations[1]));
         int diff_pitch = (int) Math.floor(rotations[0]-initialPitch);
-        if(rotations[0]<0) diff_pitch = (int) Math.floor(rotations[0]+initialPitch);
+        Log.d("pitch: ", "Normal : "+String.valueOf(diff_pitch));
+        if(rotations[0]<0) {
+            diff_pitch = (int) Math.floor(rotations[0]+initialPitch);
+            Log.d("pitch: ", "Modif : "+String.valueOf(diff_pitch));
+        }
         int diff_roll = (int) Math.floor(rotations[1]);
 
         double[] diff_rot = {diff_pitch, diff_roll};
 
-        Log.d("diff_rot: ", "pitch: "+String.valueOf(diff_rot[0])+" roll: "+String.valueOf(diff_rot[1]));
-        if(Math.abs(diff_rot[0]) < 20 && Math.abs(diff_rot[1]) < 20 ){
+        //Log.d("diff_rot: ", "pitch: "+String.valueOf(diff_rot[0])+" roll: "+String.valueOf(diff_rot[1]));
+        if(Math.abs(diff_rot[0]) < 25 && Math.abs(diff_rot[1]) < 30 ){
             sendMessageAndLog("0,0,0;","sent 0,0,0;");
             return;
         }
@@ -148,11 +152,11 @@ public class RobotController {
         //Log.d("power: ", String.valueOf(power));
 
         if(diff_pitch >= 0){
-            power = (int) Math.abs(Math.floor(100 * diff_pitch/30));
+            power = (int) Math.abs(Math.floor(100 * diff_pitch/40));
             if(power > 100) power = 100;
         }
 
-        if((angle > 340 && angle<20) || (angle< 200 && angle>160) ){
+        if(angle < 200 && angle > 160 || angle<20 && angle>0 || angle<360 && angle>340){
             power = (int) Math.abs(Math.floor(100 * diff_roll/40));
             if(power > 100) power = 100;
         }
