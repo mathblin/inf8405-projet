@@ -3,14 +3,13 @@ import sys
 from time import time, sleep
 from server_flags import args
 from enum import Enum
-# serialInst = serial.Serial('/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_A100Q8UX-if00-port0')
+# serialInst = serial.Serial('/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_A100Q8UX-if00-port0') # Deprecated: Old Raspberry Pi serial port.
 
 serialInst = None
 DEBUGGER_MODE = None
 previous_time = 0
-ARDUINO_SERIAL_COMM_MIN_TIME_DIFF = 0
 previous_read_time = 0
-ARDUINO_SERIAL_READ_TIMEOUT = 0.5
+ARDUINO_SERIAL_READ_TIMEOUT = 0
 class CONTROL_MODE(Enum):
   MODE_JOYSTICK = 0
   MODE_GYROSCOPE = 1
@@ -19,15 +18,8 @@ class CONTROL_MODE(Enum):
 GYROSCOPE_COMMANDS = 'WwSsadqQeEzZcCx'
 SERVO_SECOND_ARM_COMMAND = '2,1'
 
-# class GYROSCOPE_COMMANDS(Enum):
-#     LOWER_W = 'w'
-#     UPPER_W = 'W'
-#     LOWER_S = 's'
-#     UPPER_S = 'S'
-#     LOWER_A = 'a'
-#     LOWER_D = 'd'
-#     LOWER_Q = 'q'
-#     UPPER_Q = 'Q'
+END_SERIAL_COMM_MARKER = '!!!'
+DISCONNECTED_COMMAND = 'disconnect'
 
 def init_serial(DEBUG_MODE = None):
     """Initialisation of the server socket
@@ -64,11 +56,14 @@ def init_serial(DEBUG_MODE = None):
                 portVar = com_path + str(val)
                 print(portVar)
                 INVALID_COMM_PORT = False
-    serialInst = serial.Serial(portVar, timeout=ARDUINO_SERIAL_READ_TIMEOUT)
+    serialInst = serial.Serial(portVar, timeout=ARDUINO_SERIAL_READ_TIMEOUT, baudrate=38400)
     previous_time = time()
     sleep(1)
 
 def is_command_defined(command):
+    if command == DISCONNECTED_COMMAND:
+        return True, ''
+    
     commands = command.split(',')
     if len(commands) < 2:
         message = "invalid command, not in format (mode,letter) or (mode,angle,power): " + str(commands)
@@ -123,14 +118,7 @@ def can_send_command_to_arduino(command):
     if (not command_defined): #TODO: verify if is_command_defined() is reliable
         print(message)
         return False # TODO: verifier
-    
-    global previous_time
-    current_time = time()
-    time_diff = current_time - previous_time
-    can_send_command = time_diff > ARDUINO_SERIAL_COMM_MIN_TIME_DIFF
-    if can_send_command:
-        previous_time = current_time
-    return can_send_command
+    return True # TODO: Verify if the rest is fine
 
 def can_read_message_from_arduino():
     """This fonction verify if enough time has passed in between two 
@@ -159,11 +147,18 @@ def write_command_to_arduino(command):
 
 def blocking_read_from_arduino():
     """Fonction to test serial communication with verbose data from Arduino"""
-    while (serialInst.inWaiting() == 0):
+    message = ''
+
+    while END_SERIAL_COMM_MARKER not in message:
+        while (serialInst.inWaiting() == 0):
             pass
-    packetIn = serialInst.readline()
-    packetIn = packetIn.decode("UTF-8").strip('\r\n')
-    print("Arduino's answer:", packetIn)
+        packetIn = serialInst.readline()
+        packetIn = packetIn.decode("UTF-8").strip('\r\n')
+        message += packetIn
+
+    if DEBUGGER_MODE: 
+        message = message.strip(END_SERIAL_COMM_MARKER)
+        print("Arduino's answer:", message)
 
 def write_command_to_arduino_with_response(command):
     could_send_command = write_command_to_arduino(command)

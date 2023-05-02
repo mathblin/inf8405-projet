@@ -105,9 +105,9 @@ void mode_joystick(String* msg, bool* debug) {
 
   if (*debug && Serial.availableForWrite() > 30) {
     Serial.print("sin:" + String(sin_result) + " cos:" + String(cos_result) + " str:" + String(strength) + " cad:" + String(cad)
-                 + " <--: " + String(left_strength) + " -->: " + String(right_strength));
+                 + " <--: " + String(left_strength) + " -->: " + String(right_strength) + "!!!");
   }
   else if (Serial.availableForWrite() > 30) { // Tells the server that Arduino is ready to receive a command
-    Serial.print("ok");
+    Serial.print("ok!!!");
   }
 }
