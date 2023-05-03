@@ -4,23 +4,25 @@ import android.util.Log;
 
 public class RobotController {
     private static final double TURNING_THRESHOLD = 1.0;
-    private static final int MAX_SPEED = 255;
+    private static final int MAX_SPEED = 100;
     private double MAX_SEND_VALUE = 8.0;
     private double lastValueEQ = 0;
     private double lastValueWS = 0;
     private VideoActivity.ClientThread clientThread;
-    private boolean use_joystick_command = false;
+    private boolean use_joystick_command = true;
+
+
+    double initialPitch;
+    double initialRoll;
+
+
+    private boolean once = true;
     public RobotController(VideoActivity.ClientThread clientThread) {
         this.clientThread = clientThread;
     }
 
     public void handleRobotMovement(double[] linear_acceleration, double[] posXYZ, double topIntervalX, double bottomIntervalX) {
         double maxLinearAcceleration = Math.max(linear_acceleration[0], posXYZ[0]);
-
-        if(use_joystick_command){
-            handleMovements(linear_acceleration,posXYZ);
-            return;
-        }
 
         double stopValue;
         if (maxLinearAcceleration == linear_acceleration[0]) {
@@ -32,6 +34,12 @@ public class RobotController {
         if (Math.abs(linear_acceleration[1]) <= TURNING_THRESHOLD &&
             Math.abs(stopValue)<1.0) {
             sendMessageAndLog("1,x;", "x mini 333");
+            return;
+        }
+
+        if(use_joystick_command){
+            handleMovements(linear_acceleration,posXYZ);
+            return;
         }
 
         if (Math.abs(linear_acceleration[1]) > TURNING_THRESHOLD) {
@@ -39,108 +47,7 @@ public class RobotController {
         } else {
             handleForwardBackwardMovement(linear_acceleration, posXYZ, topIntervalX, bottomIntervalX);
         }
-
-
     }
-
-    public double calculateAngle(double[] linear_acceleration, double[] posXYZ) {
-        // Calculate the dot product of the two vectors
-        double dotProduct = linear_acceleration[0] * posXYZ[0] + linear_acceleration[1] * posXYZ[1] + linear_acceleration[2] * posXYZ[2];
-
-        // Calculate the magnitudes of both vectors
-        double linearAccelerationMagnitude = Math.sqrt(linear_acceleration[0] * linear_acceleration[0] + linear_acceleration[1] * linear_acceleration[1] + linear_acceleration[2] * linear_acceleration[2]);
-        double posXYZMagnitude = Math.sqrt(posXYZ[0] * posXYZ[0] + posXYZ[1] * posXYZ[1] + posXYZ[2] * posXYZ[2]);
-
-        // Calculate the cosine of the angle
-        double cosAngle = dotProduct / (linearAccelerationMagnitude * posXYZMagnitude);
-
-        // Clamp the cosine value between -1 and 1 to avoid errors in the acos function
-        cosAngle = Math.max(-1, Math.min(1, cosAngle));
-
-        // Calculate the angle in radians
-        double angleRadians = Math.acos(cosAngle);
-
-        // Convert the angle to degrees
-        double angleDegrees = Math.toDegrees(angleRadians);
-
-        return angleDegrees;
-    }
-
-    // Calculate angle using the accelerometer position.
-    private int getAngle(double[] linear_acceleration, double[] posXYZ){
-        // Calculate x:
-        double x=1;
-
-        // Calculate y:
-        double y=1;
-
-        // Calculate the angle in radians
-        double angleRadians = Math.atan2(y, x);
-        // Convert the angle from radians to degrees
-        double angleDegrees = Math.toDegrees(angleRadians);
-        // Normalize the angle to the range [0, 360)
-        if (angleDegrees < 0) {
-            //angleDegrees += 360;
-        }
-        return (int) Math.floor(angleDegrees);
-    }
-    // Calculate the power using the accelerometer position.
-    private int getPower(double[] linear_acceleration, double[] posXYZ){
-        //TODO: calculate power.
-       // double power_scale = calculateUnitVectorBetween(linear_acceleration,posXYZ);
-        //int power = Math.floor(power_scale*MAX_SPEED);
-        return 0;
-    }
-
-    public double[] calculateUnitVector(double[] vector) {
-        double magnitude = Math.sqrt(vector[0] * vector[0] + vector[1] * vector[1] + vector[2] * vector[2]);
-
-        double[] unitVector = new double[3];
-        unitVector[0] = vector[0] / magnitude;
-        unitVector[1] = vector[1] / magnitude;
-        unitVector[2] = vector[2] / magnitude;
-
-        return unitVector;
-    }
-
-    public double[] calculateUnitVectorBetween(double[] linear_acceleration, double[] posXYZ) {
-        // Calculate the difference vector between linear_acceleration and posXYZ
-        double[] differenceVector = new double[3];
-        differenceVector[0] = linear_acceleration[0] - posXYZ[0];
-        differenceVector[1] = linear_acceleration[1] - posXYZ[1];
-        differenceVector[2] = linear_acceleration[2] - posXYZ[2];
-
-        // Calculate the unit vector of the difference vector
-        double[] unitVector = calculateUnitVector(differenceVector);
-
-        return unitVector;
-    }
-    private void handleMovements(double[] linear_acceleration, double[] posXYZ) {
-
-        int angle = getAngle(linear_acceleration,posXYZ);
-        double angle_d = calculateAngle(linear_acceleration,posXYZ);
-        Log.d("angle accelerometer: ", String.valueOf(Math.floor(angle_d)));
-
-        /*int power = getPower(linear_acceleration,posXYZ);
-
-        double angleDegrees = Math.toDegrees(angle);
-        if (angleDegrees <0){
-            double angleFinal =  (180 + Math.abs(angleDegrees));
-            angleDegrees = angleFinal;
-        } else if (angleDegrees == 0)  {
-            double  angleFinal = (int) 0;
-            angleDegrees = angleFinal;
-        } else {
-            double  angleFinal = (int) (180 -angleDegrees);
-            angleDegrees = angleFinal;
-        }
-
-        int pwr = (int) Math.floor(power);
-        int angl = (int) Math.floor(angleDegrees);
-        String command = "0," + pwr +  ","+ angl +";" ;
-        sendMessageAndLog(command,"sent: "+command);*/
-    }
-
     private void handleTurning(double[] linear_acceleration, double[] posXYZ) {
         double sendValue;
         String message;
@@ -202,13 +109,102 @@ public class RobotController {
         lastValueWS = sendValue;
         sendMessageAndLog(message, logMessage);
     }
+    double old_roll = 0.0;
+    double old_pitch= 0.0;
+    private void handleMovements(double[] linear_acceleration, double[] posXYZ) {
+
+        if(once) {
+            double[] initialRotationAngles = getRotationAngles(linear_acceleration, posXYZ);
+            initialPitch = initialRotationAngles[0];
+            initialRoll = initialRotationAngles[1];
+            old_roll = initialRoll;
+            old_pitch = initialPitch;
+            once = false;
+        }
+
+        // TODO: la tablette est a l'envers
+        double[] rotations = getRotationAngles(linear_acceleration,posXYZ);
+        rotations[0] = rotations[0] + 0.1*(old_pitch-rotations[0]);
+        rotations[1] = rotations[1] + 0.1*(old_roll-rotations[1]);
+        old_pitch = rotations[0];
+        old_roll =  rotations[1];
+
+        Log.d("rotations: ", "pitch: "+String.valueOf(rotations[0])+" roll: "+String.valueOf(rotations[1]));
+        int diff_pitch = (int) Math.floor(rotations[0]-initialPitch);
+        if(rotations[0]<0) {
+            diff_pitch = (int) Math.floor(rotations[0]+initialPitch);
+        }
+        int diff_roll = (int) Math.floor(rotations[1]);
+
+        double[] diff_rot = {diff_pitch, diff_roll};
+
+        // angle pitch-roll
+        int angle  = (int) Math.floor(calculate2DAngle(diff_rot[1],diff_rot[0]));
+        Log.d("angle: ", String.valueOf(angle));
+
+        int power = 70; // move back at a set speed; //TODO: use the power for reverse
+
+        if(diff_pitch >= 0){
+            power = (int) Math.abs(Math.floor(100 * diff_pitch/(initialPitch+30)));
+            if (power > 100) power = 100;
+        }
+
+        if(angle<200 && angle >160 || angle>=0 && angle<20 || angle >340 & angle<=360 ){
+            power = (int) Math.abs(Math.floor(100 * diff_roll/(35)));
+            if (power > 100) power = 100;
+        }
+
+        // TODO: Send command (0, angle, power)
+        sendMessageAndLog("0,"+String.valueOf(angle)+","+String.valueOf(power)+";",
+                "sent : "+"0,"+String.valueOf(angle)+","+String.valueOf(power)+";");
+    }
+
+    // Private methods:
+    public double calculate2DAngle(double x, double y) {
+        // Calculate the angle in radians using the atan2 function
+        double angleRadians = Math.atan2(y, x);
+
+        // Convert the angle to degrees
+        double angleDegrees = Math.toDegrees(angleRadians);
+
+        // Normalize the angle to the range [0, 360)
+        angleDegrees = (angleDegrees + 360) % 360;
+
+        return angleDegrees;
+    }
+
+    public double[] getRotationAngles(double[] linear_acceleration, double[] posXYZ) {
+        // Calculate the relative acceleration vector
+        double ax = linear_acceleration[0] - posXYZ[0];
+        double ay = linear_acceleration[1] - posXYZ[1];
+        double az = linear_acceleration[2] - posXYZ[2];
+
+        // Normalize the relative acceleration vector
+        double magnitude = Math.sqrt(ax * ax + ay * ay + az * az);
+        ax /= magnitude;
+        ay /= magnitude;
+        az /= magnitude;
+
+        // Calculate pitch (rotation around the x-axis)
+        double pitch = Math.atan2(-ax, Math.sqrt(ay * ay + az * az));
+        pitch = Math.toDegrees(pitch);
+
+        // Calculate roll (rotation around the y-axis)
+        double roll = Math.atan2(ay, Math.sqrt(ax * ax + ( az * az + ay*ay)));
+        roll = Math.toDegrees(roll);
+
+
+        double[] rotationAngles = {pitch, roll};
+        return rotationAngles;
+    }
 
     private double calculateSendValue(double value1, double value2) {
         return Math.floor(value1 - value2);
     }
 
     private void sendMessageAndLog(String message, String logMessage) {
-        clientThread.sendMessage(message);
+        String utf8Message = message.replaceAll("\\s+", "");
+        clientThread.sendMessage(utf8Message);
         Log.d("letter", logMessage);
     }
 }
