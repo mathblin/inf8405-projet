@@ -24,11 +24,6 @@ public class RobotController {
     public void handleRobotMovement(double[] linear_acceleration, double[] posXYZ, double topIntervalX, double bottomIntervalX) {
         double maxLinearAcceleration = Math.max(linear_acceleration[0], posXYZ[0]);
 
-        if(use_joystick_command){
-            handleMovements(linear_acceleration,posXYZ);
-            return;
-        }
-
         double stopValue;
         if (maxLinearAcceleration == linear_acceleration[0]) {
             stopValue = maxLinearAcceleration - posXYZ[0];
@@ -39,6 +34,12 @@ public class RobotController {
         if (Math.abs(linear_acceleration[1]) <= TURNING_THRESHOLD &&
             Math.abs(stopValue)<1.0) {
             sendMessageAndLog("1,x;", "x mini 333");
+            return;
+        }
+
+        if(use_joystick_command){
+            handleMovements(linear_acceleration,posXYZ);
+            return;
         }
 
         if (Math.abs(linear_acceleration[1]) > TURNING_THRESHOLD) {
@@ -130,35 +131,27 @@ public class RobotController {
 
         Log.d("rotations: ", "pitch: "+String.valueOf(rotations[0])+" roll: "+String.valueOf(rotations[1]));
         int diff_pitch = (int) Math.floor(rotations[0]-initialPitch);
-        Log.d("pitch: ", "Normal : "+String.valueOf(diff_pitch));
         if(rotations[0]<0) {
             diff_pitch = (int) Math.floor(rotations[0]+initialPitch);
-            Log.d("pitch: ", "Modif : "+String.valueOf(diff_pitch));
         }
         int diff_roll = (int) Math.floor(rotations[1]);
 
         double[] diff_rot = {diff_pitch, diff_roll};
 
-        //Log.d("diff_rot: ", "pitch: "+String.valueOf(diff_rot[0])+" roll: "+String.valueOf(diff_rot[1]));
-        if(Math.abs(diff_rot[0]) < 25 && Math.abs(diff_rot[1]) < 30 ){
-            sendMessageAndLog("0,0,0;","sent 0,0,0;");
-            return;
-        }
         // angle pitch-roll
         int angle  = (int) Math.floor(calculate2DAngle(diff_rot[1],diff_rot[0]));
         Log.d("angle: ", String.valueOf(angle));
 
-        int power = 50; // move back at a set speed;
-        //Log.d("power: ", String.valueOf(power));
+        int power = 70; // move back at a set speed; //TODO: use the power for reverse
 
         if(diff_pitch >= 0){
-            power = (int) Math.abs(Math.floor(100 * diff_pitch/40));
-            if(power > 100) power = 100;
+            power = (int) Math.abs(Math.floor(100 * diff_pitch/(initialPitch+30)));
+            if (power > 100) power = 100;
         }
 
-        if(angle < 200 && angle > 160 || angle<20 && angle>0 || angle<360 && angle>340){
-            power = (int) Math.abs(Math.floor(100 * diff_roll/40));
-            if(power > 100) power = 100;
+        if(angle<200 && angle >160 || angle>=0 && angle<20 || angle >340 & angle<=360 ){
+            power = (int) Math.abs(Math.floor(100 * diff_roll/(35)));
+            if (power > 100) power = 100;
         }
 
         // TODO: Send command (0, angle, power)
