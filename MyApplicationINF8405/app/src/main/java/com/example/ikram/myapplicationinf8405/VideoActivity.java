@@ -338,7 +338,6 @@ public class VideoActivity extends Activity {
             // TODO : Send Stop command to robot.
             clientThread.sendMessage("1,x;");
             clientThread.sendMessage("disconnect");
-            //clientThread = null;
         }
     }
 
