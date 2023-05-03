@@ -119,6 +119,7 @@ public class CalibrationActivity extends AppCompatActivity {
                 spinner.setAdapter(adapter);
                 Toast.makeText(getApplicationContext(), tag+" a été ajouté à la liste.", Toast.LENGTH_SHORT).show();
                 adapter.notifyDataSetChanged();
+                saveSpinnerValues(spinnerItems);
             }
         });
         //End add ip button logic.
@@ -142,6 +143,7 @@ public class CalibrationActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), tag_to_remove.getText().toString()
                                 +" a été enlevé de la liste.", Toast.LENGTH_SHORT).show();
                         adapter.notifyDataSetChanged();
+                        saveSpinnerValues(spinnerItems);
                         break;
                     }
                 }
@@ -303,28 +305,24 @@ public class CalibrationActivity extends AppCompatActivity {
     public SensorEventListener accelerometerListener = new SensorEventListener() {
         public void onAccuracyChanged(Sensor sensor, int acc) { }
 
-        int i = 0;
         public void onSensorChanged(SensorEvent event) {
 
             // Get the acceleration from sensors. Raw data
-            posXYZ[0] = posXYZ[0] + 0.1 * (event.values[0] - posXYZ[0]);
-            posXYZ[1] = posXYZ[1] + 0.1 * (event.values[1] - posXYZ[1]);
-            posXYZ[2] = posXYZ[2] + 0.1 * (event.values[2] - posXYZ[2]);
+
             // Take a sample of a 100 data points for calibration
             if (calibrate_was_pressed){
                 // Disable start button during calibration
                 buttonStart.setEnabled(false);
 
                 // while start is not pressed get average values
-                /*for (int i = 0; i < 1000; i++) {
+                for (int i = 0; i < 1000; i++) {
                     posXYZ[0] = addToAverage(i, posXYZ[0], event.values[0]); // initial X
                     posXYZ[1] = addToAverage(i, posXYZ[1], event.values[1]);  // initial Y
                     posXYZ[2] = addToAverage(i, posXYZ[2], event.values[2]);  // initial Z
-                }*/
+                }
                 Toast.makeText(getApplicationContext(), "Calibration terminée!", Toast.LENGTH_SHORT).show();
                 buttonStart.setEnabled(true);
                 calibrate_was_pressed = false;
-                i=0;
             }
 
             //Loop acceleration in XYZ
